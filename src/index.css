@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700;800&display=swap');
+
+html, body {
+  overscroll-behavior-x: none;
+}
+
+* {
+  font-family: 'Baloo Da 2', cursive;
+}
+
+
+.unselected {
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+}
+
+#_rht_toaster {
+  z-index: 9999999999;
+}
+
+
+
+*[class*='-menu'] {
+  z-index: 9999999999 !important;
+}
+
+.tox-editor-header {
+  box-shadow: none !important;
+  border-bottom: 1px solid #eee !important;
+}
+
+.tox-edit-area {
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+}
+
+.mention-member {
+  @apply bg-blue-100 text-blue-600 hover:text-blue-800 hover:font-semibold
+}
+
+
+.message-content h1 {
+  @apply text-2xl font-bold;
+
+}
+
+.message-content h2 {
+  @apply text-lg font-semibold;
+
+}
+
+.message-content h3 {
+  @apply text-sm font-semibold;
+
+}
+
+.message-content h4 {
+  @apply text-xs font-semibold;
+
+}
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.child-fields-container {
+  margin: 0;
+  padding: 0;
+}
+
+.json-container div {
+  @apply bg-white
+}
+
+code {
+  @apply text-sm 
+  
+}
+
+pre:has(code[class*='language-']) {
+  @apply text-sm bg-black text-white p-2
+  
+}
+
+
+.json-container a {
+  @apply text-blue-500 hover:text-blue-700 hover:underline transition-all
+}
+
+.grey {
+  @apply bg-gray-200
+}
+
+.less-pad {
+  @apply pb-4
+}
+
+#channel-messages ul {
+  @apply list-disc ml-6
+}
+#channel-messages ol {
+  @apply list-decimal ml-6
+}
+#channel-messages ol li, #channel-messages ul li {
+  @apply mb-2
+}
+
+#channel-messages h1 {
+  @apply m-0 text-3xl
+}
+
+#channel-messages h2 {
+  @apply m-0 text-2xl
+}
+
+#channel-messages h3 {
+  @apply m-0 text-xl
+}
+
+#channel-messages h4 {
+  @apply m-0 text-lg
+}
+
+#channel-messages h5 {
+  @apply m-0 text-base
+}
+
+#channel-messages h6 {
+  @apply m-0 text-sm
+}
+
