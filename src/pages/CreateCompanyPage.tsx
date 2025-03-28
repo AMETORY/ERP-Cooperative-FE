@@ -131,7 +131,7 @@ const CreateCompanyPage: FC<CreateCompanyPageProps> = ({}) => {
         LOCAL_STORAGE_COMPANIES,
         JSON.stringify(resp.companies)
       );
-      nav(`/company/${resp.data.id}`);
+      nav(`/setting`);
     } catch (error) {
       toast.error(`${error}`);
     } finally {

@@ -31,13 +31,14 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/" element={<Home />} />
       <Route path="/create/company/:companyType" element={<CreateCompanyPage />} />
       <Route path="/company/:companyId" element={<ConnectionDetail />} />
+      <Route path="/profile" element={<ProfilePage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />
       <Route path="/member" element={<MemberPage />} />
       <Route path="/inbox" element={<InboxPage />} />
       <Route path="/chat" element={<ChatPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      
       <Route path="/form" element={<FormPage />} />
       <Route
         path="/form-template/:templateId"

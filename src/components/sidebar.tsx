@@ -49,12 +49,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
 
   useEffect(() => {
     if (mounted) {
-      getInboxMessagesCount()
-        .then((resp: any) => setInboxUnreadCount(resp.data))
-        .catch(console.error);
-      getSentMessagesCount()
-        .then((resp: any) => setSentUnreadCount(resp.data))
-        .catch(console.error);
+      // getInboxMessagesCount()
+      //   .then((resp: any) => setInboxUnreadCount(resp.data))
+      //   .catch(console.error);
+      // getSentMessagesCount()
+      //   .then((resp: any) => setSentUnreadCount(resp.data))
+      //   .catch(console.error);
     }
   }, [mounted]);
 
