@@ -5,6 +5,12 @@ import { customFetch } from "./baseApi";
 export const getChartOfAccounts = async (template: string) => {
   return await customFetch(`api/v1/account/chart-of-accounts?template=${template}`);
 };
+export const getAccountTypes = async () => {
+  return await customFetch(`api/v1/account/account-types`);
+};
+export const getAccountCode = async (type: string) => {
+  return await customFetch(`api/v1/account/get-code?type=${type}`);
+};
 
 export const getAccounts = async (req: PaginationRequest) => {
   const queryParams = new URLSearchParams();

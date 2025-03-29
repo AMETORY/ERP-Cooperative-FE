@@ -15,7 +15,9 @@ import { AccountModel } from "../models/account";
 import {
   createAccount,
   deleteAccount,
+  getAccountCode,
   getAccounts,
+  getAccountTypes,
 } from "../services/api/accountApi";
 import toast from "react-hot-toast";
 import { getPagination } from "../utils/helper";
@@ -37,6 +39,8 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   const [size, setsize] = useState(1000);
   const [pagination, setPagination] = useState<PaginationResponse>();
   const [account, setAccount] = useState<AccountModel | null>(null);
+  const [accountTypes, setAccountTypes] = useState<any>({});
+  const [selectedAccount, setSelectedAccount] = useState<AccountModel>();
   const types = [
     "ASSET",
     "RECEIVABLE",
@@ -58,6 +62,9 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
 
   useEffect(() => {
     setMounted(true);
+    getAccountTypes().then((res: any) => {
+      setAccountTypes(res.data);
+    });
   }, []);
   useEffect(() => {
     if (!mounted) return;
@@ -79,6 +86,15 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
       setLoading(false);
     }
   };
+
+  const getGroupLabel = (type: string, value: string) => {
+    return accountTypes[type].groups.find((g: any) => g.value === value)?.label;
+  };
+  const getSubGroupLabel = (type: string, group: string, value: string) => {
+    return accountTypes[type].groups
+      .find((g: any) => g.value === group)
+      ?.subgroups.find((g: any) => g.value === value)?.label;
+  };
   return (
     <AdminLayout>
       <div className="p-8 ">
@@ -90,6 +106,20 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
               pill
               onClick={() => {
                 setShowModal(true);
+                setSelectedAccount({
+                  type: "ASSET",
+                  cashflow_subgroup: "",
+                });
+                getAccountCode(selectedAccount?.type ?? "ASSET").then(
+                  (res: any) => {
+                    if (res.last_code) {
+                      setSelectedAccount((prev) => ({
+                        ...prev,
+                        code: `${parseInt(res.last_code) + 1}`,
+                      }));
+                    }
+                  }
+                );
               }}
             >
               + Create new account
@@ -199,14 +229,15 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              createAccount({
-                name: e.currentTarget.name,
-                type: e.currentTarget.type.value,
-                category: e.currentTarget.category.value,
-              }).then(() => {
-                setShowModal(false);
-                getAllAccounts();
-              });
+              console.log(selectedAccount);
+              //   createAccount({
+              //     name: e.currentTarget.name,
+              //     type: e.currentTarget.type.value,
+              //     category: e.currentTarget.category.value,
+              //   }).then(() => {
+              //     setShowModal(false);
+              //     getAllAccounts();
+              //   });
             }}
           >
             <div className="space-y-4">
@@ -217,9 +248,16 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                   name="code"
                   required
                   placeholder="Enter account code"
+                  value={selectedAccount?.code}
+                  onChange={(e) => {
+                    setSelectedAccount({
+                      ...selectedAccount,
+                      code: e.target.value,
+                    });
+                  }}
                 />
               </div>
-              
+
               <div>
                 <Label>Name</Label>
                 <TextInput
@@ -227,6 +265,13 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                   name="name"
                   required
                   placeholder="Enter account name"
+                  value={selectedAccount?.name}
+                  onChange={(e) => {
+                    setSelectedAccount({
+                      ...selectedAccount,
+                      name: e.target.value,
+                    });
+                  }}
                 />
               </div>
               <div>
@@ -235,19 +280,113 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                   name="type"
                   options={types.map((t) => ({ label: t, value: t }))}
                   required
+                  value={{
+                    label: selectedAccount?.type,
+                    value: selectedAccount?.type,
+                  }}
+                  onChange={(e) => {
+                    getAccountCode(e?.value!).then((res: any) => {
+                      setSelectedAccount((prev) => ({
+                        ...prev,
+                        type: e?.value,
+                        code: res.last_code && `${parseInt(res.last_code) + 1}`,
+                      }));
+                    });
+                  }}
                 />
               </div>
-              {/* <div>
+              <div>
                 <Label>Category</Label>
                 <Select
                   name="category"
-                  options={categories.map((t) => ({ label: t, value: t }))}
+                  options={
+                    selectedAccount?.type
+                      ? accountTypes[selectedAccount?.type].categories.map(
+                          (t: any) => ({ label: t, value: t })
+                        )
+                      : []
+                  }
+                  value={{
+                    label: selectedAccount?.category,
+                    value: selectedAccount?.category,
+                  }}
+                  onChange={(e) => {
+                    setSelectedAccount({
+                      ...selectedAccount,
+                      category: e?.value,
+                      cashflow_group: "",
+                      cashflow_subgroup: "",
+                    });
+                  }}
                   required
                 />
-              </div> */}
+              </div>
+              <div>
+                <Label>Group</Label>
+                <Select
+                  name="group"
+                  options={
+                    selectedAccount?.type
+                      ? accountTypes[selectedAccount?.type].groups
+                      : []
+                  }
+                  value={{
+                    value: selectedAccount?.cashflow_group,
+                    label:
+                      selectedAccount?.cashflow_group &&
+                      getGroupLabel(
+                        selectedAccount?.type ?? "",
+                        selectedAccount?.cashflow_group ?? ""
+                      ),
+                  }}
+                  onChange={(e) => {
+                    setSelectedAccount({
+                      ...selectedAccount,
+                      cashflow_group: e?.value,
+                      cashflow_subgroup: "",
+                    });
+                  }}
+                  required
+                />
+              </div>
+              <div>
+                <Label>Sub Group</Label>
+                <Select
+                  name="group"
+                  options={
+                    selectedAccount?.type &&
+                    accountTypes[selectedAccount?.type].groups.find(
+                      (g: any) => g.value === selectedAccount?.cashflow_group
+                    )
+                      ? accountTypes[selectedAccount?.type].groups.find(
+                          (g: any) =>
+                            g.value === selectedAccount?.cashflow_group
+                        ).subgroups
+                      : []
+                  }
+                  value={{
+                    value: selectedAccount?.cashflow_subgroup,
+                    label:
+                      selectedAccount?.cashflow_subgroup &&
+                      getSubGroupLabel(
+                        selectedAccount?.type ?? "",
+                        selectedAccount?.cashflow_group ?? "",
+                        selectedAccount?.cashflow_subgroup ?? ""
+                      ),
+                  }}
+                  onChange={(e) => {
+                    setSelectedAccount({
+                      ...selectedAccount,
+                      cashflow_subgroup: e?.value,
+                    });
+                  }}
+                  required
+                />
+              </div>
             </div>
-            <div className="mt-4">
-              <Button type="submit">Create</Button>
+            <div className="h-32"></div>
+            <div className="flex justify-end">
+              <Button type="submit">Save</Button>
             </div>
           </form>
         </Modal.Body>
