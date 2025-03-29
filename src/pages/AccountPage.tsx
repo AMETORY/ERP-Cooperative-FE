@@ -1,0 +1,258 @@
+import { useContext, useEffect, useState, type FC } from "react";
+import AdminLayout from "../components/layouts/admin";
+import {
+  Button,
+  Drawer,
+  Label,
+  Modal,
+  Pagination,
+  Table,
+  TextInput,
+} from "flowbite-react";
+import { LoadingContext } from "../contexts/LoadingContext";
+import { PaginationResponse } from "../objects/pagination";
+import { AccountModel } from "../models/account";
+import {
+  createAccount,
+  deleteAccount,
+  getAccounts,
+} from "../services/api/accountApi";
+import toast from "react-hot-toast";
+import { getPagination } from "../utils/helper";
+import { SearchContext } from "../contexts/SearchContext";
+import { BsFilter } from "react-icons/bs";
+import { LuFilter } from "react-icons/lu";
+import Select, { InputActionMeta } from "react-select";
+
+interface AccountPageProps {}
+
+const AccountPage: FC<AccountPageProps> = ({}) => {
+  const { search, setSearch } = useContext(SearchContext);
+  const [showModal, setShowModal] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { loading, setLoading } = useContext(LoadingContext);
+  const [accounts, setAccounts] = useState<AccountModel[]>([]);
+  const [page, setPage] = useState(1);
+  const [size, setsize] = useState(1000);
+  const [pagination, setPagination] = useState<PaginationResponse>();
+  const [account, setAccount] = useState<AccountModel | null>(null);
+  const types = [
+    "ASSET",
+    "RECEIVABLE",
+    "LIABILITY",
+    "EQUITY",
+    "INCOME",
+    "EXPENSE",
+    "COST",
+  ];
+  const [selectedTypes, setSelectedTypes] = useState([
+    "ASSET",
+    "RECEIVABLE",
+    "LIABILITY",
+    "EQUITY",
+    "INCOME",
+    "EXPENSE",
+    "COST",
+  ]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  useEffect(() => {
+    if (!mounted) return;
+    getAllAccounts();
+  }, [mounted, page, size, search, selectedTypes]);
+
+  const getAllAccounts = async () => {
+    try {
+      let accounts: AccountModel[] = [];
+      setLoading(true);
+      for (const type of selectedTypes) {
+        let resp: any = await getAccounts({ page, size, search, type });
+        accounts = [...accounts, ...resp.data.items];
+      }
+      setAccounts(accounts);
+    } catch (error) {
+      toast.error(`${error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <AdminLayout>
+      <div className="p-8 ">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold ">Account</h1>
+          <div className="flex items-center gap-2">
+            <Button
+              gradientDuoTone="purpleToBlue"
+              pill
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              + Create new account
+            </Button>
+            <LuFilter
+              className=" cursor-pointer text-gray-400 hover:text-gray-600"
+              onClick={() => {
+                setShowFilter(true);
+              }}
+            />
+          </div>
+        </div>
+        <div className="h-[calc(100vh-260px)] overflow-y-auto">
+          <Table>
+            <Table.Head>
+              <Table.HeadCell>Account</Table.HeadCell>
+              <Table.HeadCell>Type</Table.HeadCell>
+              <Table.HeadCell>Category</Table.HeadCell>
+              <Table.HeadCell></Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {accounts.length === 0 && (
+                <Table.Row>
+                  <Table.Cell colSpan={5} className="text-center">
+                    No accounts found.
+                  </Table.Cell>
+                </Table.Row>
+              )}
+              {accounts.map((account, i) => (
+                <Table.Row
+                  key={i}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <Table.Cell
+                    className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
+                    onClick={() => {}}
+                  >
+                    {account.code && `[${account.code}] `}
+                    {account.name}
+                  </Table.Cell>
+                  <Table.Cell>{account.type}</Table.Cell>
+                  <Table.Cell>{account.category}</Table.Cell>
+                  <Table.Cell>
+                    {account.is_deletable && (
+                      <a
+                        href="#"
+                        className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (
+                            window.confirm(
+                              `Are you sure you want to delete project ${account.name}?`
+                            )
+                          ) {
+                            deleteAccount(account?.id!).then(() => {
+                              getAllAccounts();
+                            });
+                          }
+                        }}
+                      >
+                        Delete
+                      </a>
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
+        {/* <Pagination
+          className="mt-4"
+          currentPage={page}
+          totalPages={pagination?.total_pages ?? 0}
+          onPageChange={(val) => {
+            setPage(val);
+          }}
+          showIcons
+        /> */}
+      </div>
+      <Drawer
+        position="right"
+        open={showFilter}
+        onClose={() => setShowFilter(false)}
+      >
+        <div className="mt-16">
+          <Drawer.Items>
+            <div className="flex flex-col">
+              <h3 className="font-semibold text-2xlpro">Filter</h3>
+              <div>
+                <Label>Account Type</Label>
+                <Select
+                  isMulti
+                  value={selectedTypes.map((t) => ({ label: t, value: t }))}
+                  options={types.map((t) => ({ label: t, value: t }))}
+                  onChange={(val) => {
+                    setSelectedTypes(val.map((v) => v.value));
+                  }}
+                />
+              </div>
+            </div>
+          </Drawer.Items>
+        </div>
+      </Drawer>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Create Account</Modal.Header>
+        <Modal.Body>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              createAccount({
+                name: e.currentTarget.name,
+                type: e.currentTarget.type.value,
+                category: e.currentTarget.category.value,
+              }).then(() => {
+                setShowModal(false);
+                getAllAccounts();
+              });
+            }}
+          >
+            <div className="space-y-4">
+              <div>
+                <Label>Code</Label>
+                <TextInput
+                  type="text"
+                  name="code"
+                  required
+                  placeholder="Enter account code"
+                />
+              </div>
+              
+              <div>
+                <Label>Name</Label>
+                <TextInput
+                  type="text"
+                  name="name"
+                  required
+                  placeholder="Enter account name"
+                />
+              </div>
+              <div>
+                <Label>Type</Label>
+                <Select
+                  name="type"
+                  options={types.map((t) => ({ label: t, value: t }))}
+                  required
+                />
+              </div>
+              {/* <div>
+                <Label>Category</Label>
+                <Select
+                  name="category"
+                  options={categories.map((t) => ({ label: t, value: t }))}
+                  required
+                />
+              </div> */}
+            </div>
+            <div className="mt-4">
+              <Button type="submit">Create</Button>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
+    </AdminLayout>
+  );
+};
+export default AccountPage;

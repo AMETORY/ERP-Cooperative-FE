@@ -29,11 +29,13 @@ import {
 } from "../utils/constants";
 import { MdOutlineAssistant } from "react-icons/md";
 import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
+import Logo from "./logo";
 
 interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = ({}) => {
   const { member } = useContext(MemberContext);
+  const { profile } = useContext(ProfileContext);
   const { collapsed } = useContext(CollapsedContext);
   const [mounted, setMounted] = useState(false);
   const [inboxUnreadCount, setInboxUnreadCount] = useState(0);
@@ -65,13 +67,16 @@ const Sidebar: FC<SidebarProps> = ({}) => {
     };
 
   const checkPermission = (permission: string) => {
-    if (member?.role?.permission_names) {
-      return member.role.permission_names.includes(permission);
+    if (profile?.roles?.length == 0) return false;
+    if (profile?.roles![0].permission_names) {
+      return profile?.roles![0].permission_names.includes(permission);
     }
     return false;
   };
   return (
     <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 flex flex-col">
+      <Logo collapsed={collapsed} />
+      <div className="mb-4"></div>
       <ul className="space-y-2 font-medium flex-1">
         <li className="" style={{}}>
           <span
@@ -85,22 +90,25 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </span>
         </li>
         <HR />
-        {/* <li className="text-xs text-gray-300" style={{}}>
+        <li className="text-xs text-gray-300 truncate" style={{}}>
           Feature
         </li>
-        <li className="" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/task")}
-          >
-            <Tooltip content="Task">
-              <GoTasklist />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Task</span>
-            )}
-          </span>
-        </li>
+        {checkPermission("finance:account:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/account")}
+            >
+              <Tooltip content="Account">
+                <GoTasklist />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Account</span>
+              )}
+            </span>
+          </li>
+        )}
+        {/* 
         {checkPermission("project_management:project:read") && (
           <li className="" style={{}}>
             <span
@@ -194,8 +202,9 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </span>
         </li>
         )}
-        <HR /> */}
-        <li className="text-xs text-gray-300" style={{}}>
+        */}
+        <HR /> 
+        <li className="text-xs text-gray-300 truncate" style={{}}>
           Preferences
         </li>
         {/* <li className="" style={{}}>
@@ -292,7 +301,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )} */}
-        {member?.role?.is_super_admin && (
+        {profile?.roles && profile?.roles[0].is_super_admin && (
           <li className="" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"

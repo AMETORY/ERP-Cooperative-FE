@@ -24,12 +24,14 @@ import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import AcceptInvitation from "../pages/AcceptInvitation";
 import { MemberModel } from "../models/member";
 import FormPublicPage from "../pages/FormPublicPage";
+import { SearchContext } from "../contexts/SearchContext";
 
 interface AppRoutesProps {
   token?: string | null;
 }
 
 const AppRoutes: FC<AppRoutesProps> = ({ token }) => {
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [isWsConnected, setWsConnected] = useState(false);
   const [wsMsg, setWsMsg] = useState<string | null>(null);
@@ -100,10 +102,12 @@ const AppRoutes: FC<AppRoutesProps> = ({ token }) => {
                   <WebsocketContext.Provider
                     value={{ isWsConnected, setWsConnected, wsMsg, setWsMsg }}
                   >
-                    <BrowserRouter>
-                      {token && <PrivateRoute />}
-                      {!token && <PublicRoute />}
-                    </BrowserRouter>
+                    <SearchContext.Provider value={{ search, setSearch }}>
+                      <BrowserRouter>
+                        {token && <PrivateRoute />}
+                        {!token && <PublicRoute />}
+                      </BrowserRouter>
+                    </SearchContext.Provider>
                   </WebsocketContext.Provider>
                 </CompanyIDContext.Provider>
               </ActiveCompanyContext.Provider>

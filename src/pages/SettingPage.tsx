@@ -62,8 +62,8 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
     if (mounted) {
       setLoading(true);
       getAllSetting();
-      getAllPlugins();
-      getAllCompanyPlugins();
+      // getAllPlugins();
+      // getAllCompanyPlugins();
     }
   }, [mounted]);
 
@@ -362,14 +362,14 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           >
             {renderInfo()}
           </Tabs.Item>
-          <Tabs.Item
+          {/* <Tabs.Item
             active={activeTab === 1}
             title="Plugin"
             icon={BsPlugin}
             className=""
           >
             {renderPlugin()}
-          </Tabs.Item>
+          </Tabs.Item> */}
         </Tabs>
       </div>
       <Modal show={modalPluginOpen} onClose={() => setModalPluginOpen(false)}>

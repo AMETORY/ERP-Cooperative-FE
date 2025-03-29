@@ -22,6 +22,7 @@ import ConnectionPage from "../pages/ConnectionPage";
 import ConnectionDetail from "../pages/ConnectionDetail";
 import WhatsappPage from "../pages/WhatsappPage";
 import CreateCompanyPage from "../pages/CreateCompanyPage";
+import AccountPage from "../pages/AccountPage";
 
 interface PrivateRouteProps {}
 
@@ -31,7 +32,9 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/" element={<Home />} />
       <Route path="/create/company/:companyType" element={<CreateCompanyPage />} />
       <Route path="/company/:companyId" element={<ConnectionDetail />} />
+      <Route path="/account" element={<AccountPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/setting" element={<SettingPage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />
@@ -50,7 +53,6 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/connection" element={<ConnectionPage />} />
       <Route path="/connection/:connectionId" element={<ConnectionDetail />} />
-      <Route path="/setting" element={<SettingPage />} />
       <Route path="/gemini-agent" element={<GeminiAgentPage />} />
       <Route path="/task-attribute" element={<TaskAttributePage />} />
       <Route path="/whatsapp" element={<WhatsappPage />} />
