@@ -23,6 +23,8 @@ import ConnectionDetail from "../pages/ConnectionDetail";
 import WhatsappPage from "../pages/WhatsappPage";
 import CreateCompanyPage from "../pages/CreateCompanyPage";
 import AccountPage from "../pages/AccountPage";
+import TransactionPage from "../pages/TransactionPage";
+import AccountReport from "../pages/AccountReport";
 
 interface PrivateRouteProps {}
 
@@ -33,6 +35,8 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/create/company/:companyType" element={<CreateCompanyPage />} />
       <Route path="/company/:companyId" element={<ConnectionDetail />} />
       <Route path="/account" element={<AccountPage />} />
+      <Route path="/account/:accountId/report" element={<AccountReport />} />
+      <Route path="/transaction" element={<TransactionPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/setting" element={<SettingPage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}

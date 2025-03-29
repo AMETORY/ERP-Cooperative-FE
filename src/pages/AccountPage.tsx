@@ -227,9 +227,20 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
         <Modal.Header>Create Account</Modal.Header>
         <Modal.Body>
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              console.log(selectedAccount);
+
+              try {
+                setLoading(true);
+                await createAccount(selectedAccount);
+                toast.success("Account created successfully");
+                setShowModal(false);
+                getAllAccounts();
+              } catch (error) {
+                toast.error(`${error}`)
+              } finally {
+                setLoading(false);
+              }
               //   createAccount({
               //     name: e.currentTarget.name,
               //     type: e.currentTarget.type.value,

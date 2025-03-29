@@ -1,6 +1,6 @@
 import { HR, Tooltip } from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
-import { AiOutlineDashboard } from "react-icons/ai";
+import { AiOutlineDashboard, AiOutlineTransaction } from "react-icons/ai";
 import {
   BsAsterisk,
   BsGear,
@@ -104,6 +104,21 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </Tooltip>
               {!collapsed && (
                 <span className="flex-1 ms-3 whitespace-nowrap">Account</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("finance:transaction:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/transaction")}
+            >
+              <Tooltip content="Transaction">
+                <AiOutlineTransaction />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Transaction</span>
               )}
             </span>
           </li>

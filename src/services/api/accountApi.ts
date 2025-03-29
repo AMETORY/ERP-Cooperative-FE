@@ -18,7 +18,20 @@ export const getAccounts = async (req: PaginationRequest) => {
   queryParams.set("size", String(req.size));
   if (req.search) queryParams.set("search", req.search);
   if (req.type) queryParams.set("type", req.type);
+  if (req.category) queryParams.set("category", req.category);
+  if (req.cashflow_group) queryParams.set("cashflow_group", req.cashflow_group);
+  if (req.cashflow_sub_group) queryParams.set("cashflow_sub_group", req.cashflow_sub_group);
   return await customFetch(`api/v1/account/list?${queryParams}`);
+};
+export const getAccountReport = async (accountId: string, req: PaginationRequest) => {
+  const queryParams = new URLSearchParams();
+  queryParams.set("page", String(req.page));
+  queryParams.set("size", String(req.size));
+  if (req.search) queryParams.set("search", req.search);
+  if (req.type) queryParams.set("type", req.type);
+  if (req.start_date) queryParams.set("start_date", req.start_date);
+  if (req.end_date) queryParams.set("end_date", req.end_date);
+  return await customFetch(`api/v1/account/${accountId}/report?${queryParams}`);
 };
 
 export const getAccountDetail = async (id: string) => {
