@@ -27,6 +27,8 @@ import TransactionPage from "../pages/TransactionPage";
 import AccountReport from "../pages/AccountReport";
 import JournalPage from "../pages/JournalPage";
 import JournalDetail from "../pages/JournalDetail";
+import TaxPage from "../pages/TaxPage";
+import SalesPage from "../pages/SalesPage";
 
 interface PrivateRouteProps {}
 
@@ -41,6 +43,8 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/transaction" element={<TransactionPage />} />
       <Route path="/journal" element={<JournalPage />} />
       <Route path="/journal/:journalId" element={<JournalDetail />} />
+      <Route path="/tax" element={<TaxPage />} />
+      <Route path="/sales" element={<SalesPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/setting" element={<SettingPage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}

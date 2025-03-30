@@ -21,6 +21,7 @@ export const getAccounts = async (req: PaginationRequest) => {
   if (req.category) queryParams.set("category", req.category);
   if (req.cashflow_group) queryParams.set("cashflow_group", req.cashflow_group);
   if (req.cashflow_sub_group) queryParams.set("cashflow_sub_group", req.cashflow_sub_group);
+  if (req.is_tax) queryParams.set("is_tax", "1");
   return await customFetch(`api/v1/account/list?${queryParams}`);
 };
 export const getAccountReport = async (accountId: string, req: PaginationRequest) => {

@@ -7,11 +7,12 @@ import {
   BsJournal,
   BsKanban,
   BsPeople,
+  BsPercent,
   BsWhatsapp,
 } from "react-icons/bs";
 import { GoTasklist } from "react-icons/go";
 import { HiOutlineChat } from "react-icons/hi";
-import { HiOutlineInboxArrowDown } from "react-icons/hi2";
+import { HiOutlineInboxArrowDown, HiOutlineReceiptPercent } from "react-icons/hi2";
 import { LuContact2, LuLink2, LuPowerOff } from "react-icons/lu";
 import { SiGoogleforms } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +32,7 @@ import {
 import { MdOutlineAssistant } from "react-icons/md";
 import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import Logo from "./logo";
+import { TbFileInvoice } from "react-icons/tb";
 
 interface SidebarProps {}
 
@@ -139,6 +141,21 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )}
+        {checkPermission("order:sales:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/sales")}
+            >
+              <Tooltip content="Sales">
+                <TbFileInvoice />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Sales</span>
+              )}
+            </span>
+          </li>
+        )}
         {/* 
         {checkPermission("project_management:project:read") && (
           <li className="" style={{}}>
@@ -235,22 +252,26 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         )}
         */}
         <HR /> 
+
         <li className="text-xs text-gray-300 truncate" style={{}}>
           Preferences
         </li>
-        {/* <li className="" style={{}}>
+        {checkPermission("finance:tax:read") && (
+        <li className="" style={{}}>
           <span
             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/member")}
+            onClick={handleNavigation("/tax")}
           >
-            <Tooltip content="Member">
-              <BsPeople />
+            <Tooltip content="Tax">
+              <HiOutlineReceiptPercent />
             </Tooltip>
             {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Member</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
             )}
           </span>
         </li>
+        )}
+        {/* 
         {checkPermission("customer_relationship:form:read") && (
         <li className="" style={{}}>
           <span

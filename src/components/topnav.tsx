@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { CollapsedContext } from "../contexts/CollapsedContext";
 import Logo from "./logo";
 import { CompaniesContext, CompanyIDContext } from "../contexts/CompanyContext";
@@ -18,6 +18,7 @@ const Topnav: React.FC<TopnavProps> = () => {
   const { collapsed, setCollapsed } = useContext(CollapsedContext);
   const { profile, setProfile } = useContext(ProfileContext);
   const nav = useNavigate();
+  const timeout = useRef<number | null>(null);
 
   return (
     <nav className="fixed top-0 z-20 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">

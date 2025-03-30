@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type FC } from "react";
+import { useContext, useEffect, useRef, useState, type FC } from "react";
 import AdminLayout from "../components/layouts/admin";
 import {
   Button,
@@ -8,6 +8,7 @@ import {
   Pagination,
   Table,
   TextInput,
+  ToggleSwitch,
 } from "flowbite-react";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { PaginationResponse } from "../objects/pagination";
@@ -22,7 +23,7 @@ import {
 import toast from "react-hot-toast";
 import { getPagination, money } from "../utils/helper";
 import { SearchContext } from "../contexts/SearchContext";
-import { BsFilter } from "react-icons/bs";
+import { BsCheckCircle, BsFilter } from "react-icons/bs";
 import { LuFilter } from "react-icons/lu";
 import Select, { InputActionMeta } from "react-select";
 import moment from "moment";
@@ -43,7 +44,9 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   const [account, setAccount] = useState<AccountModel | null>(null);
   const [accountTypes, setAccountTypes] = useState<any>({});
   const [selectedAccount, setSelectedAccount] = useState<AccountModel>();
-  const nav = useNavigate()
+  const nav = useNavigate();
+  const timeout = useRef<number | null>(null);
+
   const types = [
     "ASSET",
     "RECEIVABLE",
@@ -72,7 +75,16 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   useEffect(() => {
     if (!mounted) return;
     getAllAccounts();
-  }, [mounted, page, size, search, selectedTypes]);
+  }, [mounted, page, size, selectedTypes]);
+
+  useEffect(() => {
+    if (timeout.current) {
+      window.clearTimeout(timeout.current);
+    }
+    timeout.current = window.setTimeout(() => {
+      getAllAccounts();
+    }, 300);
+  }, [search]);
 
   const getAllAccounts = async () => {
     try {
@@ -165,10 +177,18 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                   >
                     {account.code && `[${account.code}] `}
                     {account.name}
+                    {account.is_tax && (
+                      <span className="text-xs text-green-400 flex items-center space-x-1">
+                        <BsCheckCircle className="text-green-400" /> 
+                        <span>Tax Account</span>
+                      </span>
+                    )}
                   </Table.Cell>
                   <Table.Cell>{account.type}</Table.Cell>
                   <Table.Cell>{account.category}</Table.Cell>
-                  <Table.Cell align="right">{money(account.balance)}</Table.Cell>
+                  <Table.Cell align="right">
+                    {money(account.balance)}
+                  </Table.Cell>
                   <Table.Cell>
                     {account.is_deletable && (account.balance ?? 0) == 0 && (
                       <a
@@ -244,7 +264,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 setShowModal(false);
                 getAllAccounts();
               } catch (error) {
-                toast.error(`${error}`)
+                toast.error(`${error}`);
               } finally {
                 setLoading(false);
               }
@@ -313,6 +333,21 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                   }}
                 />
               </div>
+              {(selectedAccount?.type == "RECEIVABLE" ||
+                selectedAccount?.type == "LIABILITY") && (
+                <div>
+                  <ToggleSwitch
+                    label="Is Tax Account"
+                    checked={selectedAccount?.is_tax ?? false}
+                    onChange={(e) => {
+                      setSelectedAccount({
+                        ...selectedAccount!,
+                        is_tax: e!,
+                      });
+                    }}
+                  />
+                </div>
+              )}
               <div>
                 <Label>Category</Label>
                 <Select
