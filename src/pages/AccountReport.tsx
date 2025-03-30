@@ -13,6 +13,7 @@ import Moment from "react-moment";
 import moment from "moment";
 import { getAccountReport } from "../services/api/accountApi";
 import { AccountReportModel } from "../models/report";
+import { BsJournal } from "react-icons/bs";
 
 interface AccountReportProps {}
 
@@ -97,16 +98,16 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                 </Table.Cell>
               </Table.Row>
             )}
-            {(report?.balance_before ?? 0) > 0 &&
-            <Table.Row>
-              <Table.Cell colSpan={5} className="font-semibold">
-                Saldo Sebelumnya{" "}
-              </Table.Cell>
-              <Table.Cell align="right" className="font-semibold">
-                {money(report?.balance_before)}
-              </Table.Cell>
-            </Table.Row>
-            }
+            {(report?.balance_before ?? 0) > 0 && (
+              <Table.Row>
+                <Table.Cell colSpan={5} className="font-semibold">
+                  Saldo Sebelumnya{" "}
+                </Table.Cell>
+                <Table.Cell align="right" className="font-semibold">
+                  {money(report?.balance_before)}
+                </Table.Cell>
+              </Table.Row>
+            )}
             {report?.transactions.map((transaction, i) => (
               <Table.Row
                 key={i}
@@ -120,11 +121,18 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                 </Table.Cell>
                 <Table.Cell>{transaction.description}</Table.Cell>
                 <Table.Cell>
-                  <Link
-                    to={`/account/${transaction?.transaction_ref?.account?.id}/report`}
-                  >
-                    {transaction.transaction_ref?.account?.name}
-                  </Link>
+                  {transaction?.transaction_ref && (
+                    <Link
+                      to={`/account/${transaction?.transaction_ref?.account?.id}/report`}
+                    >
+                      {transaction.transaction_ref?.account?.name}
+                    </Link>
+                  )}
+                  {transaction?.journal_ref && (
+                    <Link to={`/journal/${transaction?.journal_ref?.id}`} className="flex gap-1 items-center">
+                      <BsJournal />{" "} {transaction.journal_ref?.description}
+                    </Link>
+                  )}
                 </Table.Cell>
                 <Table.Cell align="right">
                   {money(transaction.debit)}

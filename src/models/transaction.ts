@@ -1,4 +1,5 @@
 import { AccountModel } from "./account";
+import { JournalModel } from "./journal";
 
 export interface TransactionModel {
   id: string;
@@ -26,6 +27,7 @@ export interface TransactionModel {
   transaction_ref_id: string;
   transaction_ref_type: string;
   transaction_ref?: TransactionModel;
+  journal_ref?: JournalModel;
   company_id: string;
   user_id: string;
 }

@@ -28,6 +28,7 @@ import Moment from "react-moment";
 import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { BsJournal } from "react-icons/bs";
 
 interface TransactionTableProps {
   transactionType: string;
@@ -208,11 +209,21 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 </Link>
               </Table.Cell>
               <Table.Cell>
-                <Link
-                  to={`/account/${transaction?.transaction_ref?.account?.id}/report`}
-                >
-                  {transaction.transaction_ref?.account?.name}
-                </Link>
+                {transaction?.transaction_ref && (
+                  <Link
+                    to={`/account/${transaction?.transaction_ref?.account?.id}/report`}
+                  >
+                    {transaction.transaction_ref?.account?.name}
+                  </Link>
+                )}
+                {transaction?.journal_ref && (
+                  <Link
+                    to={`/journal/${transaction?.journal_ref?.id}`}
+                    className="flex gap-1 items-center"
+                  >
+                    <BsJournal /> {transaction.journal_ref?.description}
+                  </Link>
+                )}
               </Table.Cell>
               <Table.Cell>
                 <a
