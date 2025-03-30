@@ -147,8 +147,8 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
             />
           </div>
         </div>
-        <div className="h-[calc(100vh-200px)] overflow-y-auto">
-          <Table>
+        <div className="h-[calc(100vh-200px)] overflow-y-auto p-1">
+          <Table className=" rounded-lg shadow-sm ">
             <Table.Head>
               <Table.HeadCell>Account</Table.HeadCell>
               <Table.HeadCell>Type</Table.HeadCell>
@@ -179,7 +179,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                     {account.name}
                     {account.is_tax && (
                       <span className="text-xs text-green-400 flex items-center space-x-1">
-                        <BsCheckCircle className="text-green-400" /> 
+                        <BsCheckCircle className="text-green-400" />
                         <span>Tax Account</span>
                       </span>
                     )}

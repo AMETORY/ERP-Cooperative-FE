@@ -1,34 +1,17 @@
 import type { FC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
-import ProjectDetail from "../pages/ProjectDetail";
-import ProjectPage from "../pages/ProjectPage";
-import TaskPage from "../pages/TaskPage";
-import MemberPage from "../pages/MemberPage";
-import InboxPage from "../pages/Inbox";
-import ChatPage from "../pages/ChatPage";
-import ProfilePage from "../pages/ProfilePage";
-import FormPage from "../pages/FormPage";
-import FormTempateDetail from "../pages/FormTempateDetail";
-import FormDetail from "../pages/FormDetail";
-import FormPublicPage from "../pages/FormPublicPage";
-import ContactPage from "../pages/ContactPage";
-import SettingPage from "../pages/SettingPage";
-import GeminiAgentPage from "../pages/GeminiAgentPage";
-import GeminiAgentDetail from "../pages/GeminiAgentDetail";
-import TaskAttributePage from "../pages/TaskAttributePage";
-import TaskAttributeDetail from "../pages/TaskAttributeDetail";
-import ConnectionPage from "../pages/ConnectionPage";
-import ConnectionDetail from "../pages/ConnectionDetail";
-import WhatsappPage from "../pages/WhatsappPage";
-import CreateCompanyPage from "../pages/CreateCompanyPage";
 import AccountPage from "../pages/AccountPage";
-import TransactionPage from "../pages/TransactionPage";
 import AccountReport from "../pages/AccountReport";
-import JournalPage from "../pages/JournalPage";
+import ConnectionDetail from "../pages/ConnectionDetail";
+import CreateCompanyPage from "../pages/CreateCompanyPage";
+import Home from "../pages/Home";
 import JournalDetail from "../pages/JournalDetail";
-import TaxPage from "../pages/TaxPage";
+import JournalPage from "../pages/JournalPage";
+import ProfilePage from "../pages/ProfilePage";
 import SalesPage from "../pages/SalesPage";
+import SettingPage from "../pages/SettingPage";
+import TaxPage from "../pages/TaxPage";
+import TransactionPage from "../pages/TransactionPage";
 
 interface PrivateRouteProps {}
 

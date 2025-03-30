@@ -1,19 +1,18 @@
+import { Datepicker, Drawer, Label, Table } from "flowbite-react";
+import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
+import { BsJournal } from "react-icons/bs";
+import { LuFilter } from "react-icons/lu";
+import Moment from "react-moment";
+import { Link, useParams } from "react-router-dom";
 import AdminLayout from "../components/layouts/admin";
 import { DateRangeContext, LoadingContext } from "../contexts/LoadingContext";
+import { SearchContext } from "../contexts/SearchContext";
+import { AccountReportModel } from "../models/report";
 import { TransactionModel } from "../models/transaction";
 import { PaginationResponse } from "../objects/pagination";
-import { SearchContext } from "../contexts/SearchContext";
-import { Link, useParams } from "react-router-dom";
-import { getTransactions } from "../services/api/transactionApi";
-import { getPagination, money } from "../utils/helper";
-import { LuFilter } from "react-icons/lu";
-import { Datepicker, Drawer, Label, Pagination, Table } from "flowbite-react";
-import Moment from "react-moment";
-import moment from "moment";
 import { getAccountReport } from "../services/api/accountApi";
-import { AccountReportModel } from "../models/report";
-import { BsJournal } from "react-icons/bs";
+import { money } from "../utils/helper";
 
 interface AccountReportProps {}
 
@@ -80,6 +79,7 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
             />
           </div>
         </div>
+        <div className=" p-1">
         <Table>
           <Table.Head>
             <Table.HeadCell>Date</Table.HeadCell>
@@ -188,6 +188,7 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
             </Table.Row>
           </Table.Body>
         </Table>
+        </div>
         {/* <Pagination
           className="mt-4"
           currentPage={page}
