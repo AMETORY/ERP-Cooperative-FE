@@ -143,3 +143,7 @@ pre:has(code[class*='language-']) {
   @apply m-0 text-sm
 }
 
+
+label {
+  @apply !font-bold
+}

@@ -7,3 +7,11 @@ export const LoadingContext = createContext<{
   loading: false,
   setLoading: () => {},
 });
+
+export const DateRangeContext = createContext<{
+  dateRange: [Date, Date] | null;
+  setDateRange: (dateRange: [Date, Date] | null) => void;
+}>({
+  dateRange: null,
+  setDateRange: () => {},
+});

@@ -16,4 +16,5 @@ export interface AccountModel {
     is_tax?: boolean;
     company_id?: string;
     user_id?: string;
+    balance?: number;
 }

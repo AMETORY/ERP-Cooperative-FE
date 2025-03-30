@@ -8,13 +8,14 @@ import {
   Textarea,
   TextInput,
 } from "flowbite-react";
-import { useContext, useEffect, useState, type FC } from "react";
+import { useContext, useEffect, useRef, useState, type FC } from "react";
 import { LoadingContext } from "../contexts/LoadingContext";
 import toast from "react-hot-toast";
 import {
   createTransaction,
   deleteTransaction,
   getTransactions,
+  updateTransaction,
 } from "../services/api/transactionApi";
 import Select, { InputActionMeta } from "react-select";
 import { AccountModel } from "../models/account";
@@ -26,6 +27,7 @@ import { TransactionModel } from "../models/transaction";
 import Moment from "react-moment";
 import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 interface TransactionTableProps {
   transactionType: string;
@@ -52,6 +54,10 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
   const [size, setsize] = useState(20);
   const [pagination, setPagination] = useState<PaginationResponse>();
   const { search, setSearch } = useContext(SearchContext);
+  const amountRef = useRef<HTMLInputElement | null>(null);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<TransactionModel>();
+
   const renderHeader = (label: string, onAdd: () => void) => {
     return (
       <div className="flex justify-between items-center mb-4">
@@ -167,8 +173,12 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
           <Table.HeadCell>Date</Table.HeadCell>
           <Table.HeadCell>Description</Table.HeadCell>
           <Table.HeadCell>Amount</Table.HeadCell>
-          <Table.HeadCell>{transactionType == "TRANSFER" ? "From" : "Category"}</Table.HeadCell>
-          <Table.HeadCell>{transactionType == "TRANSFER" ? "To" : "Account"}</Table.HeadCell>
+          <Table.HeadCell>
+            {transactionType == "TRANSFER" ? "From" : "Category"}
+          </Table.HeadCell>
+          <Table.HeadCell>
+            {transactionType == "TRANSFER" ? "To" : "Account"}
+          </Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -205,6 +215,13 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 </Link>
               </Table.Cell>
               <Table.Cell>
+                <a
+                  href="#"
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  onClick={() => setSelectedTransaction(transaction)}
+                >
+                  Edit
+                </a>
                 <a
                   href="#"
                   className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
@@ -293,14 +310,27 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 <Label>Amount</Label>
                 <TextInput
                   type="number"
+                  ref={amountRef}
                   required
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
                   placeholder="Enter amount"
                 />
+                {
+                  <h1
+                    className="text-4xl font-semibold text-right cursor-pointer"
+                    onClick={() => {
+                      amountRef.current?.focus();
+                    }}
+                  >
+                    {money(amount)}
+                  </h1>
+                }
               </div>
               <div>
-                <Label>{transactionType == "TRANSFER" ? "From" : "Category"}</Label>
+                <Label>
+                  {transactionType == "TRANSFER" ? "From" : "Category"}
+                </Label>
                 <Select
                   options={sourceAccounts.map((t) => ({
                     label: t.name!,
@@ -322,7 +352,9 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 />
               </div>
               <div>
-                <Label>{transactionType == "TRANSFER" ? "To" : "Account"}</Label>
+                <Label>
+                  {transactionType == "TRANSFER" ? "To" : "Account"}
+                </Label>
                 <Select
                   options={destinationAccounts.map((t) => ({
                     label: t.name!,
@@ -342,6 +374,112 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                     )
                   }
                 />
+              </div>
+            </div>
+            <div className="h-16"></div>
+            <div className="flex justify-end">
+              <Button type="submit" onClick={() => {}}>
+                <span>Save</span>
+              </Button>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={selectedTransaction != undefined}
+        onClose={() => setSelectedTransaction(undefined)}
+      >
+        <Modal.Header>{headerLabel()} Form</Modal.Header>
+        <Modal.Body>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                setLoading(true);
+                let data = {
+                  date: selectedTransaction?.date,
+                  description: selectedTransaction?.description,
+                  amount: selectedTransaction?.amount,
+                };
+                await updateTransaction(selectedTransaction!.id!, data);
+
+                toast.success("Transaction updated successfully");
+                setSelectedTransaction(undefined);
+                getAllTransactions();
+              } catch (error) {
+                toast.error(`${error}`);
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
+            <div className="space-y-4">
+              <div>
+                <Label>Date</Label>
+                <Datepicker
+                  required
+                  value={moment(selectedTransaction?.date).toDate()}
+                  onChange={(e) =>
+                    setSelectedTransaction({
+                      ...selectedTransaction!,
+                      date: e!.toISOString(),
+                    })
+                  }
+                  placeholder="Select date"
+                />
+              </div>
+              <div>
+                <Label>Description</Label>
+                <Textarea
+                  rows={7}
+                  required
+                  value={selectedTransaction?.description}
+                  onChange={(e) => {
+                    setSelectedTransaction({
+                      ...selectedTransaction!,
+                      description: e.target.value,
+                    });
+                  }}
+                  placeholder="Enter description"
+                />
+              </div>
+              <div>
+                <Label>Amount</Label>
+                <TextInput
+                  type="number"
+                  ref={amountRef}
+                  required
+                  value={selectedTransaction?.amount}
+                  onChange={(e) => {
+                    setSelectedTransaction({
+                      ...selectedTransaction!,
+                      amount: Number(e.target.value),
+                    });
+                  }}
+                  placeholder="Enter amount"
+                />
+                {
+                  <h1
+                    className="text-4xl font-semibold text-right cursor-pointer"
+                    onClick={() => {
+                      amountRef.current?.focus();
+                    }}
+                  >
+                    {money(selectedTransaction?.amount)}
+                  </h1>
+                }
+              </div>
+              <div>
+                <Label>
+                  {transactionType == "TRANSFER" ? "From" : "Category"}
+                </Label>
+                <div>{selectedTransaction?.account?.name}</div>
+              </div>
+              <div>
+                <Label>
+                  {transactionType == "TRANSFER" ? "To" : "Account"}
+                </Label>
+                <div>{selectedTransaction?.transaction_ref?.account?.name}</div>
               </div>
             </div>
             <div className="h-16"></div>

@@ -20,11 +20,13 @@ import {
   getAccountTypes,
 } from "../services/api/accountApi";
 import toast from "react-hot-toast";
-import { getPagination } from "../utils/helper";
+import { getPagination, money } from "../utils/helper";
 import { SearchContext } from "../contexts/SearchContext";
 import { BsFilter } from "react-icons/bs";
 import { LuFilter } from "react-icons/lu";
 import Select, { InputActionMeta } from "react-select";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 interface AccountPageProps {}
 
@@ -41,6 +43,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   const [account, setAccount] = useState<AccountModel | null>(null);
   const [accountTypes, setAccountTypes] = useState<any>({});
   const [selectedAccount, setSelectedAccount] = useState<AccountModel>();
+  const nav = useNavigate()
   const types = [
     "ASSET",
     "RECEIVABLE",
@@ -132,12 +135,13 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
             />
           </div>
         </div>
-        <div className="h-[calc(100vh-260px)] overflow-y-auto">
+        <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
               <Table.HeadCell>Account</Table.HeadCell>
               <Table.HeadCell>Type</Table.HeadCell>
               <Table.HeadCell>Category</Table.HeadCell>
+              <Table.HeadCell align="right">Balance</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -155,15 +159,18 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 >
                   <Table.Cell
                     className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
-                    onClick={() => {}}
+                    onClick={() => {
+                      nav(`/account/${account.id}/report`);
+                    }}
                   >
                     {account.code && `[${account.code}] `}
                     {account.name}
                   </Table.Cell>
                   <Table.Cell>{account.type}</Table.Cell>
                   <Table.Cell>{account.category}</Table.Cell>
+                  <Table.Cell align="right">{money(account.balance)}</Table.Cell>
                   <Table.Cell>
-                    {account.is_deletable && (
+                    {account.is_deletable && (account.balance ?? 0) == 0 && (
                       <a
                         href="#"
                         className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"

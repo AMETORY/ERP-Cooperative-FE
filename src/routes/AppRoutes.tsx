@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import ProjectDetail from "../pages/ProjectDetail";
-import { LoadingContext } from "../contexts/LoadingContext";
+import { DateRangeContext, LoadingContext } from "../contexts/LoadingContext";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import { CollapsedContext } from "../contexts/CollapsedContext";
@@ -16,6 +16,7 @@ import { asyncStorage } from "../utils/async_storage";
 import {
   LOCAL_STORAGE_COLLAPSED,
   LOCAL_STORAGE_COMPANY_ID,
+  LOCAL_STORAGE_DATERANGE,
   LOCAL_STORAGE_TOKEN,
 } from "../utils/constants";
 import { WebsocketContext } from "../contexts/WebsocketContext";
@@ -41,6 +42,7 @@ const AppRoutes: FC<AppRoutesProps> = ({ token }) => {
   const [profile, setProfile] = useState<UserModel | null>(null);
   const [member, setMember] = useState<MemberModel | null>(null);
   const [activeCompany, setActiveCompany] = useState<CompanyModel | null>(null);
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
   useEffect(() => {
     // console.log("token", token);
@@ -49,6 +51,15 @@ const AppRoutes: FC<AppRoutesProps> = ({ token }) => {
     });
     asyncStorage.getItem(LOCAL_STORAGE_COLLAPSED).then((collapsed) => {
       setCollapsed(collapsed === "true");
+    });
+    asyncStorage.getItem(LOCAL_STORAGE_DATERANGE).then((daterangeStr) => {
+      if (daterangeStr) {
+        let dateRangeParsed = JSON.parse(daterangeStr);
+        setDateRange([
+          new Date(dateRangeParsed[0]),
+          new Date(dateRangeParsed[1]),
+        ]);
+      }
     });
   }, []);
   useEffect(() => {
@@ -102,12 +113,28 @@ const AppRoutes: FC<AppRoutesProps> = ({ token }) => {
                   <WebsocketContext.Provider
                     value={{ isWsConnected, setWsConnected, wsMsg, setWsMsg }}
                   >
-                    <SearchContext.Provider value={{ search, setSearch }}>
-                      <BrowserRouter>
-                        {token && <PrivateRoute />}
-                        {!token && <PublicRoute />}
-                      </BrowserRouter>
-                    </SearchContext.Provider>
+                    <DateRangeContext.Provider
+                      value={{
+                        dateRange,
+                        setDateRange: (val) => {
+                          if (val) {
+                            console.log(val)
+                            setDateRange(val);
+                            asyncStorage.setItem(
+                              LOCAL_STORAGE_DATERANGE,
+                              JSON.stringify([val[0].toISOString(), val[1].toISOString()])
+                            );
+                          }
+                        },
+                      }}
+                    >
+                      <SearchContext.Provider value={{ search, setSearch }}>
+                        <BrowserRouter>
+                          {token && <PrivateRoute />}
+                          {!token && <PublicRoute />}
+                        </BrowserRouter>
+                      </SearchContext.Provider>
+                    </DateRangeContext.Provider>
                   </WebsocketContext.Provider>
                 </CompanyIDContext.Provider>
               </ActiveCompanyContext.Provider>

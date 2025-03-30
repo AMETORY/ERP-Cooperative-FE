@@ -6,6 +6,7 @@ export interface TransactionModel {
   description: string;
   notes: string;
   credit: number;
+  balance: number;
   debit: number;
   amount: number;
   date: string;
