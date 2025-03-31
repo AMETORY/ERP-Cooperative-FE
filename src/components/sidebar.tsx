@@ -12,7 +12,10 @@ import {
 } from "react-icons/bs";
 import { GoTasklist } from "react-icons/go";
 import { HiOutlineChat } from "react-icons/hi";
-import { HiOutlineInboxArrowDown, HiOutlineReceiptPercent } from "react-icons/hi2";
+import {
+  HiOutlineInboxArrowDown,
+  HiOutlineReceiptPercent,
+} from "react-icons/hi2";
 import { LuContact2, LuLink2, LuPowerOff } from "react-icons/lu";
 import { SiGoogleforms } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
@@ -121,7 +124,9 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 <AiOutlineTransaction />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Transaction</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">
+                  Transaction
+                </span>
               )}
             </span>
           </li>
@@ -251,25 +256,40 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         </li>
         )}
         */}
-        <HR /> 
+        <HR />
 
         <li className="text-xs text-gray-300 truncate" style={{}}>
           Preferences
         </li>
         {checkPermission("finance:tax:read") && (
-        <li className="" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/tax")}
-          >
-            <Tooltip content="Tax">
-              <HiOutlineReceiptPercent />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
-            )}
-          </span>
-        </li>
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/tax")}
+            >
+              <Tooltip content="Tax">
+                <HiOutlineReceiptPercent />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("contact:all:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/contact")}
+            >
+              <Tooltip content="Contact">
+                <LuContact2 />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Contact</span>
+              )}
+            </span>
+          </li>
         )}
         {/* 
         {checkPermission("customer_relationship:form:read") && (
@@ -321,21 +341,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )}
-        {checkPermission("contact:customer:read") && (
-          <li className="" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/contact")}
-            >
-              <Tooltip content="Contact">
-                <LuContact2 />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Contact</span>
-              )}
-            </span>
-          </li>
-        )} */}
+      
         {/* {member?.role?.is_super_admin && (
           <li className="" style={{}}>
             <span

@@ -13,6 +13,9 @@ export interface PaginationRequest {
     start_date?: string;
     end_date?: string;
     is_tax?: boolean;
+    is_customer?: boolean;
+    is_vendor?: boolean;
+    is_supplier?: boolean;
   }
   
   

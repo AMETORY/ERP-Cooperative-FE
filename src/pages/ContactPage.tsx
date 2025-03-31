@@ -13,13 +13,16 @@ import { getPagination } from "../utils/helper";
 import toast from "react-hot-toast";
 import {
   Button,
+  Checkbox,
   Label,
   Modal,
   Pagination,
   Table,
   Textarea,
   TextInput,
+  ToggleSwitch,
 } from "flowbite-react";
+import ModalContact from "../components/ModalContact";
 
 interface ContactPageProps {}
 
@@ -42,7 +45,7 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
     if (mounted) {
       getAllContacts();
     }
-  }, [mounted,page,size,search]);
+  }, [mounted, page, size, search]);
 
   const getAllContacts = async () => {
     try {
@@ -77,7 +80,7 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
   };
   return (
     <AdminLayout>
-      <div className="p-8 h-[calc(100vh-100px)] overflow-y-auto" >
+      <div className="p-8 h-[calc(100vh-100px)] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold ">Contact</h1>
           <Button
@@ -96,13 +99,14 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
             + Create new Contact
           </Button>
         </div>
-        <Table >
+        <Table>
           <Table.Head>
             <Table.HeadCell>Name</Table.HeadCell>
             <Table.HeadCell>Email</Table.HeadCell>
             <Table.HeadCell>Phone</Table.HeadCell>
             <Table.HeadCell>Address</Table.HeadCell>
             <Table.HeadCell>Position</Table.HeadCell>
+            <Table.HeadCell>Type</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
 
@@ -129,6 +133,22 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
                 <Table.Cell>{contact.phone}</Table.Cell>
                 <Table.Cell>{contact.address}</Table.Cell>
                 <Table.Cell>{contact.contact_person_position}</Table.Cell>
+                <Table.Cell>
+                  <div>
+                    <div className="flex gap-1 items-center">
+                      <Checkbox checked={contact.is_customer} />
+                      Customer
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      <Checkbox checked={contact.is_vendor} />
+                      Vendor
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      <Checkbox checked={contact.is_supplier} />
+                      Supplier
+                    </div>
+                  </div>
+                </Table.Cell>
                 <Table.Cell>
                   <a
                     href="#"
@@ -174,99 +194,13 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
         />
       </div>
       {selectedContact && (
-        <Modal show={showModal} onClose={() => setShowModal(false)}>
-          <Modal.Header>{selectedContact?.id ? "Edit" : "Create"} Contact</Modal.Header>
-          <Modal.Body>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="contactName" value="Name" />
-                <TextInput
-                  id="contactName"
-                  name="name"
-                  placeholder="Name"
-                  required
-                  value={selectedContact?.name ?? ""}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      name: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="contactEmail" value="Email" />
-                <TextInput
-                  id="contactEmail"
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  value={selectedContact?.email ?? ""}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      email: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="contactPhone" value="Phone" />
-                <TextInput
-                  id="contactPhone"
-                  name="phone"
-                  type="tel"
-                  placeholder="Phone"
-                  value={selectedContact?.phone ?? ""}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      phone: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="contactAddress" value="Address" />
-                <Textarea
-                  id="contactAddress"
-                  name="address"
-                  placeholder="Address"
-                  value={selectedContact?.address ?? ""}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      address: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="contactPersonPosition" value="Position" />
-                <TextInput
-                  id="contactPersonPosition"
-                  name="contact_person_position"
-                  type="text"
-                  placeholder="Position"
-                  value={selectedContact?.contact_person_position ?? ""}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      contact_person_position: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <div className="flex justify-end w-full">
-              <Button onClick={handleCreateContact}>
-                {selectedContact?.id ? "Edit" : "Create"} Contact
-              </Button>
-            </div>
-          </Modal.Footer>
-        </Modal>
+        <ModalContact
+          showModal={showModal}
+          setShowModal={setShowModal}
+          selectedContact={selectedContact}
+          setSelectedContact={setSelectedContact}
+          handleCreateContact={handleCreateContact}
+        />
       )}
     </AdminLayout>
   );

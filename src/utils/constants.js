@@ -22,3 +22,10 @@ export const priorityOptions = [
     { value: "HIGH", label: "High", color: "#FFC107" },
     { value: "URGENT", label: "Urgent", color: "#F44336" },
 ];
+
+export const salesTypes = [
+    { value: "INVOICE", label: "Invoice" },
+    { value: "POS", label: "POS" },
+    { value: "DIRECT_SELLING", label: "Direct Selling" },
+    { value: "ECOMMERCE", label: "Ecommerce" },
+];

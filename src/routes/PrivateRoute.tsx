@@ -12,6 +12,8 @@ import SalesPage from "../pages/SalesPage";
 import SettingPage from "../pages/SettingPage";
 import TaxPage from "../pages/TaxPage";
 import TransactionPage from "../pages/TransactionPage";
+import ContactPage from "../pages/ContactPage";
+import SalesDetail from "../pages/SalesDetail";
 
 interface PrivateRouteProps {}
 
@@ -19,7 +21,10 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/create/company/:companyType" element={<CreateCompanyPage />} />
+      <Route
+        path="/create/company/:companyType"
+        element={<CreateCompanyPage />}
+      />
       <Route path="/company/:companyId" element={<ConnectionDetail />} />
       <Route path="/account" element={<AccountPage />} />
       <Route path="/account/:accountId/report" element={<AccountReport />} />
@@ -28,8 +33,10 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/journal/:journalId" element={<JournalDetail />} />
       <Route path="/tax" element={<TaxPage />} />
       <Route path="/sales" element={<SalesPage />} />
+      <Route path="/sales/:salesId" element={<SalesDetail />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/setting" element={<SettingPage />} />
+      <Route path="/contact" element={<ContactPage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />
@@ -45,7 +52,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/form/:formId" element={<FormDetail />} />
       <Route path="/chat/:channelId" element={<ChatPage />} />
       <Route path="/project/:projectId" element={<ProjectDetail />} />
-      <Route path="/contact" element={<ContactPage />} />
+      
       <Route path="/connection" element={<ConnectionPage />} />
       <Route path="/connection/:connectionId" element={<ConnectionDetail />} />
       <Route path="/gemini-agent" element={<GeminiAgentPage />} />
