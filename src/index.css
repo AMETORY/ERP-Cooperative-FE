@@ -147,3 +147,11 @@ pre:has(code[class*='language-']) {
 label {
   @apply !font-bold
 }
+
+.input-white input {
+  @apply !bg-white
+}
+
+input[readonly], input:disabled {
+  @apply !bg-gray-100
+}

@@ -17,6 +17,9 @@ export const getSales = async (req: PaginationRequest) => {
 export const getSalesDetail = async (id: string) => {
   return await customFetch(`api/v1/sales/${id}`);
 };
+export const getSalesItems= async (id: string) => {
+  return await customFetch(`api/v1/sales/${id}/items`);
+};
 
 export const createSales = async (sales: any) => {
   return await customFetch("api/v1/sales/create", {
@@ -29,6 +32,18 @@ export const updateSales = async (id: string, sales: any) => {
   return await customFetch(`api/v1/sales/${id}`, {
     method: "PUT",
     body: JSON.stringify(sales),
+  });
+};
+export const salesAddItem = async (id: string, data: any) => {
+  return await customFetch(`api/v1/sales/${id}/add-item`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const salesUpdateItem = async (id: string, itemId: string, data: any) => {
+  return await customFetch(`api/v1/sales/${id}/update-item/${itemId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
   });
 };
 

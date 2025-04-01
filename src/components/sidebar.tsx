@@ -36,6 +36,7 @@ import { MdOutlineAssistant } from "react-icons/md";
 import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import Logo from "./logo";
 import { TbFileInvoice } from "react-icons/tb";
+import { RiShoppingBagLine } from "react-icons/ri";
 
 interface SidebarProps {}
 
@@ -291,6 +292,26 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )}
+        <HR />
+        <li className="text-xs text-gray-300 truncate" style={{}}>
+          Inventory
+        </li>
+        {checkPermission("inventory:product:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/product")}
+            >
+              <Tooltip content="Product">
+                <RiShoppingBagLine />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Product</span>
+              )}
+            </span>
+          </li>
+        )}
+        <HR />
         {/* 
         {checkPermission("customer_relationship:form:read") && (
         <li className="" style={{}}>

@@ -124,3 +124,27 @@ export const randomString = (length) => {
     }
     return result;
 }
+
+
+export const numberFocus = (node) => {
+    var empty_val = false;
+    const value = node.value;
+    if (node.value == '')
+        empty_val = true;
+    node.type = 'number';
+    if (!empty_val)
+        node.value = Number(value.replace(/,/g, '')); // or equivalent per locale
+}
+
+export const inputFormat = (value) => {
+    return value.toLocaleString('en')
+}
+export const numberBlur = (node) => {
+    var empty_val = false;
+    const value = Number(node.value);
+    if (node.value == '')
+        empty_val = true;
+    node.type = 'text';
+    if (!empty_val)
+        node.value = value.toLocaleString('en');  // or other formatting
+}

@@ -23,9 +23,19 @@ export const priorityOptions = [
     { value: "URGENT", label: "Urgent", color: "#F44336" },
 ];
 
+export const ONLINE = "ONLINE";
+export const OFFLINE = "OFFLINE";
+export const DIRECT_SELLING = "DIRECT_SELLING";
 export const salesTypes = [
+    { value: ONLINE, label: "Online" },
+    { value: OFFLINE, label: "Offline" },
+    { value: DIRECT_SELLING, label: "Direct Selling" },
+];
+
+
+export const salesDocTypes = [
     { value: "INVOICE", label: "Invoice" },
-    { value: "POS", label: "POS" },
-    { value: "DIRECT_SELLING", label: "Direct Selling" },
-    { value: "ECOMMERCE", label: "Ecommerce" },
+    { value: "SALES_ORDER", label: "Sales Order" },
+    { value: "SALES_QUOTE", label: "Sales Quote" },
+    { value: "DELIVERY", label: "Delivery" },
 ];
