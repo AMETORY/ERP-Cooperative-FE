@@ -14,6 +14,9 @@ import TaxPage from "../pages/TaxPage";
 import TransactionPage from "../pages/TransactionPage";
 import ContactPage from "../pages/ContactPage";
 import SalesDetail from "../pages/SalesDetail";
+import ProductPage from "../pages/ProductPage";
+import WarehousePage from "../pages/WarehousePage";
+import ProductDetail from "../pages/ProductDetail";
 
 interface PrivateRouteProps {}
 
@@ -35,6 +38,9 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/sales" element={<SalesPage />} />
       <Route path="/sales/:salesId" element={<SalesDetail />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/product" element={<ProductPage />} />
+      <Route path="/product/:productId" element={<ProductDetail />} />
+      <Route path="/warehouse" element={<WarehousePage />} />
       <Route path="/setting" element={<SettingPage />} />
       <Route path="/contact" element={<ContactPage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}

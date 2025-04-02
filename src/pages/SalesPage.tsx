@@ -1,35 +1,22 @@
+import {
+  Tabs
+} from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
 import AdminLayout from "../components/layouts/admin";
-import {
-  Button,
-  Datepicker,
-  Label,
-  Modal,
-  Table,
-  Tabs,
-  Textarea,
-  TextInput,
-} from "flowbite-react";
-import { LuFilter } from "react-icons/lu";
-import { SearchContext } from "../contexts/SearchContext";
 import { LoadingContext } from "../contexts/LoadingContext";
-import { PaginationResponse } from "../objects/pagination";
-import { AccountModel } from "../models/account";
-import { SalesModel } from "../models/sales";
-import Select, { InputActionMeta } from "react-select";
-import { salesTypes } from "../utils/constants";
+import { SearchContext } from "../contexts/SearchContext";
 import { ContactModel } from "../models/contact";
-import { createContact, getContacts } from "../services/api/contactApi";
+import { SalesModel } from "../models/sales";
+import { PaginationResponse } from "../objects/pagination";
+import { getContacts } from "../services/api/contactApi";
 
-import CreatableSelect from "react-select/creatable";
-import ModalContact from "../components/ModalContact";
 import toast from "react-hot-toast";
-import { createSales } from "../services/api/salesApi";
-import { useNavigate } from "react-router-dom";
+import { BsCart2 } from "react-icons/bs";
+import { PiQuotes } from "react-icons/pi";
 import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
-import { PiCarThin, PiQuotes } from "react-icons/pi";
-import { BsCart, BsCart2 } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import SalesTable from "../components/SalesTable";
+import { createSales } from "../services/api/salesApi";
 interface SalesPageProps {}
 
 const SalesPage: FC<SalesPageProps> = ({}) => {

@@ -1,3 +1,5 @@
+import { PriceCategoryModel } from "./price_category";
+
 export interface ProductPriceModel {
     id: string;
     amount: number;
@@ -10,8 +12,3 @@ export interface ProductPriceModel {
   }
   
   
-  export interface PriceCategoryModel {
-    id: string;
-    name: string;
-    description: string;
-  }

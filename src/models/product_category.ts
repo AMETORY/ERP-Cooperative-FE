@@ -1,7 +1,7 @@
 export interface ProductCategoryModel {
-  id: string;
+  id?: string;
   name: string;
-  description: string;
+  description?: string;
   color?: string;
   icon_url?: string;
 }

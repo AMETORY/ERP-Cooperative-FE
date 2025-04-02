@@ -148,3 +148,36 @@ export const numberBlur = (node) => {
     if (!empty_val)
         node.value = value.toLocaleString('en');  // or other formatting
 }
+
+
+export const invertColor = (hex) => {
+    let color = hex.startsWith('#') ? hex.slice(1) : hex;
+    if (color.length === 3) {
+        color = color.split('').map(char => char + char).join('');
+    }
+    if (color.length !== 6) {
+        throw new Error('Invalid HEX color.');
+    }
+    const r = parseInt(color.slice(0, 2), 16);
+    const g = parseInt(color.slice(2, 4), 16);
+    const b = parseInt(color.slice(4), 16);
+    const luma = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255;
+    return luma >= 0.5 ? '#000000' : '#FFFFFF';
+}
+
+export const statusColorMap = {
+    PENDING: "bg-yellow-500",
+    PREPARING: "bg-blue-500",
+    IN_DELIVERY: "bg-green-500",
+    IN_PROGRESS: "bg-orange-500",
+    COMPLETED: "bg-indigo-500",
+    delivered: "bg-indigo-500",
+    COMPLETE: "bg-indigo-500",
+    SETTLEMENT: "bg-indigo-500",
+    allocated: "bg-orange-400",
+    dropping_off: "bg-orange-400",
+    picked: "bg-orange-400",
+    picking_up: "bg-orange-400",
+    PAID: "bg-indigo-500",
+}
+

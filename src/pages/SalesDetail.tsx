@@ -232,7 +232,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       }}
                     />
                   </Table.Cell>
-                  <Table.Cell>Warehouse</Table.Cell>
+                  {showWarehouse && <Table.Cell>Warehouse</Table.Cell>}
                   <Table.Cell>
                     <TextInput
                       sizing="sm"
@@ -296,42 +296,63 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       <span className="absolute top-2 right-1">%</span>
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
-                    {/* <Select
-                      value={selectedItem?.tax}
-                      onChange={(val) => {
-                        setItems([
-                          ...items.map((i) => {
-                            if (i.id === item.id) {
-                              i.tax = val!;
-                              i.tax_id = val!.id;
-                              i.is_editing = true;
-                            }
-                            return i;
-                          }),
-                        ]);
-                      }}
-                      options={taxes}
-                      formatOptionLabel={(option: any) => (
-                        <div className="flex flex-row gap-2  items-center ">
-                          {option.code}
-                          <span>{option.amount}%</span>
-                        </div>
-                      )}
-                      inputValue={""}
-                    /> */}
-                    <div className="flex">
-                      {item.tax?.amount ? `${item.tax?.amount}%` : "0%"}
-                      <Dropdown  inline placement="bottom-end">
-                        {taxes.map((t) => (
+                  {showTax && (
+                    <Table.Cell>
+                      {/* <Select
+                             value={selectedItem?.tax}
+                             onChange={(val) => {
+                               setItems([
+                                 ...items.map((i) => {
+                                   if (i.id === item.id) {
+                                     i.tax = val!;
+                                     i.tax_id = val!.id;
+                                     i.is_editing = true;
+                                   }
+                                   return i;
+                                 }),
+                               ]);
+                             }}
+                             options={taxes}
+                             formatOptionLabel={(option: any) => (
+                               <div className="flex flex-row gap-2  items-center ">
+                                 {option.code}
+                                 <span>{option.amount}%</span>
+                               </div>
+                             )}
+                             inputValue={""}
+                           /> */}
+                      <div className="flex">
+                        {item.tax?.amount ? `${item.tax?.amount}%` : "0%"}
+                        <Dropdown inline placement="bottom-end">
+                          {taxes.map((t) => (
+                            <Dropdown.Item
+                              key={t.id}
+                              onClick={() => {
+                                setItems([
+                                  ...items.map((i) => {
+                                    if (i.id === item.id) {
+                                      i.tax = t;
+                                      i.tax_id = t.id;
+                                      i.is_editing = true;
+                                    }
+                                    return i;
+                                  }),
+                                ]);
+                              }}
+                            >
+                              <div className="flex justify-between items-center w-full">
+                                <span>{t.code}</span>
+                                <span>{t.amount}%</span>
+                              </div>
+                            </Dropdown.Item>
+                          ))}
                           <Dropdown.Item
-                            key={t.id}
                             onClick={() => {
                               setItems([
                                 ...items.map((i) => {
                                   if (i.id === item.id) {
-                                    i.tax = t;
-                                    i.tax_id = t.id;
+                                    i.tax = undefined;
+                                    i.tax_id = undefined;
                                     i.is_editing = true;
                                   }
                                   return i;
@@ -339,32 +360,19 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                               ]);
                             }}
                           >
-                            <div className="flex justify-between items-center w-full">
-                              <span>{t.code}</span>
-                              <span>{t.amount}%</span>
+                            <div
+                              className="flex justify-between items-center w-full"
+                              style={{ width: 100 }}
+                            >
+                              <span>Delete Tax</span>
+                              <BsTrash className="text-red-500" />
                             </div>
                           </Dropdown.Item>
-                        ))}
-                        <Dropdown.Item onClick={() => {
-                           setItems([
-                            ...items.map((i) => {
-                              if (i.id === item.id) {
-                                i.tax = undefined;
-                                i.tax_id = undefined;
-                                i.is_editing = true;
-                              }
-                              return i;
-                            }),
-                          ]);
-                        }}  >
-                          <div className="flex justify-between items-center w-full" style={{ width: 100 }}>
-                            <span>Delete Tax</span>
-                            <BsTrash className="text-red-500" />
-                          </div>
-                        </Dropdown.Item>
-                      </Dropdown>
-                    </div>
-                  </Table.Cell>
+                        </Dropdown>
+                      </div>
+                    </Table.Cell>
+                  )}
+
                   <Table.Cell>{money(item.total ?? 0)}</Table.Cell>
                   <Table.Cell>
                     <div className="flex gap-2">

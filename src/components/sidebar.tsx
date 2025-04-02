@@ -16,7 +16,7 @@ import {
   HiOutlineInboxArrowDown,
   HiOutlineReceiptPercent,
 } from "react-icons/hi2";
-import { LuContact2, LuLink2, LuPowerOff } from "react-icons/lu";
+import { LuContact2, LuLink2, LuPowerOff, LuWarehouse } from "react-icons/lu";
 import { SiGoogleforms } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { CollapsedContext } from "../contexts/CollapsedContext";
@@ -37,6 +37,7 @@ import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import Logo from "./logo";
 import { TbFileInvoice } from "react-icons/tb";
 import { RiShoppingBagLine } from "react-icons/ri";
+import { PiWarehouse } from "react-icons/pi";
 
 interface SidebarProps {}
 
@@ -307,6 +308,21 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </Tooltip>
               {!collapsed && (
                 <span className="flex-1 ms-3 whitespace-nowrap">Product</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("inventory:warehouse:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/warehouse")}
+            >
+              <Tooltip content="Warehouse">
+                <LuWarehouse />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Warehouse</span>
               )}
             </span>
           </li>
