@@ -5,6 +5,7 @@ import {
   Label,
   Table,
   TableRow,
+  Textarea,
   TextInput,
 } from "flowbite-react";
 import moment from "moment";
@@ -27,7 +28,10 @@ import {
   salesUpdateItem,
 } from "../services/api/salesApi";
 import { getTaxes } from "../services/api/taxApi";
-import { money } from "../utils/helper";
+import { groupBy, money } from "../utils/helper";
+import { getWarehouses } from "../services/api/warehouseApi";
+import { WarehouseModel } from "../models/warehouse";
+import CurrencyInput from "react-currency-input-field";
 
 interface SalesDetailProps {}
 
@@ -43,6 +47,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [selectedItem, setSelectedItem] = useState<SalesItemModel>();
   const [showModalProduct, setShowModalProduct] = useState(false);
   const [taxes, setTaxes] = useState<TaxModel[]>([]);
+  const [warehouses, setWarehouses] = useState<WarehouseModel[]>([]);
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -56,9 +61,27 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   useEffect(() => {
     if (sales) {
       getSalesItems(salesId!).then((res: any) => {
-        setItems(res.data);
+        let items = [];
+        for (const item of res.data as SalesItemModel[]) {
+          if (item.product?.prices) {
+            item.availablePrices = [];
+            let prices = groupBy(item.product.prices, "price_category_id");
+            for (const key of Object.keys(prices)) {
+              if (prices[key].length > 0) {
+                item.availablePrices?.push({
+                  id: key,
+                  name: prices[key][0].price_category.name,
+                  prices: prices[key],
+                });
+              }
+            }
+          }
+          items.push(item);
+        }
+        setItems(items);
       });
       getAllTaxes("");
+      getAllWarehouses("");
     }
   }, [sales]);
   useEffect(() => {
@@ -66,10 +89,22 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
     }
   }, [product]);
 
+  useEffect(() => {}, [items]);
+
   const getAllTaxes = (s: string) => {
     getTaxes({ page: 1, size: 10, search: s })
       .then((e: any) => {
         setTaxes(e.data.items);
+      })
+      .catch((error) => {
+        toast.error(`${error}`);
+      });
+  };
+
+  const getAllWarehouses = (s: string) => {
+    getWarehouses({ page: 1, size: 10, search: s })
+      .then((e: any) => {
+        setWarehouses(e.data.items);
       })
       .catch((error) => {
         toast.error(`${error}`);
@@ -102,7 +137,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   };
   return (
     <AdminLayout>
-      <div className="p-4">
+      <div className="p-4 h-[calc(100vh-80px)] overflow-y-auto">
         <h1 className="text-3xl font-bold text-gray-700">
           {sales?.sales_number}
         </h1>
@@ -119,6 +154,22 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   });
                 }}
                 className="input-white"
+              />
+            </div>
+            <div>
+              <Label>Notes</Label>
+              <Textarea
+                value={sales?.notes}
+                onChange={(e) => {
+                  setSales({
+                    ...sales,
+                    notes: e.target.value,
+                  });
+                }}
+                className="input-white"
+                style={{
+                  backgroundColor: "white",
+                }}
               />
             </div>
           </div>
@@ -183,12 +234,17 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
             </Table.Head>
             <Table.Body>
               {items.map((item) => (
-                <TableRow className=" dark:border-gray-700 dark:bg-gray-800 border">
+                <TableRow
+                  className=" dark:border-gray-700 dark:bg-gray-800 border"
+                  key={item.id}
+                >
                   <Table.Cell key={item.id}>
                     <CreatableSelect
-                      id="contact"
+                      id="product"
                       value={{
-                        label: item.product?.name,
+                        label: item.product_id
+                          ? item.product?.name
+                          : item.description,
                         value: item.product_id,
                       }}
                       options={products.map((c) => ({
@@ -196,7 +252,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         value: c.id!,
                       }))}
                       onChange={(e) => {
-                        if (e!.value) {
+                        if (e?.value) {
                           setItems([
                             ...items.map((i) => {
                               let prod = products.find(
@@ -207,24 +263,44 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                                 i.product = prod;
                                 i.unit_price = prod?.price ?? 0;
                                 i.is_editing = true;
+                                i.description = prod?.display_name ?? "";
                               }
                               return i;
                             }),
                           ]);
+                          setTimeout(() => {
+                            updateItem(item);
+                          }, 300);
                         }
                       }}
                       isSearchable
                       onCreateOption={(e) => {
-                        setSelectedItem(item);
-                        setProduct({
-                          name: e,
-                          price: 0,
-                          description: "",
-                          product_images: [],
-                          prices: [],
-                        });
-                        setShowModalProduct(true);
+                        // setSelectedItem(item);
+                        // setProduct({
+                        //   name: e,
+                        //   price: 0,
+                        //   description: "",
+                        //   product_images: [],
+                        //   prices: [],
+                        // });
+                        // setShowModalProduct(true);
+                        console.log("Create", e);
+                        setItems([
+                          ...items.map((i) => {
+                            if (i.id === item.id) {
+                              i.description = e;
+                              i.is_editing = true;
+                            }
+                            return i;
+                          }),
+                        ]);
+                        setTimeout(() => {
+                          updateItem(item);
+                        }, 300);
                       }}
+                      formatCreateLabel={(inputValue) =>
+                        `Add Non Product "${inputValue}"`
+                      }
                       onInputChange={(e) => {
                         if (e) {
                           searchProduct(e);
@@ -232,67 +308,153 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       }}
                     />
                   </Table.Cell>
-                  {showWarehouse && <Table.Cell>Warehouse</Table.Cell>}
-                  <Table.Cell>
-                    <TextInput
-                      sizing="sm"
-                      style={{ width: "60px" }}
-                      type="number"
-                      value={item.quantity ?? 0}
-                      onChange={(e) => {
-                        setItems([
-                          ...items.map((i) => {
-                            if (i.id === item.id) {
-                              i.quantity = Number(e!.target.value);
-                              i.is_editing = true;
-                            }
-                            return i;
-                          }),
-                        ]);
-                      }}
-                      className="input-white"
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <TextInput
-                      sizing="sm"
-                      style={{ width: "60px" }}
-                      type="number"
-                      value={item.unit_price ?? 0}
-                      onChange={(e) => {
-                        setItems([
-                          ...items.map((i) => {
-                            if (i.id === item.id) {
-                              i.unit_price = Number(e!.target.value);
-                              i.is_editing = true;
-                            }
-                            return i;
-                          }),
-                        ]);
-                      }}
-                      className="input-white"
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="relative flex justify-end w-fit">
-                      <TextInput
-                        sizing="sm"
-                        style={{ width: "60px" }}
-                        type="number"
-                        value={item.discount_percent ?? 0}
-                        onChange={(e) => {
+                  {showWarehouse && (
+                    <Table.Cell>
+                      <Select
+                        isDisabled={!item.product_id}
+                        value={{
+                          label: item.warehouse?.name,
+                          value: item.warehouse_id,
+                        }}
+                        options={warehouses.map((c) => ({
+                          label: c.name!,
+                          value: c.id!,
+                        }))}
+                        onChange={(val) => {
+                          let seleted = warehouses.find(
+                            (c) => c.id === val!.value
+                          );
                           setItems([
                             ...items.map((i) => {
                               if (i.id === item.id) {
-                                i.discount_percent = Number(e!.target.value);
+                                i.warehouse = seleted;
+                                i.warehouse_id = val!.value;
                                 i.is_editing = true;
                               }
                               return i;
                             }),
                           ]);
                         }}
-                        className="input-white"
+                        inputValue={""}
                       />
+                    </Table.Cell>
+                  )}
+                  <Table.Cell>
+                    <CurrencyInput
+                      className="rs-input !p-1.5 "
+                      value={item.quantity ?? 0}
+                      groupSeparator="."
+                      decimalSeparator=","
+                      onValueChange={(value, name, values) => {
+                        setItems([
+                          ...items.map((i) => {
+                            if (i.id === item.id) {
+                              i.quantity = values?.float ?? 0;
+                              i.is_editing = true;
+                            }
+                            return i;
+                          }),
+                        ]);
+                      }}
+                      onKeyUp={(e) => {
+                        if (e.key === "Enter") {
+                          updateItem(item);
+                        }
+                      }}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex gap-2 relative">
+                      <CurrencyInput
+                        className="rs-input !p-1.5"
+                        value={item.unit_price ?? 0}
+                        groupSeparator="."
+                        decimalSeparator=","
+                        onValueChange={(value, name, values) => {
+                          setItems([
+                            ...items.map((i) => {
+                              if (i.id === item.id) {
+                                i.unit_price = values?.float ?? 0;
+                                i.is_editing = true;
+                              }
+                              return i;
+                            }),
+                          ]);
+                        }}
+                        onKeyUp={(e) => {
+                          if (e.key === "Enter") {
+                            updateItem(item);
+                          }
+                        }}
+                      />
+                      {(item.availablePrices ?? []).length > 0 && (
+                        <div className="absolute top-2 right-2">
+                          <Dropdown inline placement="bottom-end">
+                            {(item.availablePrices ?? []).map((t) => (
+                              <Dropdown.Item
+                                key={t.id}
+                                onClick={() => {
+                                  let priceSelected = item.unit_price;
+                                  for (const price of t.prices.sort(
+                                    (a, b) => b.min_quantity - a.min_quantity
+                                  )) {
+                                    if (price.min_quantity <= item.quantity) {
+                                      priceSelected = price.amount;
+                                      break;
+                                    }
+                                  }
+                                  setItems([
+                                    ...items.map((i) => {
+                                      if (i.id === item.id) {
+                                        i.unit_price = priceSelected;
+                                        i.is_editing = true;
+                                      }
+                                      return i;
+                                    }),
+                                  ]);
+                                  setTimeout(() => {
+                                    updateItem(item);
+                                  }, 300);
+                                }}
+                              >
+                                <div
+                                  className="flex justify-between items-center w-full"
+                                  style={{ width: "100px" }}
+                                >
+                                  <span>{t.name}</span>
+                                </div>
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown>
+                        </div>
+                      )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="relative flex justify-end w-fit">
+                      <CurrencyInput
+                        className="rs-input !p-1.5 "
+                        value={item.discount_percent ?? 0}
+                        groupSeparator="."
+                        decimalSeparator=","
+                        onValueChange={(value, name, values) => {
+                          setItems([
+                            ...items.map((i) => {
+                              if (i.id === item.id) {
+                                i.discount_percent = values?.float ?? 0;
+                                i.is_editing = true;
+                              }
+                              return i;
+                            }),
+                          ]);
+                        }}
+                        onKeyUp={(e) => {
+                          if (e.key === "Enter") {
+                            updateItem(item);
+                          }
+                        }}
+                      />
+
                       <span className="absolute top-2 right-1">%</span>
                     </div>
                   </Table.Cell>
@@ -338,6 +500,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                                     return i;
                                   }),
                                 ]);
+
+                                setTimeout(() => {
+                                  updateItem(item);
+                                }, 300);
                               }}
                             >
                               <div className="flex justify-between items-center w-full">
@@ -358,6 +524,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                                   return i;
                                 }),
                               ]);
+
+                              setTimeout(() => {
+                                updateItem(item);
+                              }, 300);
                             }}
                           >
                             <div
@@ -376,7 +546,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   <Table.Cell>{money(item.total ?? 0)}</Table.Cell>
                   <Table.Cell>
                     <div className="flex gap-2">
-                      {item.is_editing && (
+                      {/* {item.is_editing && (
                         <div
                           className="font-medium text-green-400 hover:text-green-600 text-xs hover:underline dark:text-green-500 cursor-pointer"
                           onClick={() => {
@@ -385,7 +555,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         >
                           Save
                         </div>
-                      )}
+                      )} */}
                       <div
                         className="font-medium text-red-400 hover:text-red-600 text-xs hover:underline dark:text-red-500 cursor-pointer"
                         onClick={() => {}}
@@ -397,7 +567,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </TableRow>
               ))}
               <Table.Row>
-                <Table.Cell colSpan={7}>
+                <Table.Cell colSpan={8}>
                   <div className="flex gap-2 justify-center item">
                     <button
                       className="flex gap-2 justify-center item"
@@ -405,8 +575,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         salesAddItem(salesId!, {
                           description: "new item",
                           quantity: 1,
+                          sales_id: salesId,
                         }).then((res: any) => {
-                          setItems([...items, res.data]);
+                          let item = res.data;
+                          setItems([...items, item]);
                           searchProduct("");
                         });
                       }}
@@ -419,6 +591,45 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               </Table.Row>
             </Table.Body>
           </Table>
+        </div>
+        <div className="grid grid-cols-2 gap-8 mt-4 ">
+          <div className="flex flex-col gap-2"></div>
+          <div className="flex flex-col gap-2  border rounded-lg ">
+            <table>
+              <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                <td className="py-2 px-4">
+                  <strong className="text-sm">Sub Total</strong>
+                </td>
+                <td className="text-right px-4">
+                  <span>{money(sales?.total_before_disc)}</span>
+                </td>
+              </tr>
+              <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                <td className="py-2 px-4">
+                  <strong className="text-sm">Total Discount</strong>
+                </td>
+                <td className="text-right px-4">
+                  <span>{money(sales?.total_discount)}</span>
+                </td>
+              </tr>
+              <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                <td className="py-2 px-4">
+                  <strong className="text-sm">Total Tax</strong>
+                </td>
+                <td className="text-right px-4">
+                  <span>{money(sales?.total_tax)}</span>
+                </td>
+              </tr>
+              <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                <td className="py-2 px-4">
+                  <strong className="text-lg">Total</strong>
+                </td>
+                <td className="text-right px-4">
+                  <span className="text-lg">{money(sales?.total)}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
       <ModalProduct

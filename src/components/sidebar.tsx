@@ -258,41 +258,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         </li>
         )}
         */}
-        <HR />
 
-        <li className="text-xs text-gray-300 truncate" style={{}}>
-          Preferences
-        </li>
-        {checkPermission("finance:tax:read") && (
-          <li className="" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/tax")}
-            >
-              <Tooltip content="Tax">
-                <HiOutlineReceiptPercent />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
-              )}
-            </span>
-          </li>
-        )}
-        {checkPermission("contact:all:read") && (
-          <li className="" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/contact")}
-            >
-              <Tooltip content="Contact">
-                <LuContact2 />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Contact</span>
-              )}
-            </span>
-          </li>
-        )}
         <HR />
         <li className="text-xs text-gray-300 truncate" style={{}}>
           Inventory
@@ -328,6 +294,40 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         <HR />
+
+        <li className="text-xs text-gray-300 truncate" style={{}}>
+          Preferences
+        </li>
+        {checkPermission("finance:tax:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/tax")}
+            >
+              <Tooltip content="Tax">
+                <HiOutlineReceiptPercent />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("contact:all:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/contact")}
+            >
+              <Tooltip content="Contact">
+                <LuContact2 />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Contact</span>
+              )}
+            </span>
+          </li>
+        )}
         {/* 
         {checkPermission("customer_relationship:form:read") && (
         <li className="" style={{}}>

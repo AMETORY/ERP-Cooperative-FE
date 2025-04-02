@@ -1,6 +1,7 @@
 import { AccountModel } from "./account";
 import { CompanyModel } from "./company";
 import { ContactModel } from "./contact";
+import { ProductPriceModel } from "./price";
 import { ProductModel, VariantModel } from "./product";
 import { TaxModel } from "./tax";
 import { WarehouseModel } from "./warehouse";
@@ -17,6 +18,7 @@ export interface SalesModel {
     total_before_tax?: number;
     total_before_disc?: number;
     total_tax?: number;
+    total_discount?: number;
     status?: string;
     stock_status?: string;
     sales_date?: string;
@@ -70,5 +72,6 @@ export interface SalesItemModel {
     tax?: TaxModel;
     total_tax: number;
     is_editing?: boolean;
+    availablePrices?: {id: string, name: string, prices: ProductPriceModel[]}[]
 }
 

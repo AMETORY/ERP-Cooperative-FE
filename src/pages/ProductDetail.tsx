@@ -4,7 +4,7 @@ import { Badge, Button, Carousel } from "flowbite-react";
 import { ProductModel, VariantModel } from "../models/product";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-    createProductVariant,
+  createProductVariant,
   deleteDiscount,
   deleteProductImage,
   deleteProductPrice,
@@ -16,7 +16,7 @@ import {
   updateProductVariant,
 } from "../services/api/productApi";
 import { MdOutlineImageNotSupported } from "react-icons/md";
-import { BsCheck, BsCheck2Circle, BsTrash3 } from "react-icons/bs";
+import { BsCheck, BsCheck2Circle, BsImage, BsTrash3 } from "react-icons/bs";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { uploadFile } from "../services/api/commonApi";
 import toast from "react-hot-toast";
@@ -81,12 +81,11 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
       } else {
         await createProductVariant(product!.id!, data);
       }
-      getProductVariants(product!.id!)
-        .then((response: any) => {
-          setVariants(response.data);
-          setModalAddVariant(false);
-          setSelectedVariant(undefined);
-        });
+      getProductVariants(product!.id!).then((response: any) => {
+        setVariants(response.data);
+        setModalAddVariant(false);
+        setSelectedVariant(undefined);
+      });
     } catch (error) {
       toast.error(`${error}`);
     } finally {
@@ -176,16 +175,15 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
 
   const renderImages = () => (
     <div className="w-full">
-      <Carousel className="custom-slider" color="orange">
+      <Carousel className="custom-slider" color="orange" slide={false} leftControl={""} rightControl={""} draggable indicators={false}>
         {(product?.product_images ?? []).map((img, index) => (
           <div className="relative" key={index}>
             <img
               key={index}
-              className="object-cover"
+              className="object-cover w-full"
               src={img.url}
-              height="250"
             />
-            <div className="absolute top-0 right-0 cursor-pointer p-2 aspect-square rounded-full bg-black bg-opacity-20">
+            <div className="absolute bottom-2 right-[calc(50%-16px)] cursor-pointer p-2 aspect-square rounded-full bg-black bg-opacity-20 z-50">
               <BsTrash3
                 className=""
                 onClick={() => removeImage(img.id!)}
@@ -197,13 +195,13 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
         ))}
       </Carousel>
       <Button
-        color="orange"
         size="sm"
-        className="mt-4"
+        className="mt-4 w-full"
         onClick={() => {
           fileRef.current?.click();
         }}
       >
+        <BsImage className="mr-2" />
         Add Image
       </Button>
     </div>
@@ -592,7 +590,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
               )}
             </div>
             <div className="w-full p-2"></div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="flex flex-row justify-between items-center">
                 <small className="font-bold">Discounts:</small>
                 <Button
@@ -707,7 +705,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
               </table>
             ) : (
               <p className="text-sm text-gray-400">No Discounts Available</p>
-            )}
+            )} */}
             <div className="w-full p-2"></div>
 
             <div className="mb-4">
@@ -787,12 +785,14 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
         }}
       />
       <PriceForm
+        product={product}
         open={modalAddPrice}
         onClose={() => setModalAddPrice(false)}
         onSubmit={(val) => {
           val.product_id = product?.id;
-          console.log(val);
-        //   addPrice(val);
+          setModalAddPrice(false);
+          getDetail();
+          //   addPrice(val);
         }}
       />
       {product && (

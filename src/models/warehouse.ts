@@ -1,7 +1,7 @@
 export interface WarehouseModel {
-  id: string;
+  id?: string;
   name: string;
-  code: string;
+  code?: string;
   description?: string;
   address?: string;
   phone?: string;

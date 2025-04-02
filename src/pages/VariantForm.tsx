@@ -2,11 +2,11 @@ import { useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import CreatableSelect from "react-select/creatable";
 import { ProductModel, VariantModel } from "../models/product";
-import { Button, Checkbox, Modal, TextInput } from "flowbite-react";
+import { Button, Checkbox, Label, Modal, TextInput } from "flowbite-react";
 import { invertColor } from "../utils/helper";
 import { addTagVariant } from "../services/api/productApi";
-import { ProductAttribute } from "../models/ProductAttribute";
-
+import { ProductAttributeModel } from "../models/producy_attribute";
+import { getProductAttributes } from "../services/api/productAttributeApi";
 
 interface VariantFormProps {
   open: boolean;
@@ -23,9 +23,9 @@ const VariantForm: FC<VariantFormProps> = ({
   product,
   variant,
 }) => {
-  const [attributes, setAttributes] = useState<ProductAttribute[]>([]);
+  const [attributes, setAttributes] = useState<ProductAttributeModel[]>([]);
   const [attributeIds, setAttributeIds] = useState<string[]>([]);
-//   const [tags, setTags] = useState<Tag[]>([]);
+  //   const [tags, setTags] = useState<Tag[]>([]);
 
   const [data, setData] = useState<VariantModel>({
     id: "",
@@ -42,13 +42,12 @@ const VariantForm: FC<VariantFormProps> = ({
 
   useEffect(() => {
     if (open) {
-    //   getProductAttributes({ page: 1, size: 100 })
-    //     .then((res:any) => {
-    //       setAttributes(res.data.items);
-    //     });
-    //   getTags({ page: 1, size: 100 })
-    //     .then((v) => v.json())
-    //     .then((v) => setTags(v.data.items));
+      getProductAttributes({ page: 1, size: 100 }).then((res: any) => {
+        setAttributes(res.data.items);
+      });
+      //   getTags({ page: 1, size: 100 })
+      //     .then((v) => v.json())
+      //     .then((v) => setTags(v.data.items));
     } else {
       clearForm();
     }
@@ -90,9 +89,7 @@ const VariantForm: FC<VariantFormProps> = ({
         onClose();
       }}
     >
-      <Modal.Header>
-      Variants Form
-      </Modal.Header>
+      <Modal.Header>Variants Form</Modal.Header>
       <Modal.Body>
         <div className="w-full flex flex-col space-y-4">
           <div className="form-group">
@@ -100,22 +97,23 @@ const VariantForm: FC<VariantFormProps> = ({
             <div className="input">
               <div className="grid grid-cols-4 gap-4 ">
                 {attributes.map((attr) => (
-                  <Checkbox
-                    key={attr.id}
-                    value={attr.id}
-                    checked={attributeIds.some((a) => a === attr.id)}
-                    onChange={(checked) => {
-                      if (checked) {
-                        setAttributeIds([...attributeIds, attr.id]);
-                      } else {
-                        setAttributeIds(
-                          attributeIds.filter((a) => a !== attr.id)
-                        );
-                      }
-                    }}
-                  >
-                    {attr.name}
-                  </Checkbox>
+                  <div className="flex gap-2" key={attr.id}>
+                    <Checkbox
+                      key={attr.id}
+                      value={attr.id}
+                      checked={attributeIds.some((a) => a === attr.id)}
+                      onChange={(checked) => {
+                        if (!attributeIds.includes(attr.id)) {
+                          setAttributeIds([...attributeIds, attr.id]);
+                        } else {
+                          setAttributeIds(
+                            attributeIds.filter((a) => a !== attr.id)
+                          );
+                        }
+                      }}
+                    />
+                    <Label htmlFor={attr.id}>{attr.name}</Label>
+                  </div>
                 ))}
               </div>
             </div>
@@ -127,7 +125,9 @@ const VariantForm: FC<VariantFormProps> = ({
                 name="sku"
                 placeholder="SKU"
                 value={data.sku}
-                onChange={(value) => setData({ ...data, sku: value.target.value })}
+                onChange={(value) =>
+                  setData({ ...data, sku: value.target.value })
+                }
               />
             </div>
           </div>
@@ -138,7 +138,9 @@ const VariantForm: FC<VariantFormProps> = ({
                 name="barcode"
                 placeholder="Barcode"
                 value={data.barcode}
-                onChange={(value) => setData({ ...data, barcode: value.target.value })}
+                onChange={(value) =>
+                  setData({ ...data, barcode: value.target.value })
+                }
               />
             </div>
           </div>
@@ -288,35 +290,34 @@ const VariantForm: FC<VariantFormProps> = ({
                     )?.value || ""
                   }
                   placeholder={attr.name}
-                  onChange={(value) =>
-                   {
-                    // setData((prevData) => {
-                    //     const attribute = prevData.attributes.find(
-                    //       (attribute) => attribute.attribute_id === attr.id
-                    //     );
-                    //     if (attribute) {
-                    //       return {
-                    //         ...prevData,
-                    //         attributes: prevData.attributes.map((a) =>
-                    //           a.attribute_id === attr.id ? { ...a, value } : a
-                    //         ),
-                    //       };
-                    //     } else {
-                    //       return {
-                    //         ...prevData,
-                    //         attributes: [
-                    //           ...prevData.attributes,
-                    //           {
-                    //             attribute_id: attr.id,
-                    //             variant_id: variant?.id || "",
-                    //             value,
-                    //           },
-                    //         ],
-                    //       };
-                    //     }
-                    //   })
-                   }
-                  }
+                  onChange={(el) => {
+                  
+                    setData((prevData) => {
+                        const attribute = prevData.attributes.find(
+                          (attribute) => attribute.attribute_id === attr.id
+                        );
+                        if (attribute) {
+                          return {
+                            ...prevData,
+                            attributes: prevData.attributes.map((a) =>
+                              a.attribute_id === attr.id ? { ...a, value: el.target.value } : a
+                            ),
+                          };
+                        } else {
+                          return {
+                            ...prevData,
+                            attributes: [
+                              ...prevData.attributes,
+                              {
+                                attribute_id: attr.id,
+                                variant_id: variant?.id || "",
+                                value: el.target.value,
+                              },
+                            ],
+                          };
+                        }
+                      })
+                  }}
                 />
               </div>
             ))}
@@ -325,7 +326,6 @@ const VariantForm: FC<VariantFormProps> = ({
       <Modal.Footer>
         <div className="pt-4 flex justify-end w-full gap-2">
           <Button
-            
             onClick={() => {
               //   console.log(data);
               onSubmit(data!);
@@ -333,11 +333,9 @@ const VariantForm: FC<VariantFormProps> = ({
           >
             Submit
           </Button>
-        
         </div>
       </Modal.Footer>
     </Modal>
   );
 };
 export default VariantForm;
-

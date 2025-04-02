@@ -10,8 +10,12 @@ export interface PaginationRequest {
     project_id?: string;
     account_id?: string;
     team_id?: string;
+    doc_type?: string;
     start_date?: string;
     end_date?: string;
+    warehouse_id?: string;
+    product_id?: string;
+    merchant_id?: string;
     is_tax?: boolean;
     is_customer?: boolean;
     is_vendor?: boolean;

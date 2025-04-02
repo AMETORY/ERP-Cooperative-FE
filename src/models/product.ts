@@ -10,6 +10,7 @@ export interface ProductModel {
   id?: string;
   name: string;
   description?: string;
+  display_name?: string;
   sku?: string;
   barcode?: string;
   price: number;

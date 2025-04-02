@@ -115,6 +115,13 @@ export const nl2br = (str) => {
 }
 
 
+export const groupBy = (array, key) => {
+    return array.reduce((result, currentValue) => {
+        (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
+        return result;
+    }, {});
+}
+
 export const randomString = (length) => {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

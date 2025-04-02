@@ -3,6 +3,7 @@ import {
   Datepicker,
   Label,
   Modal,
+  Table,
   Textarea,
   TextInput,
 } from "flowbite-react";
@@ -16,11 +17,13 @@ import { PaginationResponse } from "../objects/pagination";
 import { salesTypes } from "../utils/constants";
 import { createContact, getContacts } from "../services/api/contactApi";
 import toast from "react-hot-toast";
-import { createSales } from "../services/api/salesApi";
+import { createSales, deleteSales, getSales } from "../services/api/salesApi";
 import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
 import Select, { InputActionMeta } from "react-select";
 import ModalContact from "./ModalContact";
+import { getPagination, money } from "../utils/helper";
+import Moment from "react-moment";
 
 interface SalesTableProps {
   docType: string;
@@ -33,10 +36,10 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
   const [showFilter, setShowFilter] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
-  const [sales] = useState<SalesModel[]>([]);
+  const [sales, setSales] = useState<SalesModel[]>([]);
   const [page, setPage] = useState(1);
   const [size, setsize] = useState(20);
-  const [pagination] = useState<PaginationResponse>();
+  const [pagination, setPagination] = useState<PaginationResponse>();
   const [date, setDate] = useState<Date>(new Date());
   const [salesNumber, setSalesNumber] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
@@ -55,6 +58,25 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
     value: string;
     label: string;
   }>();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      getAllSales();
+    }
+  }, [mounted, page, size, search]);
+
+  const getAllSales = () => {
+    setLoading(true);
+    getSales({ page, size, search, doc_type: docType }).then((res: any) => {
+      setLoading(false);
+      setSales(res.data.items);
+      setPagination(getPagination(res.data));
+    });
+  };
 
   useEffect(() => {
     getAllContacts("");
@@ -119,6 +141,63 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           />
         </div>
       </div>
+      <Table>
+        <Table.Head>
+          <Table.HeadCell>Date</Table.HeadCell>
+          <Table.HeadCell>Sales Number</Table.HeadCell>
+          <Table.HeadCell>Contact</Table.HeadCell>
+          <Table.HeadCell>Total</Table.HeadCell>
+          <Table.HeadCell>Balance</Table.HeadCell>
+          <Table.HeadCell></Table.HeadCell>
+        </Table.Head>
+        <Table.Body>
+          {sales.length === 0 && (
+            <Table.Row>
+              <Table.Cell colSpan={6}>
+                <p className="text-gray-400 text-center">No sales found</p>
+              </Table.Cell>
+            </Table.Row>
+          )}
+          {sales.map((sale) => (
+            <Table.Row key={sale.id}>
+              <Table.Cell><Moment format="DD/MM/YYYY">{sale.sales_date}</Moment></Table.Cell>
+              <Table.Cell>{sale.sales_number}</Table.Cell>
+              <Table.Cell>{sale.contact_data_parsed?.name}</Table.Cell>
+              <Table.Cell>{money(sale.total)}</Table.Cell>
+              <Table.Cell>{money((sale.total ?? 0) - (sale.paid ?? 0))}</Table.Cell>
+              <Table.Cell>
+                <a
+                  href="#"
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  onClick={() => {
+                    nav(`/sales/${sale.id}`);
+                  }}
+                >
+                  View
+                </a>
+                <a
+                  href="#"
+                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (
+                      window.confirm(
+                        `Are you sure you want to delete  ${sale.sales_number}?`
+                      )
+                    ) {
+                      deleteSales(sale!.id!).then(() => {
+                        getAllSales();
+                      });
+                    }
+                  }}
+                >
+                  Delete
+                </a>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Create {title}</Modal.Header>
         <Modal.Body>

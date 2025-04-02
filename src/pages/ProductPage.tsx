@@ -9,6 +9,8 @@ import ModalProduct from "../components/ModalProduct";
 import { ProductModel } from "../models/product";
 import ProductCategoryTable from "../components/ProductCategoryTable";
 import PriceCategoryTable from "../components/PriceCategoryTable";
+import { PiDotsNine } from "react-icons/pi";
+import ProductAttributeTable from "../components/ProductAttributeTable";
 
 interface ProductPageProps {}
 
@@ -49,8 +51,9 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
           >
             <PriceCategoryTable />
           </Tabs.Item>
-          {/* <Tabs.Item active={activeTab === 3} title="Sales Quote" icon={PiQuotes}>
-          </Tabs.Item> */}
+          <Tabs.Item active={activeTab === 3} title="Attributes" icon={PiDotsNine}>
+            <ProductAttributeTable />
+          </Tabs.Item>
         </Tabs>
       </div>
 

@@ -1,4 +1,4 @@
-export interface ProductAttribute {
+export interface ProductAttributeModel {
   id: string;
   name: string;
   priority: number;

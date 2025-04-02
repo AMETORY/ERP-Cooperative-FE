@@ -7,6 +7,7 @@ import { ProductCategoryModel } from "../models/product_category";
 import { getProductCategories } from "../services/api/productCategoryApi";
 import Select, { InputActionMeta } from "react-select";
 import Barcode from "react-barcode";
+import CurrencyInput from "react-currency-input-field";
 interface ModalProductProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -92,17 +93,17 @@ const ModalProduct: FC<ModalProductProps> = ({
           </div>
           <div className="mb-4">
             <Label htmlFor="product-price" value="Product Price" />
-            <TextInput
-              id="product-price"
-              placeholder="Product Price"
-              value={product?.price ?? ""}
-              onChange={(e) =>
+            <CurrencyInput
+              className="rs-input !p-1.5 "
+              value={product?.price ?? 0}
+              groupSeparator="."
+              decimalSeparator=","
+              onValueChange={(value, name, values) => {
                 setProduct({
                   ...product!,
-                  price: parseFloat(e.target.value) || 0,
-                })
-              }
-              className="input-white"
+                  price: values?.float ?? 0,
+                });
+              }}
             />
           </div>
           <div className="mb-4">
