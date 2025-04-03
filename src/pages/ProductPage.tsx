@@ -11,6 +11,8 @@ import ProductCategoryTable from "../components/ProductCategoryTable";
 import PriceCategoryTable from "../components/PriceCategoryTable";
 import { PiDotsNine } from "react-icons/pi";
 import ProductAttributeTable from "../components/ProductAttributeTable";
+import { TbRulerMeasure } from "react-icons/tb";
+import UnitTable from "../components/UnitTable";
 
 interface ProductPageProps {}
 
@@ -20,7 +22,7 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
 
   return (
     <AdminLayout>
-      <div className="w-full h-full flex flex-col gap-4 px-8">
+      <div className="w-full flex flex-col gap-4 px-8">
         <Tabs
           aria-label="Default tabs"
           variant="default"
@@ -53,6 +55,9 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
           </Tabs.Item>
           <Tabs.Item active={activeTab === 3} title="Attributes" icon={PiDotsNine}>
             <ProductAttributeTable />
+          </Tabs.Item>
+          <Tabs.Item active={activeTab === 4} title="Units" icon={TbRulerMeasure}>
+            <UnitTable />
           </Tabs.Item>
         </Tabs>
       </div>

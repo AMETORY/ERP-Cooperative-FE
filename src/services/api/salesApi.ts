@@ -41,6 +41,11 @@ export const salesAddItem = async (id: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
+export const salesDeleteItem = async (id: string, itemId: any) => {
+  return await customFetch(`api/v1/sales/${id}/delete-item/${itemId}`, {
+    method: "DELETE",
+  });
+};
 export const salesUpdateItem = async (id: string, itemId: string, data: any) => {
   return await customFetch(`api/v1/sales/${id}/update-item/${itemId}`, {
     method: "PUT",

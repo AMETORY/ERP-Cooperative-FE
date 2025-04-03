@@ -80,8 +80,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
               <Table.Cell>{product.description}</Table.Cell>
               <Table.Cell>
                 <a
-                  href="#"
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
                   onClick={() => {
                     navigate(`/product/${product.id}`);
                   }}
@@ -89,8 +88,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
                   View
                 </a>
                 <a
-                  href="#"
-                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     if (

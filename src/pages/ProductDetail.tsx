@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState, type FC } from "react";
 import AdminLayout from "../components/layouts/admin";
-import { Badge, Button, Carousel } from "flowbite-react";
+import { Badge, Button, Carousel, Tooltip } from "flowbite-react";
 import { ProductModel, VariantModel } from "../models/product";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -8,6 +8,7 @@ import {
   deleteDiscount,
   deleteProductImage,
   deleteProductPrice,
+  deleteProductUnit,
   deleteProductVariant,
   getDiscounts,
   getProduct,
@@ -16,7 +17,13 @@ import {
   updateProductVariant,
 } from "../services/api/productApi";
 import { MdOutlineImageNotSupported } from "react-icons/md";
-import { BsCheck, BsCheck2Circle, BsImage, BsTrash3 } from "react-icons/bs";
+import {
+  BsCheck,
+  BsCheck2Circle,
+  BsCheckCircle,
+  BsImage,
+  BsTrash3,
+} from "react-icons/bs";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { uploadFile } from "../services/api/commonApi";
 import toast from "react-hot-toast";
@@ -29,6 +36,8 @@ import { StockMovement } from "../models/stock_movement";
 import ModalProduct from "../components/ModalProduct";
 import PriceForm from "./PriceForm";
 import VariantForm from "./VariantForm";
+import { UnitModel } from "../models/unit";
+import ModalProductUnit from "../components/ModalProductUnit";
 
 interface ProductDetailProps {}
 
@@ -46,6 +55,8 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
   const [selectedDiscount, setSelectedDiscount] = useState<DiscountModel>();
   const [stockMovements, setStockMovements] = useState<StockMovement[]>([]);
   const [modalAddPrice, setModalAddPrice] = useState(false);
+  const [modalAddUnit, setModalAddUnit] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState<UnitModel>();
   const nav = useNavigate();
   useEffect(() => {
     if (productId) {
@@ -93,6 +104,22 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
     }
   };
 
+  const removeUnit = async (id: string) => {
+    try {
+      const confirmRemoval = window.confirm(
+        "Are you sure you want to remove this unit?"
+      );
+      if (!confirmRemoval) return;
+
+      setLoading(true);
+      await deleteProductUnit(productId!, id);
+      getDetail();
+    } catch (error) {
+      toast.error(`${error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
   const removePrice = async (id: string) => {
     try {
       const confirmRemoval = window.confirm(
@@ -175,14 +202,18 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
 
   const renderImages = () => (
     <div className="w-full">
-      <Carousel className="custom-slider" color="orange" slide={false} leftControl={""} rightControl={""} draggable indicators={false}>
+      <Carousel
+        className="custom-slider"
+        color="orange"
+        slide={false}
+        leftControl={""}
+        rightControl={""}
+        draggable
+        indicators={false}
+      >
         {(product?.product_images ?? []).map((img, index) => (
           <div className="relative" key={index}>
-            <img
-              key={index}
-              className="object-cover w-full"
-              src={img.url}
-            />
+            <img key={index} className="object-cover w-full" src={img.url} />
             <div className="absolute bottom-2 right-[calc(50%-16px)] cursor-pointer p-2 aspect-square rounded-full bg-black bg-opacity-20 z-50">
               <BsTrash3
                 className=""
@@ -467,6 +498,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                 <p className="text-sm text-gray-400">No Price Available</p>
               )}
             </div>
+            <div className="w-full p-2"></div>
             <div className="mb-4">
               <div className="flex flex-row justify-between items-center">
                 <small className="font-bold">Variants:</small>
@@ -587,6 +619,90 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                 </table>
               ) : (
                 <p className="text-sm text-gray-400">No Variants Available</p>
+              )}
+            </div>
+            <div className="w-full p-2"></div>
+            <div className="mb-4">
+              <div className="flex flex-row justify-between items-center">
+                <small className="font-bold">Units:</small>
+                <Button
+                  color="green"
+                  size="xs"
+                  className="ml-2"
+                  onClick={() => {
+                    setModalAddUnit(true);
+                  }}
+                >
+                  Add Unit
+                </Button>
+              </div>
+              {(product?.units ?? []).length > 0 ? (
+                <table className="w-full border border-gray-300 mt-4">
+                  <thead>
+                    <tr>
+                      <th className="px-2 py-1 text-xs border text-left border-gray-300">
+                        Code
+                      </th>
+                      <th className="px-2 py-1 text-xs border border-gray-300">
+                        Name
+                      </th>
+                      <th className="px-2 py-1 text-xs border border-gray-300">
+                        Description
+                      </th>
+                      <th className="px-2 py-1 text-xs border border-gray-300">
+                        Value
+                      </th>
+
+                      <th className="px-2 py-1 text-xs border border-gray-300">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(product?.units ?? []).map((v) => (
+                      <tr key={v.id}>
+                        <td
+                          className="px-2 py-1 text-xs border border-gray-300 hover:underline cursor-pointer"
+                          onClick={() => {
+                            setSelectedUnit(v);
+                            setModalAddUnit(true);
+                          }}
+                        >
+                          <div>{v.code}</div>
+                        </td>
+                        <td className="px-2 py-1 text-xs border text-center border-gray-300">
+                          {v.name}
+                        </td>
+                        <td className="px-2 py-1 text-xs border text-center border-gray-300">
+                          {v.description}
+                        </td>
+                        <td className="px-2 py-1 text-xs border text-center border-gray-300">
+                          <div className="flex gap-2 items-center justify-between">
+                           
+                            {money(v.value)} {product?.default_unit?.code}{" "}
+                            {v.is_default && (
+                              <Tooltip content={"Default Unit"} trigger="hover">
+                                <BsCheckCircle className="text-green-400" />
+                              </Tooltip>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="px-2 py-1 text-xs border border-gray-300 text-center">
+                          <div className="flex justify-center">
+                            <BsTrash3
+                              className="text-red-500 hover:text-red-800 cursor-pointer"
+                              size={12}
+                              onClick={() => removeUnit(v.id!)}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="text-sm text-gray-400">No Units Available</p>
               )}
             </div>
             <div className="w-full p-2"></div>
@@ -805,6 +921,17 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
           }}
           product={product!}
           variant={selectedVariant}
+        />
+      )}
+      {product && (
+        <ModalProductUnit
+          product={product}
+          show={modalAddUnit}
+          setShow={setModalAddUnit}
+          onCreate={() => {
+            setModalAddUnit(false);
+            getDetail();
+          }}
         />
       )}
       {/* 

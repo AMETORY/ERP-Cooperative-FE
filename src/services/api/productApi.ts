@@ -79,6 +79,11 @@ export const deleteProductPrice = async (id: string, priceId: string) => {
     method: "DELETE",
   });
 };
+export const deleteProductUnit = async (id: string, priceId: string) => {
+  return await customFetch(`api/v1/product/${id}/unit/${priceId}`, {
+    method: "DELETE",
+  });
+};
 export const deleteProductImage = async (id: string, imageId: string) => {
   return await customFetch(`api/v1/product/${id}/image/${imageId}`, {
     method: "DELETE",
@@ -89,6 +94,12 @@ export const deleteProductImage = async (id: string, imageId: string) => {
 export const createProductVariant = async (productId: string, data: any) => {
   return await customFetch(`api/v1/product/${productId}/variant`, {
     method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+export const addProductUnit = async (productId: string, data: any) => {
+  return await customFetch(`api/v1/product/${productId}/unit`, {
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };

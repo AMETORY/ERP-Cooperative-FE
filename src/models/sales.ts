@@ -4,6 +4,7 @@ import { ContactModel } from "./contact";
 import { ProductPriceModel } from "./price";
 import { ProductModel, VariantModel } from "./product";
 import { TaxModel } from "./tax";
+import { UnitModel } from "./unit";
 import { WarehouseModel } from "./warehouse";
 
 export interface SalesModel {
@@ -24,6 +25,8 @@ export interface SalesModel {
     sales_date?: string;
     due_date?: string;
     payment_terms?: string;
+    payment_terms_code?: string;
+    term_condition?: string;
     company_id?: string;
     company?: CompanyModel;
     contact_id?: string;
@@ -33,6 +36,8 @@ export interface SalesModel {
     delivery?: ContactModel;
     delivery_data?: string;
     type?: string;
+    ref_id?: string;
+    ref_type?: string;
     document_type?: string;
     items?: SalesItemModel[];
     published_at?: string;
@@ -48,9 +53,10 @@ export interface SalesModel {
 
 export interface SalesItemModel {
     id?: string;
-    sales_id: string;
+    sales_id?: string | null;
     sales: SalesModel;
     description: string;
+    notes?: string;
     quantity: number;
     unit_price: number;
     total: number;
@@ -73,5 +79,9 @@ export interface SalesItemModel {
     total_tax: number;
     is_editing?: boolean;
     availablePrices?: {id: string, name: string, prices: ProductPriceModel[]}[]
+    unit?: UnitModel;
+    unit_id?: string;
+    unit_value?: number;
+
 }
 

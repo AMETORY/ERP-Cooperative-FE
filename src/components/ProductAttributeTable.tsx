@@ -92,8 +92,7 @@ const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
               <Table.Cell>{category.name}</Table.Cell>
               <Table.Cell>
                 <a
-                  href="#"
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
                   onClick={() => {
                     setProductAttribute(category);
                     setShowModal(true);
@@ -102,8 +101,7 @@ const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
                   Edit
                 </a>
                 <a
-                  href="#"
-                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     if (

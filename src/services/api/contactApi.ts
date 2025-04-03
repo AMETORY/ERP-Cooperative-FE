@@ -18,6 +18,7 @@ export const getContact = async (id: string) => {
   return await customFetch(`api/v1/contact/${id}`);
 };
 
+
 export const createContact = async (contact: any) => {
   return await customFetch("api/v1/contact/create", {
     method: "POST",

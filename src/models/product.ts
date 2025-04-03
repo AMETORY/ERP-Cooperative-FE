@@ -4,6 +4,7 @@ import { DiscountModel } from "./discount";
 import { FileModel } from "./file";
 import { ProductPriceModel } from "./price";
 import { ProductCategoryModel } from "./product_category";
+import { UnitModel } from "./unit";
 
 
 export interface ProductModel {
@@ -31,7 +32,8 @@ export interface ProductModel {
   weight?: number;
   width?: number;
   status?: string;
-
+  units?: UnitModel[];
+  default_unit?: UnitModel;
 }
 
 

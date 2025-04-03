@@ -24,6 +24,7 @@ import Select, { InputActionMeta } from "react-select";
 import ModalContact from "./ModalContact";
 import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
+import ModalSales from "./ModalSales";
 
 interface SalesTableProps {
   docType: string;
@@ -45,6 +46,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
   const [notes, setNotes] = useState<string>("");
   const [contacts, setContacts] = useState<ContactModel[]>([]);
   const [tempContact, setTempContact] = useState<ContactModel>();
+  
   const nav = useNavigate();
 
   const [salesType, setSalesType] = useState<{
@@ -90,6 +92,8 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
     });
     setContacts(res.data.items);
   };
+
+
   const saveInvoice = async () => {
     try {
       if (!selectedContact) {
@@ -109,7 +113,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
         sales_date: date.toISOString(),
         document_type: docType,
       });
-      toast.success("Contact created successfully");
+      toast.success("sales created successfully");
       setShowModal(false);
       // getAllContacts("");
       nav(`/sales/${resp.data.id}`);
@@ -160,15 +164,18 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           )}
           {sales.map((sale) => (
             <Table.Row key={sale.id}>
-              <Table.Cell><Moment format="DD/MM/YYYY">{sale.sales_date}</Moment></Table.Cell>
+              <Table.Cell>
+                <Moment format="DD/MM/YYYY">{sale.sales_date}</Moment>
+              </Table.Cell>
               <Table.Cell>{sale.sales_number}</Table.Cell>
               <Table.Cell>{sale.contact_data_parsed?.name}</Table.Cell>
               <Table.Cell>{money(sale.total)}</Table.Cell>
-              <Table.Cell>{money((sale.total ?? 0) - (sale.paid ?? 0))}</Table.Cell>
+              <Table.Cell>
+                {money((sale.total ?? 0) - (sale.paid ?? 0))}
+              </Table.Cell>
               <Table.Cell>
                 <a
-                  href="#"
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
                   onClick={() => {
                     nav(`/sales/${sale.id}`);
                   }}
@@ -176,8 +183,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
                   View
                 </a>
                 <a
-                  href="#"
-                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     if (
@@ -307,6 +313,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           }}
         />
       )}
+     
     </div>
   );
 };
