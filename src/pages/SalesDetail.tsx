@@ -1,5 +1,6 @@
 import { Editor } from "@tinymce/tinymce-react";
 import {
+  Badge,
   Button,
   Checkbox,
   Datepicker,
@@ -15,7 +16,7 @@ import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
-import { BsPlusCircle, BsTrash } from "react-icons/bs";
+import { BsAirplane, BsCart2, BsPlusCircle, BsTrash } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -44,6 +45,12 @@ import { getTaxes } from "../services/api/taxApi";
 import { getWarehouses } from "../services/api/warehouseApi";
 import { groupBy, money } from "../utils/helper";
 import DrawerPostInvoice from "../components/DrawerPostInvoice";
+import { FaPaperPlane } from "react-icons/fa6";
+import { IoPaperPlaneOutline } from "react-icons/io5";
+import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+import { MdOutlinePublish } from "react-icons/md";
+import { PiQuotes } from "react-icons/pi";
+import Moment from "react-moment";
 
 interface SalesDetailProps {}
 
@@ -70,6 +77,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [tempSales, setTempSales] = useState<SalesModel>();
   const [showCreateSales, setShowCreateSales] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
   >([]);
@@ -108,6 +116,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
         setPaymentTermGroups(groups);
         setPaymentTerms(terms);
       });
+
+      if (sales.status == "DRAFT") {
+        setIsEditable(true);
+      }
     }
   }, [sales]);
   useEffect(() => {
@@ -192,6 +204,57 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
       setProducts(res.data.items);
     });
   };
+  const renderHeader = () => {
+    switch (sales?.document_type) {
+      case "INVOICE":
+        return (
+          <Badge
+            icon={TbFileInvoice}
+            className="flex gap-2 flex-row"
+            color="green"
+          >
+            Invoice
+          </Badge>
+        );
+        break;
+
+      case "DELIVERY":
+        return (
+          <Badge
+            icon={TbTruckDelivery}
+            className="flex gap-2 flex-row"
+            color="pink"
+          >
+            Delivery
+          </Badge>
+        );
+        break;
+
+      case "SALES_ORDER":
+        return (
+          <Badge icon={BsCart2} className="flex gap-2 flex-row" color="purple">
+            Sales Order
+          </Badge>
+        );
+        break;
+
+      case "SALES_QUOTE":
+        return (
+          <Badge
+            icon={PiQuotes}
+            className="flex gap-2 flex-row"
+            color="warning"
+          >
+            Sales Quote
+          </Badge>
+        );
+        break;
+
+      default:
+        break;
+    }
+    return null;
+  };
 
   const updateItem = (item: SalesItemModel) => {
     let data = items.find((c) => c.id === item.id);
@@ -215,26 +278,34 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
     <AdminLayout>
       <div className="p-4 h-[calc(100vh-80px)] overflow-y-auto">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-700">
-            {sales?.sales_number}
-          </h1>
+          <div>
+            <div className="w-fit">{renderHeader()}</div>
+            <h1 className="text-3xl font-bold text-gray-700">
+              {sales?.sales_number}
+            </h1>
+          </div>
           <div className="flex gap-2 items-center">
             <div>{sales?.status}</div>
             <Dropdown inline>
-              {!sales?.published_at && (
+              {!sales?.published_at && sales?.document_type == "INVOICE" && (
                 <Dropdown.Item
+                  icon={IoPaperPlaneOutline}
                   onClick={() => {
-                    if (sales?.document_type == "INVOICE") {
-                      setShowPostModal(true);
-                    }
+                    setShowPostModal(true);
                   }}
                 >
-                  Release
+                  POST INVOICE
+                </Dropdown.Item>
+              )}
+              {!sales?.published_at && sales?.document_type != "INVOICE" && (
+                <Dropdown.Item icon={MdOutlinePublish} onClick={() => {}}>
+                  RELEASE
                 </Dropdown.Item>
               )}
               {(sales?.document_type == "SALES_QUOTE" ||
                 sales?.document_type == "SALES_ORDER") && (
                 <Dropdown.Item
+                  icon={TbFileInvoice}
                   onClick={() => {
                     setTempSales({
                       ...sales,
@@ -255,7 +326,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </Dropdown.Item>
               )}
               {sales?.document_type == "INVOICE" && (
-                <Dropdown.Item>Create Delivery Letter</Dropdown.Item>
+                <Dropdown.Item icon={TbTruckDelivery}>
+                  Create Delivery Letter
+                </Dropdown.Item>
               )}
             </Dropdown>
             {isEdited && (
@@ -282,33 +355,43 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           <div className="flex flex-col space-y-4">
             <div>
               <Label>Date</Label>
-              <Datepicker
-                value={moment(sales?.sales_date).toDate()}
-                onChange={(date) => {
-                  setSales({
-                    ...sales,
-                    sales_date: moment(date).toISOString(),
-                  });
-                }}
-                className="input-white"
-              />
+              {isEditable ? (
+                <Datepicker
+                  value={moment(sales?.sales_date).toDate()}
+                  onChange={(date) => {
+                    setSales({
+                      ...sales,
+                      sales_date: moment(date).toISOString(),
+                    });
+                  }}
+                  className="input-white"
+                />
+              ) : (
+                <div className="text-data">
+                  <Moment format="DD MMM YYYY">{sales?.sales_date}</Moment>
+                </div>
+              )}
             </div>
             <div>
               <Label>Notes</Label>
-              <Textarea
-                value={sales?.notes}
-                onChange={(e) => {
-                  setSales({
-                    ...sales,
-                    notes: e.target.value,
-                  });
-                  setIsEdited(true);
-                }}
-                className="input-white"
-                style={{
-                  backgroundColor: "white",
-                }}
-              />
+              {isEditable ? (
+                <Textarea
+                  value={sales?.notes}
+                  onChange={(e) => {
+                    setSales({
+                      ...sales,
+                      notes: e.target.value,
+                    });
+                    setIsEdited(true);
+                  }}
+                  className="input-white"
+                  style={{
+                    backgroundColor: "white",
+                  }}
+                />
+              ) : (
+                <div className="text-data">{sales?.notes}</div>
+              )}
             </div>
           </div>
           <div className="flex flex-col space-y-4">
@@ -352,11 +435,11 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           <Table className=" overflow-x-auto border rounded-none" hoverable>
             <Table.Head>
               <Table.HeadCell style={{ width: "300px" }}>Item</Table.HeadCell>
-              {showWarehouse && (
+              {/* {showWarehouse && (
                 <Table.HeadCell style={{ width: "150px" }}>
                   Warehouse
                 </Table.HeadCell>
-              )}
+              )} */}
               <Table.HeadCell style={{ width: "100px" }}>Qty</Table.HeadCell>
               <Table.HeadCell style={{ width: "120px" }}>Price</Table.HeadCell>
               <Table.HeadCell style={{ width: "40px" }}>Disc</Table.HeadCell>
@@ -365,7 +448,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               )}
               <Table.HeadCell style={{ width: "130px" }}>Amount</Table.HeadCell>
               <Table.HeadCell className="w-10">
-                <div className="flex justify-end">
+                {/* <div className="flex justify-end">
                   <Dropdown
                     label=""
                     size="xs"
@@ -390,7 +473,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       Tax
                     </Dropdown.Item>
                   </Dropdown>
-                </div>
+                </div> */}
               </Table.HeadCell>
             </Table.Head>
             <Table.Body>
@@ -400,96 +483,107 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   key={item.id}
                 >
                   <Table.Cell key={item.id}>
-                    <CreatableSelect
-                      id="product"
-                      value={{
-                        label: item.product_id
-                          ? item.product?.name
-                          : item.description,
-                        value: item.product_id,
-                      }}
-                      options={products.map((c) => ({
-                        label: c.name!,
-                        value: c.id!,
-                      }))}
-                      onChange={(e) => {
-                        if (e?.value) {
-                          setItems([
-                            ...items.map((i) => {
-                              let prod = products.find(
-                                (c) => c.id === e!.value
-                              );
-                              if (i.id === item.id) {
-                                i.product_id = e!.value;
-                                i.product = prod;
-                                i.unit_price = prod?.price ?? 0;
-                                i.description = prod?.display_name ?? "";
-                              }
-                              return i;
-                            }),
-                          ]);
-                          setTimeout(() => {
-                            updateItem(item);
-                          }, 300);
-                        }
-                      }}
-                      isSearchable
-                      onCreateOption={(e) => {
-                        // setSelectedItem(item);
-                        // setProduct({
-                        //   name: e,
-                        //   price: 0,
-                        //   description: "",
-                        //   product_images: [],
-                        //   prices: [],
-                        // });
-                        // setShowModalProduct(true);
-                        console.log("Create", e);
-                        setItems([
-                          ...items.map((i) => {
-                            if (i.id === item.id) {
-                              i.description = e;
+                    {isEditable ? (
+                      <div>
+                        <CreatableSelect
+                          id="product"
+                          value={{
+                            label: item.product_id
+                              ? item.product?.name
+                              : item.description,
+                            value: item.product_id,
+                          }}
+                          options={products.map((c) => ({
+                            label: c.name!,
+                            value: c.id!,
+                          }))}
+                          onChange={(e) => {
+                            if (e?.value) {
+                              setItems([
+                                ...items.map((i) => {
+                                  let prod = products.find(
+                                    (c) => c.id === e!.value
+                                  );
+                                  if (i.id === item.id) {
+                                    i.product_id = e!.value;
+                                    i.product = prod;
+                                    i.unit_price = prod?.price ?? 0;
+                                    i.description = prod?.display_name ?? "";
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                              setTimeout(() => {
+                                updateItem(item);
+                              }, 300);
                             }
-                            return i;
-                          }),
-                        ]);
-                        setTimeout(() => {
-                          updateItem(item);
-                        }, 300);
-                      }}
-                      formatCreateLabel={(inputValue) =>
-                        `Add Non Product "${inputValue}"`
-                      }
-                      onInputChange={(e) => {
-                        if (e) {
-                          searchProduct(e);
-                        }
-                      }}
-                    />
-                    {!item?.notes ? (
-                      <div
-                        className="text-xs italic cursor-pointer"
-                        onClick={() => {
-                          setSelectedItem(item);
-                          setModalNoteOpen(true);
-                        }}
-                      >
-                        + Notes
+                          }}
+                          isSearchable
+                          onCreateOption={(e) => {
+                            // setSelectedItem(item);
+                            // setProduct({
+                            //   name: e,
+                            //   price: 0,
+                            //   description: "",
+                            //   product_images: [],
+                            //   prices: [],
+                            // });
+                            // setShowModalProduct(true);
+                            console.log("Create", e);
+                            setItems([
+                              ...items.map((i) => {
+                                if (i.id === item.id) {
+                                  i.description = e;
+                                }
+                                return i;
+                              }),
+                            ]);
+                            setTimeout(() => {
+                              updateItem(item);
+                            }, 300);
+                          }}
+                          formatCreateLabel={(inputValue) =>
+                            `Add Non Product "${inputValue}"`
+                          }
+                          onInputChange={(e) => {
+                            if (e) {
+                              searchProduct(e);
+                            }
+                          }}
+                        />
+                        {!item?.notes ? (
+                          <div
+                            className="text-xs italic cursor-pointer"
+                            onClick={() => {
+                              setSelectedItem(item);
+                              setModalNoteOpen(true);
+                            }}
+                          >
+                            + Notes
+                          </div>
+                        ) : (
+                          <div
+                            className="bg-gray-50 px-2 text-xs py-1 mt-2 rounded-lg cursor-pointer"
+                            onClick={() => {
+                              setItemNotes(item.notes ?? "");
+                              setSelectedItem(item);
+                              setModalNoteOpen(true);
+                            }}
+                          >
+                            {item.notes}
+                          </div>
+                        )}
                       </div>
                     ) : (
-                      <div
-                        className="bg-gray-50 px-2 text-xs py-1 mt-2 rounded-lg cursor-pointer"
-                        onClick={() => {
-                          setItemNotes(item.notes ?? "");
-                          setSelectedItem(item);
-                          setModalNoteOpen(true);
-                        }}
-                      >
-                        {item.notes}
+                      <div className="flex flex-col">
+                        <div className="text-data font-semibold">
+                          {item.description}
+                        </div>
+                        <small className="text-data">{item.notes}</small>
                       </div>
                     )}
                   </Table.Cell>
-                  {showWarehouse && (
+                  {/* {showWarehouse && (
                     <Table.Cell valign="top">
                       <Select
                         isDisabled={!item.product_id}
@@ -518,117 +612,49 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         inputValue={""}
                       />
                     </Table.Cell>
-                  )}
+                  )} */}
                   <Table.Cell valign="top">
-                    <div className="flex w-full items-center">
-                      <div className=" relative min-w-[32px]">
-                        <CurrencyInput
-                          className="rs-input !p-1.5 "
-                          value={item.quantity ?? 0}
-                          groupSeparator="."
-                          decimalSeparator=","
-                          onValueChange={(value, name, values) => {
-                            setItems([
-                              ...items.map((i) => {
-                                if (i.id === item.id) {
-                                  i.quantity = values?.float ?? 0;
-                                }
-                                return i;
-                              }),
-                            ]);
-                          }}
-                          onKeyUp={(e) => {
-                            if (e.key === "Enter") {
-                              updateItem(item);
-                            }
-                          }}
-                        />
-                        {item.unit && (
-                          <div className="absolute top-2.5 right-2 text-xs">
-                            {item?.unit?.code}
-                          </div>
-                        )}
-                      </div>
-                      {(item.product?.units ?? []).length > 0 ? (
-                        <Dropdown inline placement="bottom-end">
-                          {(item.product?.units ?? []).map((t) => (
-                            <Dropdown.Item
-                              key={t.id}
-                              onClick={() => {
-                                setItems([
-                                  ...items.map((i) => {
-                                    if (i.id === item.id) {
-                                      i.unit_id = t.id;
-                                      i.unit = t;
-                                    }
-                                    return i;
-                                  }),
-                                ]);
-                                setTimeout(() => {
-                                  updateItem(item);
-                                }, 300);
-                              }}
-                            >
-                              <div
-                                className="flex justify-between items-center w-full"
-                                style={{ width: "100px" }}
-                              >
-                                <span>{t.name}</span>
-                              </div>
-                            </Dropdown.Item>
-                          ))}
-                        </Dropdown>
-                      ) : (
-                        <div className="w-[38px]"></div>
-                      )}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell valign="top">
-                    <div className="flex gap-2 relative">
-                      <CurrencyInput
-                        className="rs-input !p-1.5"
-                        value={item.unit_price ?? 0}
-                        groupSeparator="."
-                        decimalSeparator=","
-                        onValueChange={(value, name, values) => {
-                          setItems([
-                            ...items.map((i) => {
-                              if (i.id === item.id) {
-                                i.unit_price = values?.float ?? 0;
+                    {isEditable ? (
+                      <div className="flex w-full items-center">
+                        <div className=" relative min-w-[32px]">
+                          <CurrencyInput
+                            className="rs-input !p-1.5 "
+                            value={item.quantity ?? 0}
+                            groupSeparator="."
+                            decimalSeparator=","
+                            onValueChange={(value, name, values) => {
+                              setItems([
+                                ...items.map((i) => {
+                                  if (i.id === item.id) {
+                                    i.quantity = values?.float ?? 0;
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                            }}
+                            onKeyUp={(e) => {
+                              if (e.key === "Enter") {
+                                updateItem(item);
                               }
-                              return i;
-                            }),
-                          ]);
-                        }}
-                        onKeyUp={(e) => {
-                          if (e.key === "Enter") {
-                            updateItem(item);
-                          }
-                        }}
-                      />
-                      {(item.availablePrices ?? []).length > 0 && (
-                        <div className="absolute top-2 right-2">
+                            }}
+                          />
+                          {item.unit && (
+                            <div className="absolute top-2.5 right-2 text-xs">
+                              {item?.unit?.code}
+                            </div>
+                          )}
+                        </div>
+                        {(item.product?.units ?? []).length > 0 ? (
                           <Dropdown inline placement="bottom-end">
-                            {(item.availablePrices ?? []).map((t) => (
+                            {(item.product?.units ?? []).map((t) => (
                               <Dropdown.Item
                                 key={t.id}
                                 onClick={() => {
-                                  let priceSelected = item.unit_price;
-                                  for (const price of t.prices.sort(
-                                    (a, b) => b.min_quantity - a.min_quantity
-                                  )) {
-                                    if (
-                                      price.min_quantity <=
-                                      item.quantity * (item.unit_value ?? 1)
-                                    ) {
-                                      priceSelected = price.amount;
-                                      break;
-                                    }
-                                  }
                                   setItems([
                                     ...items.map((i) => {
                                       if (i.id === item.id) {
-                                        i.unit_price = priceSelected;
+                                        i.unit_id = t.id;
+                                        i.unit = t;
                                       }
                                       return i;
                                     }),
@@ -647,73 +673,157 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                               </Dropdown.Item>
                             ))}
                           </Dropdown>
-                        </div>
-                      )}
-                    </div>
+                        ) : (
+                          <div className="w-[38px]"></div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-data">
+                        {money(item.quantity)} {item?.unit?.code}
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell valign="top">
-                    <div className="relative flex justify-end w-fit">
-                      <CurrencyInput
-                        className="rs-input !p-1.5 "
-                        value={item.discount_percent ?? 0}
-                        groupSeparator="."
-                        decimalSeparator=","
-                        onValueChange={(value, name, values) => {
-                          setItems([
-                            ...items.map((i) => {
-                              if (i.id === item.id) {
-                                i.discount_percent = values?.float ?? 0;
-                              }
-                              return i;
-                            }),
-                          ]);
-                        }}
-                        onKeyUp={(e) => {
-                          if (e.key === "Enter") {
-                            updateItem(item);
-                          }
-                        }}
-                      />
+                    {isEditable ? (
+                      <div className="flex gap-2 relative">
+                        <CurrencyInput
+                          className="rs-input !p-1.5"
+                          value={item.unit_price ?? 0}
+                          groupSeparator="."
+                          decimalSeparator=","
+                          onValueChange={(value, name, values) => {
+                            setItems([
+                              ...items.map((i) => {
+                                if (i.id === item.id) {
+                                  i.unit_price = values?.float ?? 0;
+                                }
+                                return i;
+                              }),
+                            ]);
+                          }}
+                          onKeyUp={(e) => {
+                            if (e.key === "Enter") {
+                              updateItem(item);
+                            }
+                          }}
+                        />
+                        {(item.availablePrices ?? []).length > 0 && (
+                          <div className="absolute top-2 right-2">
+                            <Dropdown inline placement="bottom-end">
+                              {(item.availablePrices ?? []).map((t) => (
+                                <Dropdown.Item
+                                  key={t.id}
+                                  onClick={() => {
+                                    let priceSelected = item.unit_price;
+                                    for (const price of t.prices.sort(
+                                      (a, b) => b.min_quantity - a.min_quantity
+                                    )) {
+                                      if (
+                                        price.min_quantity <=
+                                        item.quantity * (item.unit_value ?? 1)
+                                      ) {
+                                        priceSelected = price.amount;
+                                        break;
+                                      }
+                                    }
+                                    setItems([
+                                      ...items.map((i) => {
+                                        if (i.id === item.id) {
+                                          i.unit_price = priceSelected;
+                                        }
+                                        return i;
+                                      }),
+                                    ]);
+                                    setTimeout(() => {
+                                      updateItem(item);
+                                    }, 300);
+                                  }}
+                                >
+                                  <div
+                                    className="flex justify-between items-center w-full"
+                                    style={{ width: "100px" }}
+                                  >
+                                    <span>{t.name}</span>
+                                  </div>
+                                </Dropdown.Item>
+                              ))}
+                            </Dropdown>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-data">{money(item.unit_price)}</div>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell valign="top">
+                    {isEditable ? (
+                      <div className="relative flex justify-end w-fit">
+                        <CurrencyInput
+                          className="rs-input !p-1.5 "
+                          value={item.discount_percent ?? 0}
+                          groupSeparator="."
+                          decimalSeparator=","
+                          onValueChange={(value, name, values) => {
+                            setItems([
+                              ...items.map((i) => {
+                                if (i.id === item.id) {
+                                  i.discount_percent = values?.float ?? 0;
+                                }
+                                return i;
+                              }),
+                            ]);
+                          }}
+                          onKeyUp={(e) => {
+                            if (e.key === "Enter") {
+                              updateItem(item);
+                            }
+                          }}
+                        />
 
-                      <span className="absolute top-2 right-1">%</span>
-                    </div>
+                        <span className="absolute top-2 right-1">%</span>
+                      </div>
+                    ) : (
+                      <div className="text-data">{item.discount_percent}%</div>
+                    )}
                   </Table.Cell>
                   {showTax && (
                     <Table.Cell valign="top">
-                      {/* <Select
-                             value={selectedItem?.tax}
-                             onChange={(val) => {
-                               setItems([
-                                 ...items.map((i) => {
-                                   if (i.id === item.id) {
-                                     i.tax = val!;
-                                     i.tax_id = val!.id;
-                                   }
-                                   return i;
-                                 }),
-                               ]);
-                             }}
-                             options={taxes}
-                             formatOptionLabel={(option: any) => (
-                               <div className="flex flex-row gap-2  items-center ">
-                                 {option.code}
-                                 <span>{option.amount}%</span>
-                               </div>
-                             )}
-                             inputValue={""}
-                           /> */}
-                      <div className="flex min-h-[32px] items-center">
-                        {item.tax?.amount ? `${item.tax?.amount}%` : "0%"}
-                        <Dropdown inline placement="bottom-end">
-                          {taxes.map((t) => (
+                      {isEditable ? (
+                        <div className="flex min-h-[32px] items-center">
+                          {item.tax?.amount ? `${item.tax?.amount}%` : "0%"}
+                          <Dropdown inline placement="bottom-end">
+                            {taxes.map((t) => (
+                              <Dropdown.Item
+                                key={t.id}
+                                onClick={() => {
+                                  setItems([
+                                    ...items.map((i) => {
+                                      if (i.id === item.id) {
+                                        i.tax = t;
+                                        i.tax_id = t.id;
+                                      }
+                                      return i;
+                                    }),
+                                  ]);
+
+                                  setTimeout(() => {
+                                    updateItem(item);
+                                  }, 300);
+                                }}
+                              >
+                                <div className="flex justify-between items-center w-full">
+                                  <span>{t.code}</span>
+                                  <span>{t.amount}%</span>
+                                </div>
+                              </Dropdown.Item>
+                            ))}
                             <Dropdown.Item
-                              key={t.id}
                               onClick={() => {
                                 setItems([
                                   ...items.map((i) => {
                                     if (i.id === item.id) {
-                                      i.tax = t;
-                                      i.tax_id = t.id;
+                                      i.tax = undefined;
+                                      i.tax_id = undefined;
                                     }
                                     return i;
                                   }),
@@ -724,50 +834,29 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                                 }, 300);
                               }}
                             >
-                              <div className="flex justify-between items-center w-full">
-                                <span>{t.code}</span>
-                                <span>{t.amount}%</span>
+                              <div
+                                className="flex justify-between items-center w-full"
+                                style={{ width: 100 }}
+                              >
+                                <span>Delete Tax</span>
+                                <BsTrash className="text-red-500" />
                               </div>
                             </Dropdown.Item>
-                          ))}
-                          <Dropdown.Item
-                            onClick={() => {
-                              setItems([
-                                ...items.map((i) => {
-                                  if (i.id === item.id) {
-                                    i.tax = undefined;
-                                    i.tax_id = undefined;
-                                  }
-                                  return i;
-                                }),
-                              ]);
-
-                              setTimeout(() => {
-                                updateItem(item);
-                              }, 300);
-                            }}
-                          >
-                            <div
-                              className="flex justify-between items-center w-full"
-                              style={{ width: 100 }}
-                            >
-                              <span>Delete Tax</span>
-                              <BsTrash className="text-red-500" />
-                            </div>
-                          </Dropdown.Item>
-                        </Dropdown>
-                      </div>
+                          </Dropdown>
+                        </div>
+                      ) : (
+                        <div className="text-data">{item.tax?.amount}%</div>
+                      )}
                     </Table.Cell>
                   )}
 
                   <Table.Cell valign="top">
-                    <div className="flex min-h-[32px] items-center">
-                      {money(item.total ?? 0)}
-                    </div>
+                    <div className="text-data">{money(item.total ?? 0)}</div>
                   </Table.Cell>
                   <Table.Cell valign="top">
-                    <div className="flex gap-2 min-h-[32px] items-center">
-                      {/* {item.is_editing && (
+                    {isEditable && (
+                      <div className="flex gap-2 min-h-[32px] items-center">
+                        {/* {item.is_editing && (
                         <div
                           className="font-medium text-green-400 hover:text-green-600 text-xs hover:underline dark:text-green-500 cursor-pointer"
                           onClick={() => {
@@ -777,49 +866,52 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                           Save
                         </div>
                       )} */}
-                      <div
-                        className="font-medium text-red-400 hover:text-red-600 text-xs hover:underline dark:text-red-500 cursor-pointer"
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              "Are you sure you want to delete this item?"
-                            )
-                          ) {
-                            salesDeleteItem(sales!.id!, item.id).then(() => {
-                              getAllItems();
-                            });
-                          }
-                        }}
-                      >
-                        Delete
+                        <div
+                          className="font-medium text-red-400 hover:text-red-600 text-xs hover:underline dark:text-red-500 cursor-pointer"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "Are you sure you want to delete this item?"
+                              )
+                            ) {
+                              salesDeleteItem(sales!.id!, item.id).then(() => {
+                                getAllItems();
+                              });
+                            }
+                          }}
+                        >
+                          Delete
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </Table.Cell>
                 </TableRow>
               ))}
-              <Table.Row>
-                <Table.Cell colSpan={8}>
-                  <div className="flex gap-2 justify-center item">
-                    <button
-                      className="flex gap-2 justify-center item"
-                      onClick={() => {
-                        salesAddItem(salesId!, {
-                          description: "new item",
-                          quantity: 1,
-                          sales_id: salesId,
-                        }).then((res: any) => {
-                          let item = res.data;
-                          setItems([...items, item]);
-                          searchProduct("");
-                        });
-                      }}
-                    >
-                      <BsPlusCircle />
-                      Add Item
-                    </button>
-                  </div>
-                </Table.Cell>
-              </Table.Row>
+              {isEditable && (
+                <Table.Row>
+                  <Table.Cell colSpan={8}>
+                    <div className="flex gap-2 justify-center item">
+                      <button
+                        className="flex gap-2 justify-center item"
+                        onClick={() => {
+                          salesAddItem(salesId!, {
+                            description: "new item",
+                            quantity: 1,
+                            sales_id: salesId,
+                          }).then((res: any) => {
+                            let item = res.data;
+                            setItems([...items, item]);
+                            searchProduct("");
+                          });
+                        }}
+                      >
+                        <BsPlusCircle />
+                        Add Item
+                      </button>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              )}
             </Table.Body>
           </Table>
         </div>
@@ -828,130 +920,159 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           <div className="flex flex-col gap-2 space-y-4 bg-gray-50 rounded-lg p-4">
             <div>
               <Label>Description</Label>
-              <Textarea
-                value={sales?.description}
-                onChange={(e) => {
-                  setSales({
-                    ...sales,
-                    description: e.target.value,
-                  });
-                  setIsEdited(true);
-                }}
-                className="input-white"
-                style={{
-                  backgroundColor: "white",
-                }}
-                placeholder="Sales Description"
-                onBlur={() => {}}
-              />
+              {isEditable ? (
+                <Textarea
+                  value={sales?.description}
+                  onChange={(e) => {
+                    setSales({
+                      ...sales,
+                      description: e.target.value,
+                    });
+                    setIsEdited(true);
+                  }}
+                  className="input-white"
+                  style={{
+                    backgroundColor: "white",
+                  }}
+                  placeholder="Sales Description"
+                  onBlur={() => {}}
+                />
+              ) : (
+                <div className="text-data">{sales?.description}</div>
+              )}
             </div>
             <div>
               <Label>Payment Term</Label>
-              <select
-                className="rs-input"
-                value={sales?.payment_terms_code}
-                onChange={(val: any) => {
-                  setIsEdited(true);
-                  let selected = paymentTerms.find(
-                    (e) => e.code == val.target.value
-                  );
-                  if (selected) {
-                    setSales({
-                      ...sales,
-                      payment_terms: JSON.stringify(selected),
-                      payment_terms_code: selected.code,
-                    });
-                  }
-                }}
-              >
-                <option value={""}>Select Payment Term</option>
-                {paymentTermGroups.map((pt) => (
-                  <optgroup label={pt.group} key={pt.group}>
-                    {pt.terms.map((t) => (
-                      <option key={t.code} value={t.code}>
-                        {t.name}
-                      </option>
+              {isEditable ? (
+                <div>
+                  <select
+                    className="rs-input"
+                    value={sales?.payment_terms_code}
+                    onChange={(val: any) => {
+                      setIsEdited(true);
+                      let selected = paymentTerms.find(
+                        (e) => e.code == val.target.value
+                      );
+                      if (selected) {
+                        setSales({
+                          ...sales,
+                          payment_terms: JSON.stringify(selected),
+                          payment_terms_code: selected.code,
+                        });
+                      }
+                    }}
+                  >
+                    <option value={""}>Select Payment Term</option>
+                    {paymentTermGroups.map((pt) => (
+                      <optgroup label={pt.group} key={pt.group}>
+                        {pt.terms.map((t) => (
+                          <option key={t.code} value={t.code}>
+                            {t.name}
+                          </option>
+                        ))}
+                      </optgroup>
                     ))}
-                  </optgroup>
-                ))}
-              </select>
-              {sales?.payment_terms && (
-                <div className="p-2 rounded-lg bg-gray-50 text-xs">
-                  {
-                    (JSON.parse(sales?.payment_terms) as PaymentTermModel)
-                      .description
-                  }
+                  </select>
+                  {sales?.payment_terms && (
+                    <div className="p-2 rounded-lg bg-gray-50 text-xs">
+                      {
+                        (JSON.parse(sales?.payment_terms) as PaymentTermModel)
+                          .description
+                      }
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-data">
+                  {sales?.payment_terms && (
+                    <>
+                      <strong>{JSON.parse(sales?.payment_terms).name}</strong>{" "}
+                      {JSON.parse(sales?.payment_terms).description}{" "}
+                    </>
+                  )}
                 </div>
               )}
             </div>
             <div>
               <Label>Term & Condition</Label>
-              <Editor
-                apiKey={process.env.REACT_APP_TINY_MCE_KEY}
-                init={{
-                  plugins:
-                    "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount ",
-                  toolbar:
-                    "closeButton saveButton aiButton | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat ",
+              {isEditable ? (
+                <Editor
+                  apiKey={process.env.REACT_APP_TINY_MCE_KEY}
+                  init={{
+                    plugins:
+                      "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount ",
+                    toolbar:
+                      "closeButton saveButton aiButton | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat ",
 
-                  menubar: "file edit view insert format tools table custom",
-                  menu: {
-                    custom: {
-                      title: "Editor",
-                      items: "closeButton saveButton",
+                    menubar: "file edit view insert format tools table custom",
+                    menu: {
+                      custom: {
+                        title: "Editor",
+                        items: "closeButton saveButton",
+                      },
                     },
-                  },
-                }}
-                initialValue={sales?.term_condition ?? ""}
-                onChange={handleEditorChange}
-              />
+                  }}
+                  initialValue={sales?.term_condition ?? ""}
+                  onChange={handleEditorChange}
+                />
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: sales?.term_condition ?? "",
+                  }}
+                />
+              )}
             </div>
           </div>
-          <div className="flex flex-col gap-2  border rounded-lg h-fit">
-            <div className="w-full h-fit">
-              <table className="w-full">
-                <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                  <td className="py-2 px-4">
-                    <strong className="text-sm">Sub Total</strong>
-                  </td>
-                  <td className="text-right px-4">
-                    <span>{money(sales?.total_before_disc)}</span>
-                  </td>
-                </tr>
-                <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                  <td className="py-2 px-4">
-                    <strong className="text-sm">Total Discount</strong>
-                  </td>
-                  <td className="text-right px-4">
-                    <span>{money(sales?.total_discount)}</span>
-                  </td>
-                </tr>
-                <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                  <td className="py-2 px-4">
-                    <strong className="text-sm">After Discount</strong>
-                  </td>
-                  <td className="text-right px-4">
-                    <span>{money(sales?.subtotal)}</span>
-                  </td>
-                </tr>
-                <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                  <td className="py-2 px-4">
-                    <strong className="text-sm">Total Tax</strong>
-                  </td>
-                  <td className="text-right px-4">
-                    <span>{money(sales?.total_tax)}</span>
-                  </td>
-                </tr>
-                <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                  <td className="py-2 px-4">
-                    <strong className="text-lg">Total</strong>
-                  </td>
-                  <td className="text-right px-4">
-                    <span className="text-lg">{money(sales?.total)}</span>
-                  </td>
-                </tr>
-              </table>
+          <div>
+            <h3 className="font-semibold text-lg">Summary</h3>
+            <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4">
+              <div className="w-full h-fit">
+                <table className="w-full">
+                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                    <td className="py-2 px-4">
+                      <strong className="text-sm">Sub Total</strong>
+                    </td>
+                    <td className="text-right px-4">
+                      <span>{money(sales?.total_before_disc)}</span>
+                    </td>
+                  </tr>
+                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                    <td className="py-2 px-4">
+                      <strong className="text-sm">Total Discount</strong>
+                    </td>
+                    <td className="text-right px-4">
+                      <span>{money(sales?.total_discount)}</span>
+                    </td>
+                  </tr>
+                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                    <td className="py-2 px-4">
+                      <strong className="text-sm">After Discount</strong>
+                    </td>
+                    <td className="text-right px-4">
+                      <span>{money(sales?.subtotal)}</span>
+                    </td>
+                  </tr>
+                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                    <td className="py-2 px-4">
+                      <strong className="text-sm">Total Tax</strong>
+                    </td>
+                    <td className="text-right px-4">
+                      <span>{money(sales?.total_tax)}</span>
+                    </td>
+                  </tr>
+                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                    <td className="py-2 px-4">
+                      <strong className="text-lg">Total</strong>
+                    </td>
+                    <td className="text-right px-4">
+                      <span className="text-lg">{money(sales?.total)}</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </div>
+            <h3 className="font-semibold text-lg">Payment</h3>
           </div>
         </div>
       </div>
@@ -1040,11 +1161,17 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
       {sales && (
         <DrawerPostInvoice
           open={showPostModal}
-          onClose={() => setShowPostModal(false)}
+          onClose={() => {
+            setShowPostModal(false);
+            setTimeout(() => {
+              getDetail();
+            }, 300);
+          }}
           sales={{
             ...sales!,
             items: items,
           }}
+          setSales={setSales}
         />
       )}
     </AdminLayout>

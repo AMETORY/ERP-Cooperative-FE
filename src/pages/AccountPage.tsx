@@ -52,7 +52,8 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
     "RECEIVABLE",
     "LIABILITY",
     "EQUITY",
-    "INCOME",
+    "REVENUE",
+    "CONTRA_REVENUE",
     "EXPENSE",
     "COST",
   ];
@@ -61,7 +62,8 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
     "RECEIVABLE",
     "LIABILITY",
     "EQUITY",
-    "INCOME",
+    "REVENUE",
+    "CONTRA_REVENUE",
     "EXPENSE",
     "COST",
   ]);

@@ -4,6 +4,7 @@ import { Tabs } from "flowbite-react";
 import { LuWarehouse } from "react-icons/lu";
 import { RxReload } from "react-icons/rx";
 import WarehouseTable from "../components/WarehouseTable";
+import StockMovementTable from "../components/StockMovementTable";
 
 interface WarehousePageProps {}
 
@@ -33,6 +34,7 @@ const WarehousePage: FC<WarehousePageProps> = ({}) => {
             title="Stock Movement"
             icon={RxReload}
           >
+            <StockMovementTable />
           </Tabs.Item>
          
         </Tabs>

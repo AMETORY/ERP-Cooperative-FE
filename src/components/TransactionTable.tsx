@@ -29,6 +29,7 @@ import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { BsJournal } from "react-icons/bs";
+import { TbFileInvoice } from "react-icons/tb";
 
 interface TransactionTableProps {
   transactionType: string;
@@ -106,8 +107,8 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
 
   const headerLabel = () => {
     switch (transactionType) {
-      case "INCOME":
-        return "Income Transaction";
+      case "REVENUE":
+        return "Revenue Transaction";
       case "EXPENSE":
         return "Expense Transaction";
       case "EQUITY":
@@ -122,8 +123,8 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
     <div>
       {renderHeader(headerLabel(), () => {
         switch (transactionType) {
-          case "INCOME":
-            getAccounts({ page: 1, size: 100, type: "INCOME" }).then(
+          case "REVENUE":
+            getAccounts({ page: 1, size: 100, type: "REVENUE" }).then(
               (v: any) => {
                 setSourceAccounts(v.data.items);
               }
@@ -178,7 +179,7 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
             {transactionType == "TRANSFER" ? "From" : "Category"}
           </Table.HeadCell>
           <Table.HeadCell>
-            {transactionType == "TRANSFER" ? "To" : "Account"}
+            {transactionType == "TRANSFER" ? "To" : "Account/Ref"}
           </Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
@@ -222,6 +223,14 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                     className="flex gap-1 items-center"
                   >
                     <BsJournal /> {transaction.journal_ref?.description}
+                  </Link>
+                )}
+                {transaction?.sales_ref && (
+                  <Link
+                    to={`/sales/${transaction?.sales_ref?.id}`}
+                    className="flex gap-1 items-center"
+                  >
+                    <TbFileInvoice /> {transaction.sales_ref?.sales_number}
                   </Link>
                 )}
               </Table.Cell>
@@ -278,7 +287,7 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                   amount: amount,
                   source_id: selectedSource?.id,
                   destination_id: selectedDestination?.id,
-                  is_income: transactionType === "INCOME",
+                  is_income: transactionType === "REVENUE",
                   is_expense: transactionType === "EXPENSE",
                   is_equity: transactionType === "EQUITY",
                   is_transfer: transactionType === "TRANSFER",

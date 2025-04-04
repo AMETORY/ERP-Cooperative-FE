@@ -13,6 +13,7 @@ import { TransactionModel } from "../models/transaction";
 import { PaginationResponse } from "../objects/pagination";
 import { getAccountReport } from "../services/api/accountApi";
 import { money } from "../utils/helper";
+import { TbFileInvoice } from "react-icons/tb";
 
 interface AccountReportProps {}
 
@@ -131,6 +132,11 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                   {transaction?.journal_ref && (
                     <Link to={`/journal/${transaction?.journal_ref?.id}`} className="flex gap-1 items-center">
                       <BsJournal />{" "} {transaction.journal_ref?.description}
+                    </Link>
+                  )}
+                  {transaction?.sales_ref && (
+                    <Link to={`/sales/${transaction?.sales_ref?.id}`} className="flex gap-1 items-center">
+                      <TbFileInvoice />{" "} {transaction.sales_ref?.sales_number}
                     </Link>
                   )}
                 </Table.Cell>

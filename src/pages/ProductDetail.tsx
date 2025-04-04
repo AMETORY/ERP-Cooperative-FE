@@ -32,12 +32,13 @@ import { invertColor, money, nl2br } from "../utils/helper";
 import { DiscountModel } from "../models/discount";
 import Barcode from "react-barcode";
 import Moment from "react-moment";
-import { StockMovement } from "../models/stock_movement";
+import { StockMovementModel } from "../models/stock_movement";
 import ModalProduct from "../components/ModalProduct";
 import PriceForm from "./PriceForm";
 import VariantForm from "./VariantForm";
 import { UnitModel } from "../models/unit";
 import ModalProductUnit from "../components/ModalProductUnit";
+import { getStockMovements } from "../services/api/stockMovementApi";
 
 interface ProductDetailProps {}
 
@@ -53,7 +54,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
   const [selectedVariant, setSelectedVariant] = useState<VariantModel>();
   const [modalAddDiscount, setModalAddDiscount] = useState(false);
   const [selectedDiscount, setSelectedDiscount] = useState<DiscountModel>();
-  const [stockMovements, setStockMovements] = useState<StockMovement[]>([]);
+  const [stockMovements, setStockMovements] = useState<StockMovementModel[]>([]);
   const [modalAddPrice, setModalAddPrice] = useState(false);
   const [modalAddUnit, setModalAddUnit] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState<UnitModel>();
@@ -72,6 +73,8 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
     getProduct(productId!).then((res: any) => {
       setProduct(res.data);
       getPreference();
+      getStockMovements({ page: 1, size: 10, product_id: productId! })
+        .then((v: any) => setStockMovements(v.data.items));
     });
   };
 
@@ -414,7 +417,10 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
 
             <div className="mb-4">
               <small className="font-bold">Total Stock:</small>
-              <p className="text-lg"> {money(product?.total_stock)}</p>
+              <p className="text-lg">
+                {" "}
+                {money(product?.total_stock)} {product?.default_unit?.code}
+              </p>
             </div>
             <div className="mb-4">
               <small className="font-bold">Price:</small>
@@ -678,7 +684,6 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                         </td>
                         <td className="px-2 py-1 text-xs border text-center border-gray-300">
                           <div className="flex gap-2 items-center justify-between">
-                           
                             {money(v.value)} {product?.default_unit?.code}{" "}
                             {v.is_default && (
                               <Tooltip content={"Default Unit"} trigger="hover">
@@ -863,7 +868,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                           <Moment format="DD/MM/YYYY HH:mm">{v.date}</Moment>
                         </td>
                         <td className="px-2 py-1 text-xs border border-gray-300 text-center">
-                          {v.quantity}
+                          {money(v.quantity)}{v.unit?.code}
                         </td>
 
                         <td

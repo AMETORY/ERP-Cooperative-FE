@@ -9,7 +9,7 @@ import {
   Textarea,
   TextInput,
 } from "flowbite-react";
-import { BsInfoCircle } from "react-icons/bs";
+import { BsInfoCircle, BsPaypal, BsReceipt } from "react-icons/bs";
 import { LuFolderOutput, LuFolderInput, LuFilter } from "react-icons/lu";
 import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
@@ -25,6 +25,7 @@ import { SearchContext } from "../contexts/SearchContext";
 import TransactionTable from "../components/TransactionTable";
 import { PiMoney } from "react-icons/pi";
 import { TbTransfer } from "react-icons/tb";
+import { MdPayment } from "react-icons/md";
 interface TransactionPageProps {}
 
 const TransactionPage: FC<TransactionPageProps> = ({}) => {
@@ -39,7 +40,7 @@ const TransactionPage: FC<TransactionPageProps> = ({}) => {
 
   //   useEffect(() => {
   //     if (mounted) {
-  //       getAllTransactions("INCOME");
+  //       getAllTransactions("REVENUE");
   //     }
   //   }, [mounted, page, size, search]);
 
@@ -76,10 +77,10 @@ const TransactionPage: FC<TransactionPageProps> = ({}) => {
         >
           <Tabs.Item
             active={activeTab === 0}
-            title="Income"
+            title="Revenue"
             icon={LuFolderInput}
           >
-            <TransactionTable transactionType="INCOME" />
+            <TransactionTable transactionType="REVENUE" />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 1}
@@ -93,6 +94,12 @@ const TransactionPage: FC<TransactionPageProps> = ({}) => {
           </Tabs.Item>
           <Tabs.Item active={activeTab === 3} title="Transfer" icon={TbTransfer}>
             <TransactionTable transactionType="TRANSFER" />
+          </Tabs.Item>
+          <Tabs.Item active={activeTab === 4} title="Payable" icon={MdPayment}>
+            <TransactionTable transactionType="PAYABLE" />
+          </Tabs.Item>
+          <Tabs.Item active={activeTab === 4} title="Receivable" icon={BsReceipt}>
+            <TransactionTable transactionType="RECEIVABLE" />
           </Tabs.Item>
         </Tabs>
       </div>

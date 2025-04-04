@@ -150,6 +150,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           <Table.HeadCell>Date</Table.HeadCell>
           <Table.HeadCell>Sales Number</Table.HeadCell>
           <Table.HeadCell>Contact</Table.HeadCell>
+          <Table.HeadCell>Status</Table.HeadCell>
           <Table.HeadCell>Total</Table.HeadCell>
           <Table.HeadCell>Balance</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
@@ -169,6 +170,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
               </Table.Cell>
               <Table.Cell>{sale.sales_number}</Table.Cell>
               <Table.Cell>{sale.contact_data_parsed?.name}</Table.Cell>
+              <Table.Cell>{sale.status}</Table.Cell>
               <Table.Cell>{money(sale.total)}</Table.Cell>
               <Table.Cell>
                 {money((sale.total ?? 0) - (sale.paid ?? 0))}

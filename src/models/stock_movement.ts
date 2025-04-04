@@ -1,5 +1,7 @@
 import { MerchantModel } from "./merchant";
 import {  ProductModel } from "./product";
+import { SalesModel } from "./sales";
+import { UnitModel } from "./unit";
 import { WarehouseModel } from "./warehouse";
 
 
@@ -9,7 +11,7 @@ export enum MovementType {
   MovementTypeTransfer = "TRANSFER",
   MovementTypeAdjust = "ADJUST",
 }
-export interface StockMovement {
+export interface StockMovementModel {
   id: string;
   date: Date;
   description?: string | null;
@@ -18,6 +20,7 @@ export interface StockMovement {
   source_warehouse_id?: string;
   warehouse_id: string;
   warehouse?: WarehouseModel;
+  unit?: UnitModel;
   merchant_id?: string | null;
   merchant?: MerchantModel| null;
   distributor_id?: string | null;
@@ -25,4 +28,6 @@ export interface StockMovement {
   quantity: number;
   type: MovementType;
   reference_id?: string | null;
+  reference_type?: string | null;
+  sales_ref?: SalesModel;
 }
