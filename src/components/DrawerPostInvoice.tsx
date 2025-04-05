@@ -36,6 +36,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
   const { loading, setLoading } = useContext(LoadingContext);
   const [incomeAccounts, setIncomeAccounts] = useState<AccountModel[]>([]);
   const [assetAccounts, setAssetAccounts] = useState<AccountModel[]>([]);
+  const [paymentAccounts, setPaymentAccounts] = useState<AccountModel[]>([]);
   const [items, setItems] = useState<SalesItemModel[]>([]);
   const [isGlobalIncome, setIsGlobalIncome] = useState(true);
   const [isGlobalAsset, setIsGlobalAsset] = useState(true);
@@ -47,9 +48,6 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
 
   useEffect(() => {
     if (sales) {
-      getAllIncome("");
-      getAllAsset("");
-      getAllWarehouses("");
       setItems(sales.items ?? []);
       setTransactionDate(
         sales.sales_date ? moment(sales.sales_date).toDate() : new Date()
@@ -68,6 +66,23 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
       }
     }
   }, [sales]);
+  useEffect(() => {
+    getAllIncome("");
+    getAllPayment("");
+    getAllWarehouses("");
+  }, []);
+
+  const getAllPayment = (s: string) => {
+    getAccounts({
+      page: 1,
+      size: 10,
+      search: s,
+      type: "RECEIVABLE,ASSET",
+      cashflow_sub_group: "cash_bank,acceptance_from_customers",
+    }).then((e: any) => {
+      setPaymentAccounts(e.data.items);
+    });
+  };
 
   const getAllIncome = (s: string) => {
     getAccounts({ page: 1, size: 10, search: s, type: "REVENUE" }).then(
@@ -114,6 +129,33 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
       <DrawerItems>
         <div className="overflow-x-auto h-[calc(100vh-180px)] mt-4 p-2  space-y-4">
           <div className="grid grid-cols-2 gap-4">
+            <div className="w-full">
+              <Label className="">Payment Account</Label>
+              <Select
+                value={{
+                  label: sales?.payment_account?.name!,
+                  value: sales?.payment_account?.id!,
+                }}
+                options={paymentAccounts.map((c) => ({
+                  label: c.name!,
+                  value: c.id!,
+                }))}
+                onChange={(val) => {
+                  let selected = paymentAccounts.find(
+                    (c) => c.id == val!.value
+                  );
+                  setSales({
+                    ...sales,
+                    payment_account: selected,
+                    payment_account_id: selected?.id,
+                  });
+                }}
+                inputValue={""}
+                onInputChange={(e) => getAllPayment(e)}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Due Date</Label>
               <Datepicker
@@ -121,7 +163,9 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                 onChange={(e) => setDueDate(e!)}
                 className="w-full input-white"
               />
-              <small><strong>{paymentTerm?.name}</strong> {paymentTerm?.description}</small>
+              <small>
+                <strong>{paymentTerm?.name}</strong> {paymentTerm?.description}
+              </small>
             </div>
             <div>
               <Label>Transaction Date</Label>
@@ -234,7 +278,6 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                     </div>
                   </Table.Cell>
                   <Table.Cell valign="top">
-                    <Label className="">Revenue Account</Label>
                     <div className="flex gap-2">
                       <Select
                         isDisabled={isGlobalIncome && i > 0}
@@ -290,8 +333,8 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                         </div>
                       )}
                     </div>
-                    <div className="h-4"></div>
-                    <Label className="">Asset Account</Label>
+                    {/* <div className="h-4"></div> */}
+                    {/* <Label className="">Asset Account</Label>
                     <div className="flex gap-2">
                       <Select
                         isDisabled={isGlobalAsset && i > 0}
@@ -344,7 +387,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                           <Label className=""></Label>
                         </div>
                       )}
-                    </div>
+                    </div> */}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -363,18 +406,15 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                     toast.error(
                       `Sales account for ${item.description} is required`
                     );
+                    return;
                     break;
                   }
-                  if (!item.asset_account_id) {
-                    toast.error(
-                      `Asset account for ${item.description} is required`
-                    );
-                    break;
-                  }
+
                   if (!item.warehouse_id) {
                     toast.error(
                       `Warehouse for ${item.description} is required`
                     );
+                    return;
                     break;
                   }
                 }

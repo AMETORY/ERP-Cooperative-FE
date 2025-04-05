@@ -107,7 +107,11 @@ export const toSnakeCase = (str) => {
 
 export const money = (val, friction = 2) => {
     if (!val) return 0;
-    return val.toLocaleString('id-ID', { useGrouping: true, maximumFractionDigits: friction });
+    const options = { useGrouping: true, maximumFractionDigits: friction };
+    if (val < 0) {
+        return `(${Math.abs(val).toLocaleString('id-ID', options)})`;
+    }
+    return val.toLocaleString('id-ID', options);
 }
 
 export const nl2br = (str) => {

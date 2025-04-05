@@ -1,5 +1,6 @@
 import { AccountModel } from "./account";
 import { JournalModel } from "./journal";
+import { PurchaseModel } from "./purchase";
 import { SalesModel } from "./sales";
 
 export interface TransactionModel {
@@ -30,6 +31,7 @@ export interface TransactionModel {
   transaction_ref?: TransactionModel;
   journal_ref?: JournalModel;
   sales_ref?: SalesModel;
+  purchase_ref?: PurchaseModel;
   company_id: string;
   user_id: string;
 }

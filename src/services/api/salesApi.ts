@@ -46,6 +46,12 @@ export const postInvoice = async (id: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
+export const paymentInvoice = async (id: string, data: any) => {
+  return await customFetch(`api/v1/sales/${id}/payment`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
 export const salesAddItem = async (id: string, data: any) => {
   return await customFetch(`api/v1/sales/${id}/add-item`, {
     method: "PUT",
@@ -66,5 +72,7 @@ export const salesUpdateItem = async (id: string, itemId: string, data: any) => 
 
 
 export const deleteSales = async (id: string) => {
-  await customFetch(`api/v1/sales/${id}`);
+  await customFetch(`api/v1/sales/${id}`, {
+    method: "DELETE",
+  });
 };

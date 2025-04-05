@@ -1,7 +1,7 @@
 import { Datepicker, Drawer, Label, Table } from "flowbite-react";
 import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
-import { BsJournal } from "react-icons/bs";
+import { BsCartCheck, BsJournal } from "react-icons/bs";
 import { LuFilter } from "react-icons/lu";
 import Moment from "react-moment";
 import { Link, useParams } from "react-router-dom";
@@ -154,6 +154,14 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                         className="flex gap-1 items-center"
                       >
                         <TbFileInvoice /> {transaction.sales_ref?.sales_number}
+                      </Link>
+                    )}
+                    {transaction?.purchase_ref && (
+                      <Link
+                        to={`/purchase/${transaction?.purchase_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <BsCartCheck /> {transaction.purchase_ref?.purchase_number}
                       </Link>
                     )}
                   </Table.Cell>

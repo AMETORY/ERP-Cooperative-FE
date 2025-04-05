@@ -7,6 +7,7 @@ import {
   Table,
   Textarea,
   TextInput,
+  ToggleSwitch,
 } from "flowbite-react";
 import { useContext, useEffect, useRef, useState, type FC } from "react";
 import { LoadingContext } from "../contexts/LoadingContext";
@@ -28,7 +29,7 @@ import Moment from "react-moment";
 import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { BsJournal } from "react-icons/bs";
+import { BsCartCheck, BsJournal } from "react-icons/bs";
 import { TbFileInvoice } from "react-icons/tb";
 
 interface TransactionTableProps {
@@ -57,6 +58,8 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
   const [pagination, setPagination] = useState<PaginationResponse>();
   const { search, setSearch } = useContext(SearchContext);
   const amountRef = useRef<HTMLInputElement | null>(null);
+  const [isOpeningBalance, setIsOpeningBalance] = useState(false);
+  const [isPrive, setIsPrive] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionModel>();
 
@@ -233,6 +236,14 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                     <TbFileInvoice /> {transaction.sales_ref?.sales_number}
                   </Link>
                 )}
+                {transaction?.purchase_ref && (
+                  <Link
+                    to={`/purchase/${transaction?.purchase_ref?.id}`}
+                    className="flex gap-1 items-center"
+                  >
+                    <BsCartCheck /> {transaction.purchase_ref?.purchase_number}
+                  </Link>
+                )}
               </Table.Cell>
               <Table.Cell>
                 <a
@@ -284,13 +295,14 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 let data = {
                   date: date?.toISOString(),
                   description: description,
-                  amount: amount,
+                  amount: isPrive ? -amount : amount,
                   source_id: selectedSource?.id,
                   destination_id: selectedDestination?.id,
                   is_income: transactionType === "REVENUE",
                   is_expense: transactionType === "EXPENSE",
                   is_equity: transactionType === "EQUITY",
                   is_transfer: transactionType === "TRANSFER",
+                  is_opening_balance: isOpeningBalance,
                 };
                 await createTransaction(data);
 
@@ -345,6 +357,24 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                   </h1>
                 }
               </div>
+              {transactionType === "EQUITY" && (
+                <ToggleSwitch
+                  checked={isOpeningBalance}
+                  onChange={(e) => {
+                    setIsOpeningBalance(e);
+                  }}
+                  label="Is Opening Balance?"
+                  />
+              )}
+              {transactionType === "EQUITY" && (
+                <ToggleSwitch
+                  checked={isPrive}
+                  onChange={(e) => {
+                    setIsPrive(e);
+                  }}
+                  label="Is Prive / Dividend?"
+                  />
+              )}
               <div>
                 <Label>
                   {transactionType == "TRANSFER" ? "From" : "Category"}

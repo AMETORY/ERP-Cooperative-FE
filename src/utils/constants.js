@@ -52,3 +52,9 @@ export const purchaseTypes = [
     { value: "PURCHASE", label: "Purchase" },
     { value: "PURCHASE_ECOMMERCE", label: "E-commerce" },
 ];
+
+export const paymentMethods = [
+    { value: "CASH", label: "Cash" },
+    { value: "BANK_TRANSFER", label: "Bank Transfer" },
+    { value: "QRIS", label: "QRIS" },
+];

@@ -27,7 +27,7 @@ import ModalSales from "../components/ModalSales";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { PaymentTermModel } from "../models/payment_term";
 import { ProductModel } from "../models/product";
-import { SalesItemModel, SalesModel } from "../models/sales";
+import { SalesItemModel, SalesModel, SalesPaymentModel } from "../models/sales";
 import { TaxModel } from "../models/tax";
 import { WarehouseModel } from "../models/warehouse";
 import { getPaymentTermGroups } from "../services/api/paymentTermApi";
@@ -36,6 +36,7 @@ import {
   createSales,
   getSalesDetail,
   getSalesItems,
+  paymentInvoice,
   publishSales,
   salesAddItem,
   salesDeleteItem,
@@ -46,12 +47,15 @@ import { getTaxes } from "../services/api/taxApi";
 import { getWarehouses } from "../services/api/warehouseApi";
 import { groupBy, money } from "../utils/helper";
 import DrawerPostInvoice from "../components/DrawerPostInvoice";
-import { FaPaperPlane } from "react-icons/fa6";
+import { FaPaperPlane, FaPlane } from "react-icons/fa6";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
 import { MdOutlinePublish } from "react-icons/md";
 import { PiQuotes } from "react-icons/pi";
 import Moment from "react-moment";
+import { paymentMethods } from "../utils/constants";
+import { AccountModel } from "../models/account";
+import { getAccounts } from "../services/api/accountApi";
 
 interface SalesDetailProps {}
 
@@ -79,6 +83,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [showCreateSales, setShowCreateSales] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [payment, setPayment] = useState<SalesPaymentModel>();
+  const [discountEnabled, setDiscountEnabled] = useState(false);
+  const [assets, setAssets] = useState<AccountModel[]>([]);
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
   >([]);
@@ -260,15 +267,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
       salesUpdateItem(salesId!, item.id!, data).then((v: any) => {
         getSalesDetail(salesId!).then((res: any) => {
           setSales(res.data);
+          getAllItems();
         });
-        setItems([
-          ...items.map((i) => {
-            if (i.id === item.id) {
-              return v.data;
-            }
-            return i;
-          }),
-        ]);
       });
     }
   };
@@ -965,7 +965,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               )}
             </div>
             <div>
-              <Label>Payment Term</Label>
+              <div>
+                <Label>Payment Term</Label>
+              </div>
               {isEditable ? (
                 <div>
                   <select
@@ -1095,10 +1097,223 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </table>
               </div>
             </div>
-            <h3 className="font-semibold text-lg">Payment</h3>
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold text-lg">Payment</h3>
+              <Button
+                size="xs"
+                color="green"
+                onClick={() => {
+                  let payment_discount = 0;
+                  let paymentTerm: PaymentTermModel;
+                  if (sales?.payment_terms) {
+                    paymentTerm = JSON.parse(
+                      sales?.payment_terms
+                    ) as PaymentTermModel;
+                    if (
+                      paymentTerm.discount_due_days &&
+                      moment(sales?.discount_due_date) <
+                        moment(sales?.published_at).add(
+                          paymentTerm.discount_due_days,
+                          "days"
+                        )
+                    ) {
+                      setDiscountEnabled(true);
+                      payment_discount = paymentTerm.discount_amount ?? 0;
+                    }
+                  }
+                  setPayment({
+                    payment_date: new Date(),
+                    sales_id: sales?.id!,
+                    amount: sales?.total! - sales?.paid!,
+                    notes: "",
+                    payment_discount,
+                    payment_method: "CASH",
+                    payment_method_notes: "",
+                  });
+                  getAccounts({
+                    page: 1,
+                    size: 10,
+                    cashflow_sub_group: "cash_bank",
+                  }).then((e: any) => {
+                    setAssets(e.data.items);
+                  });
+                }}
+              >
+                + Payment
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+      <Modal show={payment != undefined} onClose={() => setPayment(undefined)}>
+        <Modal.Header>Payment</Modal.Header>
+        <Modal.Body>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                await paymentInvoice(sales!.id!, payment!);
+                setPayment(undefined);
+                toast.success("Payment added successfully");
+                setTimeout(() => {
+                  getDetail();
+                }, 300);
+              } catch (error) {
+                toast.error(`${error}`);
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
+            <div className="flex flex-col space-y-4">
+              <div>
+                <label className="font-semibold text-sm">Payment Date</label>
+                <Datepicker
+                  required
+                  value={payment?.payment_date}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      payment_date: val!,
+                    });
+                  }}
+                  className="input-white"
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Description</label>
+                <Textarea
+                  required
+                  placeholder="Description"
+                  value={payment?.notes}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      notes: val!.target.value,
+                    });
+                  }}
+                  style={{ backgroundColor: "white" }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Payment Amount</label>
+                <CurrencyInput
+                  className="rs-input !p-1.5  text-xl"
+                  required
+                  value={payment?.amount}
+                  groupSeparator="."
+                  decimalSeparator=","
+                  onValueChange={(_, __, val) => {
+                    setPayment({
+                      ...payment!,
+                      amount: val?.float ?? 0,
+                    });
+                  }}
+                  style={{ fontSize: "1.5rem" }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Account</label>
+                <Select
+                  options={assets.map((a) => ({
+                    label: a.name,
+                    value: a.id,
+                  }))}
+                  value={{
+                    label: assets.find(
+                      (a) => a.id === payment?.asset_account_id
+                    )?.name,
+                    value: payment?.asset_account_id,
+                  }}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      asset_account_id: val?.value!,
+                    });
+                  }}
+                  onInputChange={(val) => {
+                    getAccounts({
+                      page: 1,
+                      size: 10,
+                      cashflow_sub_group: "cash_bank",
+                      search: val,
+                    }).then((e: any) => {
+                      setAssets(e.data.items);
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Payment Method</label>
+                <Select
+                  options={paymentMethods}
+                  required
+                  value={{
+                    value: payment?.payment_method,
+                    label: paymentMethods.find(
+                      (m) => m.value === payment?.payment_method
+                    )?.label,
+                  }}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      payment_method: val?.value!,
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">
+                  Payment Method Notes
+                </label>
+                <Textarea
+                  placeholder="Payment Method Notes"
+                  value={payment?.payment_method_notes}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      payment_method_notes: val!.target.value,
+                    });
+                  }}
+                  style={{ backgroundColor: "white" }}
+                />
+              </div>
+              {discountEnabled && (
+                <div>
+                  <label className="font-semibold text-sm">
+                    Payment Discount
+                  </label>
+                  <div className="relative w-fit">
+                    <CurrencyInput
+                      disabled={!discountEnabled}
+                      className="rs-input !p-1.5 text-right !pr-6"
+                      value={payment?.payment_discount ?? 0}
+                      max={payment?.payment_discount ?? 0}
+                      groupSeparator="."
+                      decimalSeparator=","
+                      onValueChange={(_, __, val) => {
+                        setPayment({
+                          ...payment!,
+                          payment_discount: val?.float ?? 0,
+                        });
+                      }}
+                      style={{ width: 60 }}
+                    />
+                    <span className="absolute top-1.5 right-2">%</span>
+                  </div>
+                </div>
+              )}
+              <div className="h-6"></div>
+              <div className="w-full flex">
+                <Button type="submit" className="w-full">
+                  <IoPaperPlaneOutline className="mr-2" />
+                  Send Payment
+                </Button>
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
       <ModalProduct
         product={product}
         show={showModalProduct}
@@ -1181,7 +1396,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           saveSales={saveSales}
         />
       )}
-      {sales && (
+      {sales && showPostModal && (
         <DrawerPostInvoice
           open={showPostModal}
           onClose={() => {

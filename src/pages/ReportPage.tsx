@@ -8,7 +8,7 @@ interface ReportPageProps {}
 const ReportPage: FC<ReportPageProps> = ({}) => {
   const reportCards = [
     {
-      icon: <BsGraphUp size={40} />,
+      icon: <img src="/icon/cash-flow.png" width={40} />,
       title: "Cashflow Statement",
       description: "View detailed cash inflows and outflows.",
       link: "/cashflow-statement",
@@ -20,17 +20,25 @@ const ReportPage: FC<ReportPageProps> = ({}) => {
       link: "/cogs",
     },
     {
-      icon: <BsPieChart size={40} />,
+      // icon: <BsPieChart size={40} />,
+      icon: <img src="/icon/profit-loss.png" width={40} />,
       title: "Profit and Loss Statement",
       description: "Check the profit and loss trends over time.",
       link: "/profit-loss-statement",
     },
     {
-      icon: <BsTable size={40} />,
+      icon: <img src="/icon/budget-balance.png" width={40} />,
       title: "Balance Sheet",
       description: "View detailed assets, liabilities, and equity.",
       link: "/balance-sheet",
     },
+    {
+      icon: <img src="/icon/investment.png" width={40} />,
+      title: "Capital Change Statement",
+      description: "Review changes in equity capital over a period.",
+      link: "/capital-change-statement",
+    },
+
   ];
   return (
     <AdminLayout>
