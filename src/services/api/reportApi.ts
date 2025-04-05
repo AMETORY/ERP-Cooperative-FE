@@ -24,3 +24,9 @@ export const capitalChangeReport = async (start_date: Date, end_date: Date) => {
     body: JSON.stringify({ start_date, end_date }),
   });
 };
+export const cashFlowReport = async (start_date: Date, end_date: Date) => {
+  return await customFetch("api/v1/report/cash-flow", {
+    method: "POST",
+    body: JSON.stringify({ start_date, end_date }),
+  });
+};

@@ -24,6 +24,7 @@ import CogsReport from "../pages/CogsReport";
 import ProfitLoss from "../pages/ProfitLossReport";
 import BalanceSheet from "../pages/BalanceSheetReport";
 import CapitalChange from "../pages/CapitalChangeReport";
+import CashFlow from "../pages/CashFlow";
 
 interface PrivateRouteProps {}
 
@@ -56,6 +57,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/cogs" element={<CogsReport />} />
       <Route path="/profit-loss-statement" element={<ProfitLoss />} />
       <Route path="/balance-sheet" element={<BalanceSheet />} />
+      <Route path="/cashflow-statement" element={<CashFlow />} />
       <Route path="/capital-change-statement" element={<CapitalChange />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />

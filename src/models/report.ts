@@ -93,3 +93,18 @@ export interface CapitalChangeModel {
   ending_balance: number;
 }
 
+
+export interface CashFlowReport {
+  operating: CashflowSubGroup[];
+  investing: CashflowSubGroup[];
+  financing: CashflowSubGroup[];
+  total_operating: number;
+  total_investing: number;
+  total_financing: number;
+}
+
+export interface CashflowSubGroup {
+  name: string;
+  description: string;
+  amount: number;
+}
