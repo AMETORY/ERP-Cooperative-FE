@@ -119,7 +119,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
               <Datepicker
                 value={dueDate ? moment(dueDate).toDate() : new Date()}
                 onChange={(e) => setDueDate(e!)}
-                className="w-full"
+                className="w-full input-white"
               />
               <small><strong>{paymentTerm?.name}</strong> {paymentTerm?.description}</small>
             </div>
@@ -128,7 +128,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
               <Datepicker
                 value={transactionDate}
                 onChange={(e: any) => setTransactionDate(e)}
-                className="w-full"
+                className="w-full input-white"
               />
             </div>
           </div>

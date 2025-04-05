@@ -17,6 +17,10 @@ import SalesDetail from "../pages/SalesDetail";
 import ProductPage from "../pages/ProductPage";
 import WarehousePage from "../pages/WarehousePage";
 import ProductDetail from "../pages/ProductDetail";
+import PurchasePage from "../pages/PurchasePage";
+import PurchaseDetail from "../pages/PurchaseDetail";
+import ReportPage from "../pages/ReportPage";
+import CogsReport from "../pages/CogsReport";
 
 interface PrivateRouteProps {}
 
@@ -37,12 +41,16 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/tax" element={<TaxPage />} />
       <Route path="/sales" element={<SalesPage />} />
       <Route path="/sales/:salesId" element={<SalesDetail />} />
+      <Route path="/purchase" element={<PurchasePage />} />
+      <Route path="/purchase/:purchaseId" element={<PurchaseDetail />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/product" element={<ProductPage />} />
       <Route path="/product/:productId" element={<ProductDetail />} />
       <Route path="/warehouse" element={<WarehousePage />} />
       <Route path="/setting" element={<SettingPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/report" element={<ReportPage />} />
+      <Route path="/cogs" element={<CogsReport />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />

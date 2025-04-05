@@ -3,6 +3,7 @@ import { useContext, useEffect, useState, type FC } from "react";
 import { AiOutlineDashboard, AiOutlineTransaction } from "react-icons/ai";
 import {
   BsAsterisk,
+  BsCartCheck,
   BsGear,
   BsJournal,
   BsKanban,
@@ -10,7 +11,7 @@ import {
   BsPercent,
   BsWhatsapp,
 } from "react-icons/bs";
-import { GoTasklist } from "react-icons/go";
+import { GoReport, GoTasklist } from "react-icons/go";
 import { HiOutlineChat } from "react-icons/hi";
 import {
   HiOutlineInboxArrowDown,
@@ -35,7 +36,7 @@ import {
 import { MdOutlineAssistant } from "react-icons/md";
 import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import Logo from "./logo";
-import { TbFileInvoice } from "react-icons/tb";
+import { TbFileInvoice, TbReportAnalytics, TbReportMoney } from "react-icons/tb";
 import { RiShoppingBagLine } from "react-icons/ri";
 import { PiWarehouse } from "react-icons/pi";
 
@@ -159,6 +160,36 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </Tooltip>
               {!collapsed && (
                 <span className="flex-1 ms-3 whitespace-nowrap">Sales</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("inventory:purchase:read") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/purchase")}
+            >
+              <Tooltip content="Purchase">
+                <BsCartCheck />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Purchase</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("finance:report:menu") && (
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/report")}
+            >
+              <Tooltip content="Report">
+                <TbReportAnalytics />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Report</span>
               )}
             </span>
           </li>

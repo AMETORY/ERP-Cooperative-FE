@@ -11,6 +11,7 @@ import {
   Table,
   TableRow,
   Textarea,
+  TextInput,
 } from "flowbite-react";
 import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
@@ -21,27 +22,27 @@ import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import AdminLayout from "../components/layouts/admin";
-import ModalListContact from "../components/ModalListContact";
+// import ModalListContact from "../components/ModalListContact";
 import ModalProduct from "../components/ModalProduct";
-import ModalSales from "../components/ModalSales";
+import ModalPurchase from "../components/ModalPurchase";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { PaymentTermModel } from "../models/payment_term";
 import { ProductModel } from "../models/product";
-import { SalesItemModel, SalesModel } from "../models/sales";
+import { PurchaseItemModel, PurchaseModel } from "../models/purchase";
 import { TaxModel } from "../models/tax";
 import { WarehouseModel } from "../models/warehouse";
 import { getPaymentTermGroups } from "../services/api/paymentTermApi";
 import { getProducts } from "../services/api/productApi";
 import {
-  createSales,
-  getSalesDetail,
-  getSalesItems,
-  publishSales,
-  salesAddItem,
-  salesDeleteItem,
-  salesUpdateItem,
-  updateSales,
-} from "../services/api/salesApi";
+  createPurchase,
+  getPurchaseDetail,
+  getPurchaseItems,
+  publishPurchase,
+  purchaseAddItem,
+  purchaseDeleteItem,
+  purchaseUpdateItem,
+  updatePurchase,
+} from "../services/api/purchaseApi";
 import { getTaxes } from "../services/api/taxApi";
 import { getWarehouses } from "../services/api/warehouseApi";
 import { groupBy, money } from "../utils/helper";
@@ -52,21 +53,22 @@ import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
 import { MdOutlinePublish } from "react-icons/md";
 import { PiQuotes } from "react-icons/pi";
 import Moment from "react-moment";
+import DrawerPostPurchase from "../components/DrawerPostPurchase";
 
-interface SalesDetailProps {}
+interface PurchaseDetailProps {}
 
-const SalesDetail: FC<SalesDetailProps> = ({}) => {
+const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
   const nav = useNavigate();
   const { loading, setLoading } = useContext(LoadingContext);
-  const { salesId } = useParams();
+  const { purchaseId } = useParams();
   const [mounted, setMounted] = useState(false);
-  const [sales, setSales] = useState<SalesModel>();
+  const [purchase, setPurchase] = useState<PurchaseModel>();
   const [showWarehouse, setShowWarehouse] = useState(true);
   const [showTax, setShowTax] = useState(true);
-  const [items, setItems] = useState<SalesItemModel[]>([]);
+  const [items, setItems] = useState<PurchaseItemModel[]>([]);
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [product, setProduct] = useState<ProductModel>();
-  const [selectedItem, setSelectedItem] = useState<SalesItemModel>();
+  const [selectedItem, setSelectedItem] = useState<PurchaseItemModel>();
   const [showModalProduct, setShowModalProduct] = useState(false);
   const [taxes, setTaxes] = useState<TaxModel[]>([]);
   const [modalNoteOpen, setModalNoteOpen] = useState(false);
@@ -74,11 +76,12 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [warehouses, setWarehouses] = useState<WarehouseModel[]>([]);
   const [itemNotes, setItemNotes] = useState("");
   const [isEdited, setIsEdited] = useState(false);
-  const [salesTitle, setSalesTitle] = useState("");
-  const [tempSales, setTempSales] = useState<SalesModel>();
-  const [showCreateSales, setShowCreateSales] = useState(false);
+  const [purchaseTitle, setPurchaseTitle] = useState("");
+  const [tempPurchase, setTempPurchase] = useState<PurchaseModel>();
+  const [showCreatePurchase, setShowCreatePurchase] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
   >([]);
@@ -87,64 +90,64 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
     setMounted(true);
   }, []);
   useEffect(() => {
-    if (mounted && salesId) {
+    if (mounted && purchaseId) {
       getDetail();
+      getAllItems();
+      getAllTaxes("");
+      getAllWarehouses("");
+      getPaymentTermGroups().then((res: any) => {
+        let groups: { group: string; terms: PaymentTermModel[] }[] = [];
+        let terms: PaymentTermModel[] = [];
+        for (const key of Object.keys(res.data)) {
+          groups.push({
+            group: key,
+            terms: res.data[key],
+          });
+          for (const term of res.data[key]) {
+            terms.push(term);
+          }
+        }
+        setPaymentTermGroups(groups);
+        setPaymentTerms(terms);
+      });
     }
-  }, [mounted, salesId]);
+  }, [mounted, purchaseId]);
 
   const getDetail = () => {
-    getSalesDetail(salesId!).then((res: any) => {
-      setSales(res.data);
+    getPurchaseDetail(purchaseId!).then((res: any) => {
+      setPurchase(res.data);
       setIsEditable(res.data.status == "DRAFT");
-    });
-    getAllItems();
-    getAllTaxes("");
-    getAllWarehouses("");
-    getPaymentTermGroups().then((res: any) => {
-      let groups: { group: string; terms: PaymentTermModel[] }[] = [];
-      let terms: PaymentTermModel[] = [];
-      for (const key of Object.keys(res.data)) {
-        groups.push({
-          group: key,
-          terms: res.data[key],
-        });
-        for (const term of res.data[key]) {
-          terms.push(term);
-        }
-      }
-      setPaymentTermGroups(groups);
-      setPaymentTerms(terms);
     });
   };
   useEffect(() => {
-    if (sales) {
+    if (purchase) {
     }
-  }, [sales]);
+  }, [purchase]);
   useEffect(() => {
     if (product) {
     }
   }, [product]);
 
   const handleEditorChange = (e: any) => {
-    setSales({
-      ...sales!,
+    setPurchase({
+      ...purchase!,
       term_condition: e.target.getContent(),
     });
     setIsEdited(true);
   };
 
-  const saveSales = async (data: SalesModel) => {
+  const savePurchase = async (data: PurchaseModel) => {
     try {
-      if (!data.sales_number) {
-        toast.error("Sales number is required");
+      if (!data.purchase_number) {
+        toast.error("Purchase number is required");
         return;
       }
       setLoading(true);
-      let resp: any = await createSales(data);
-      toast.success("sales created successfully");
-      setShowCreateSales(false);
+      let resp: any = await createPurchase(data);
+      toast.success("purchase created successfully");
+      setShowCreatePurchase(false);
       // getAllContacts("");
-      nav(`/sales/${resp.data.id}`);
+      nav(`/purchase/${resp.data.id}`);
     } catch (error) {
       toast.error(`${error}`);
     } finally {
@@ -153,22 +156,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   };
 
   const getAllItems = () => {
-    getSalesItems(salesId!).then((res: any) => {
+    getPurchaseItems(purchaseId!).then((res: any) => {
       let items = [];
-      for (const item of res.data as SalesItemModel[]) {
-        if (item.product?.prices) {
-          item.availablePrices = [];
-          let prices = groupBy(item.product.prices, "price_category_id");
-          for (const key of Object.keys(prices)) {
-            if (prices[key].length > 0) {
-              item.availablePrices?.push({
-                id: key,
-                name: prices[key][0].price_category.name,
-                prices: prices[key],
-              });
-            }
-          }
-        }
+      for (const item of res.data as PurchaseItemModel[]) {
         items.push(item);
       }
       setItems(items);
@@ -203,47 +193,23 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
     });
   };
   const renderHeader = () => {
-    switch (sales?.document_type) {
-      case "INVOICE":
+    switch (purchase?.document_type) {
+      case "BILL":
         return (
           <Badge
             icon={TbFileInvoice}
             className="flex gap-2 flex-row"
             color="green"
           >
-            Invoice
+            Purchase
           </Badge>
         );
         break;
 
-      case "DELIVERY":
-        return (
-          <Badge
-            icon={TbTruckDelivery}
-            className="flex gap-2 flex-row"
-            color="pink"
-          >
-            Delivery
-          </Badge>
-        );
-        break;
-
-      case "SALES_ORDER":
+      case "PURCHASE_ORDER":
         return (
           <Badge icon={BsCart2} className="flex gap-2 flex-row" color="purple">
-            Sales Order
-          </Badge>
-        );
-        break;
-
-      case "SALES_QUOTE":
-        return (
-          <Badge
-            icon={PiQuotes}
-            className="flex gap-2 flex-row"
-            color="warning"
-          >
-            Sales Quote
+            Purchase Order
           </Badge>
         );
         break;
@@ -254,12 +220,12 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
     return null;
   };
 
-  const updateItem = (item: SalesItemModel) => {
+  const updateItem = (item: PurchaseItemModel) => {
     let data = items.find((c) => c.id === item.id);
     if (data) {
-      salesUpdateItem(salesId!, item.id!, data).then((v: any) => {
-        getSalesDetail(salesId!).then((res: any) => {
-          setSales(res.data);
+      purchaseUpdateItem(purchaseId!, item.id!, data).then((v: any) => {
+        getPurchaseDetail(purchaseId!).then((res: any) => {
+          setPurchase(res.data);
         });
         setItems([
           ...items.map((i) => {
@@ -279,13 +245,13 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           <div>
             <div className="w-fit">{renderHeader()}</div>
             <h1 className="text-3xl font-bold text-gray-700">
-              {sales?.sales_number}
+              {purchase?.purchase_number}
             </h1>
           </div>
           <div className="flex gap-2 items-center">
-            <div>{sales?.status}</div>
+            <div>{purchase?.status}</div>
             <Dropdown inline>
-              {!sales?.published_at && sales?.document_type == "INVOICE" && (
+              {!purchase?.published_at && purchase?.document_type == "BILL" && (
                 <Dropdown.Item
                   icon={IoPaperPlaneOutline}
                   onClick={() => {
@@ -295,7 +261,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   POST INVOICE
                 </Dropdown.Item>
               )}
-              {!sales?.published_at && sales?.document_type != "INVOICE" && (
+              {!purchase?.published_at && purchase?.document_type != "BILL" && (
                 <Dropdown.Item
                   icon={MdOutlinePublish}
                   onClick={() => {
@@ -305,7 +271,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       )
                     ) {
                       setLoading(true);
-                      publishSales(sales?.id!)
+                      publishPurchase(purchase?.id!)
                         .then((res: any) => {
                           getDetail();
                         })
@@ -321,45 +287,44 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   RELEASE
                 </Dropdown.Item>
               )}
-              {(sales?.document_type == "SALES_QUOTE" ||
-                sales?.document_type == "SALES_ORDER") && (
+              {purchase?.document_type == "PURCHASE_ORDER" && (
                 <Dropdown.Item
                   icon={TbFileInvoice}
                   onClick={() => {
-                    setTempSales({
-                      ...sales,
-                      document_type: "INVOICE",
-                      sales_number: "",
+                    setTempPurchase({
+                      ...purchase,
+                      document_type: "BILL",
+                      purchase_number: "",
                       notes: "",
                       status: "DRAFT",
-                      ref_id: sales?.id,
-                      ref_type: sales?.document_type,
-                      sales_date: moment().toISOString(),
+                      ref_id: purchase?.id,
+                      ref_type: purchase?.document_type,
+                      purchase_date: moment().toISOString(),
                       items: items,
                     });
-                    setSalesTitle("Invoice");
-                    setShowCreateSales(true);
+                    setPurchaseTitle("Purchase");
+                    setShowCreatePurchase(true);
                   }}
                 >
                   Create Invoice
                 </Dropdown.Item>
               )}
-              {sales?.document_type == "INVOICE" && (
+              {/* {purchase?.document_type == "BILL" && (
                 <Dropdown.Item icon={TbTruckDelivery}>
                   Create Delivery Letter
                 </Dropdown.Item>
-              )}
+              )} */}
             </Dropdown>
             {isEdited && (
               <Button
                 size="xs"
                 onClick={() => {
                   setLoading(true);
-                  updateSales(sales?.id!, sales!)
+                  updatePurchase(purchase?.id!, purchase!)
                     .then(() => {
                       getDetail();
                       setIsEdited(false);
-                      toast.success("Sales updated successfully");
+                      toast.success("Purchase updated successfully");
                     })
                     .catch((err) => toast.error(`${err}`))
                     .finally(() => setLoading(false));
@@ -376,18 +341,20 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               <Label>Date</Label>
               {isEditable ? (
                 <Datepicker
-                  value={moment(sales?.sales_date).toDate()}
+                  value={moment(purchase?.purchase_date).toDate()}
                   onChange={(date) => {
-                    setSales({
-                      ...sales,
-                      sales_date: moment(date).toISOString(),
+                    setPurchase({
+                      ...purchase,
+                      purchase_date: moment(date).toISOString(),
                     });
                   }}
                   className="input-white"
                 />
               ) : (
                 <div className="text-data">
-                  <Moment format="DD MMM YYYY">{sales?.sales_date}</Moment>
+                  <Moment format="DD MMM YYYY">
+                    {purchase?.purchase_date}
+                  </Moment>
                 </div>
               )}
             </div>
@@ -395,10 +362,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               <Label>Notes</Label>
               {isEditable ? (
                 <Textarea
-                  value={sales?.notes}
+                  value={purchase?.notes}
                   onChange={(e) => {
-                    setSales({
-                      ...sales,
+                    setPurchase({
+                      ...purchase,
                       notes: e.target.value,
                     });
                     setIsEdited(true);
@@ -409,43 +376,20 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   }}
                 />
               ) : (
-                <div className="text-data">{sales?.notes}</div>
+                <div className="text-data">{purchase?.notes}</div>
               )}
             </div>
           </div>
           <div className="flex flex-col space-y-4">
             <div>
               <Label>Billed To</Label>
-              <div>{sales?.contact_data_parsed?.name}</div>
-              <div>{sales?.contact_data_parsed?.address}</div>
+              <div>{purchase?.contact_data_parsed?.name}</div>
+              <div>{purchase?.contact_data_parsed?.address}</div>
               <div>
-                {sales?.contact_data_parsed?.phone}{" "}
-                {sales?.contact_data_parsed?.email && "-"}{" "}
-                {sales?.contact_data_parsed?.email}
+                {purchase?.contact_data_parsed?.phone}{" "}
+                {purchase?.contact_data_parsed?.email && "-"}{" "}
+                {purchase?.contact_data_parsed?.email}
               </div>
-            </div>
-            <div>
-              <Label>Shipped To</Label>
-              {sales?.delivery ? (
-                <>
-                  <div>{sales?.delivery_data_parsed?.name}</div>
-                  <div>{sales?.delivery_data_parsed?.address}</div>
-                  <div>
-                    {sales?.delivery_data_parsed?.phone}{" "}
-                    {sales?.delivery_data_parsed?.email && "-"}{" "}
-                    {sales?.delivery_data_parsed?.email}
-                  </div>
-                </>
-              ) : (
-                <div
-                  className="text-xs italic cursor-pointer"
-                  onClick={() => {
-                    setModalShippingOpen(true);
-                  }}
-                >
-                  + Shipping Address
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -504,30 +448,71 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   <Table.Cell key={item.id}>
                     {isEditable ? (
                       <div>
-                        <CreatableSelect
-                          id="product"
-                          value={{
-                            label: item.product_id
-                              ? item.product?.name
-                              : item.description,
-                            value: item.product_id,
-                          }}
-                          options={products.map((c) => ({
-                            label: c.name!,
-                            value: c.id!,
-                          }))}
-                          onChange={(e) => {
-                            if (e?.value) {
+                        {item.is_cost ? (
+                          <TextInput
+                            className="input-white"
+                            value={item.description}
+                            onChange={(e) => {
                               setItems([
                                 ...items.map((i) => {
-                                  let prod = products.find(
-                                    (c) => c.id === e!.value
-                                  );
                                   if (i.id === item.id) {
-                                    i.product_id = e!.value;
-                                    i.product = prod;
-                                    i.unit_price = prod?.price ?? 0;
-                                    i.description = prod?.display_name ?? "";
+                                    i.description = e.target.value;
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                            }}
+                          />
+                        ) : (
+                          <CreatableSelect
+                            id="product"
+                            value={{
+                              label: item.product_id
+                                ? item.product?.name
+                                : item.description,
+                              value: item.product_id,
+                            }}
+                            options={products.map((c) => ({
+                              label: c.name!,
+                              value: c.id!,
+                            }))}
+                            onChange={(e) => {
+                              if (e?.value) {
+                                setItems([
+                                  ...items.map((i) => {
+                                    let prod = products.find(
+                                      (c) => c.id === e!.value
+                                    );
+                                    if (i.id === item.id) {
+                                      i.product_id = e!.value;
+                                      i.product = prod;
+                                      i.unit_price = prod?.price ?? 0;
+                                      i.description = prod?.display_name ?? "";
+                                    }
+                                    return i;
+                                  }),
+                                ]);
+                                setTimeout(() => {
+                                  updateItem(item);
+                                }, 300);
+                              }
+                            }}
+                            isSearchable
+                            onCreateOption={(e) => {
+                              // setSelectedItem(item);
+                              // setProduct({
+                              //   name: e,
+                              //   price: 0,
+                              //   description: "",
+                              //   product_images: [],
+                              //   prices: [],
+                              // });
+                              // setShowModalProduct(true);
+                              console.log("Create", e);
+                              setItems([
+                                ...items.map((i) => {
+                                  if (i.id === item.id) {
+                                    i.description = e;
                                   }
                                   return i;
                                 }),
@@ -535,41 +520,18 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                               setTimeout(() => {
                                 updateItem(item);
                               }, 300);
+                            }}
+                            formatCreateLabel={(inputValue) =>
+                              `Add Non Product "${inputValue}"`
                             }
-                          }}
-                          isSearchable
-                          onCreateOption={(e) => {
-                            // setSelectedItem(item);
-                            // setProduct({
-                            //   name: e,
-                            //   price: 0,
-                            //   description: "",
-                            //   product_images: [],
-                            //   prices: [],
-                            // });
-                            // setShowModalProduct(true);
-                            console.log("Create", e);
-                            setItems([
-                              ...items.map((i) => {
-                                if (i.id === item.id) {
-                                  i.description = e;
-                                }
-                                return i;
-                              }),
-                            ]);
-                            setTimeout(() => {
-                              updateItem(item);
-                            }, 300);
-                          }}
-                          formatCreateLabel={(inputValue) =>
-                            `Add Non Product "${inputValue}"`
-                          }
-                          onInputChange={(e) => {
-                            if (e) {
-                              searchProduct(e);
-                            }
-                          }}
-                        />
+                            onInputChange={(e) => {
+                              if (e) {
+                                searchProduct(e);
+                              }
+                            }}
+                          />
+                        )}
+
                         {!item?.notes ? (
                           <div
                             className="text-xs italic cursor-pointer"
@@ -726,56 +688,13 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                             }
                           }}
                         />
-                        {(item.availablePrices ?? []).length > 0 && (
-                          <div className="absolute top-2 right-2">
-                            <Dropdown inline placement="bottom-end">
-                              {(item.availablePrices ?? []).map((t) => (
-                                <Dropdown.Item
-                                  key={t.id}
-                                  onClick={() => {
-                                    let priceSelected = item.unit_price;
-                                    for (const price of t.prices.sort(
-                                      (a, b) => b.min_quantity - a.min_quantity
-                                    )) {
-                                      if (
-                                        price.min_quantity <=
-                                        item.quantity * (item.unit_value ?? 1)
-                                      ) {
-                                        priceSelected = price.amount;
-                                        break;
-                                      }
-                                    }
-                                    setItems([
-                                      ...items.map((i) => {
-                                        if (i.id === item.id) {
-                                          i.unit_price = priceSelected;
-                                        }
-                                        return i;
-                                      }),
-                                    ]);
-                                    setTimeout(() => {
-                                      updateItem(item);
-                                    }, 300);
-                                  }}
-                                >
-                                  <div
-                                    className="flex justify-between items-center w-full"
-                                    style={{ width: "100px" }}
-                                  >
-                                    <span>{t.name}</span>
-                                  </div>
-                                </Dropdown.Item>
-                              ))}
-                            </Dropdown>
-                          </div>
-                        )}
                       </div>
                     ) : (
                       <div className="text-data">{money(item.unit_price)}</div>
                     )}
                   </Table.Cell>
                   <Table.Cell valign="top">
-                    {isEditable ? (
+                    {isEditable && !item.is_cost ? (
                       <div className="relative flex justify-end w-fit">
                         <CurrencyInput
                           className="rs-input !p-1.5 "
@@ -805,7 +724,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       item.discount_percent > 0 && (
                         <div className="text-data">
                           {money(item.discount_percent)}%
-                        </div> // TODO: fix this
+                        </div>
                       )
                     )}
                   </Table.Cell>
@@ -897,9 +816,11 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                                 "Are you sure you want to delete this item?"
                               )
                             ) {
-                              salesDeleteItem(sales!.id!, item.id).then(() => {
-                                getAllItems();
-                              });
+                              purchaseDeleteItem(purchase!.id!, item.id).then(
+                                () => {
+                                  getAllItems();
+                                }
+                              );
                             }
                           }}
                         >
@@ -913,14 +834,14 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               {isEditable && (
                 <Table.Row>
                   <Table.Cell colSpan={8}>
-                    <div className="flex gap-2 justify-center item">
+                    <div className="flex gap-2 justify-center items-center">
                       <button
-                        className="flex gap-2 justify-center item"
+                        className="flex gap-2 justify-center items-center hover:bg-gray-100 py-2 px-4 rounded-lg"
                         onClick={() => {
-                          salesAddItem(salesId!, {
+                          purchaseAddItem(purchaseId!, {
                             description: "new item",
                             quantity: 1,
-                            sales_id: salesId,
+                            purchase_id: purchaseId,
                           }).then((res: any) => {
                             let item = res.data;
                             setItems([...items, item]);
@@ -930,6 +851,24 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       >
                         <BsPlusCircle />
                         Add Item
+                      </button>
+                      <button
+                        className="flex gap-2 justify-center items-center hover:bg-gray-100 py-2 px-4 rounded-lg"
+                        onClick={() => {
+                          purchaseAddItem(purchaseId!, {
+                            description: "Biaya Angkut",
+                            quantity: 1,
+                            is_cost: true,
+                            purchase_id: purchaseId,
+                          }).then((res: any) => {
+                            let item = res.data;
+                            setItems([...items, item]);
+                            searchProduct("");
+                          });
+                        }}
+                      >
+                        <BsPlusCircle />
+                        Add Cost
                       </button>
                     </div>
                   </Table.Cell>
@@ -945,10 +884,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               <Label>Description</Label>
               {isEditable ? (
                 <Textarea
-                  value={sales?.description}
+                  value={purchase?.description}
                   onChange={(e) => {
-                    setSales({
-                      ...sales,
+                    setPurchase({
+                      ...purchase,
                       description: e.target.value,
                     });
                     setIsEdited(true);
@@ -957,11 +896,11 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   style={{
                     backgroundColor: "white",
                   }}
-                  placeholder="Sales Description"
+                  placeholder="Purchase Description"
                   onBlur={() => {}}
                 />
               ) : (
-                <div className="text-data">{sales?.description}</div>
+                <div className="text-data">{purchase?.description}</div>
               )}
             </div>
             <div>
@@ -970,15 +909,15 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 <div>
                   <select
                     className="rs-input"
-                    value={sales?.payment_terms_code}
+                    value={purchase?.payment_terms_code}
                     onChange={(val: any) => {
                       setIsEdited(true);
                       let selected = paymentTerms.find(
                         (e) => e.code == val.target.value
                       );
                       if (selected) {
-                        setSales({
-                          ...sales,
+                        setPurchase({
+                          ...purchase,
                           payment_terms: JSON.stringify(selected),
                           payment_terms_code: selected.code,
                         });
@@ -996,21 +935,26 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       </optgroup>
                     ))}
                   </select>
-                  {sales?.payment_terms && (
+                  {purchase?.payment_terms && (
                     <div className="p-2 rounded-lg bg-gray-50 text-xs">
                       {
-                        (JSON.parse(sales?.payment_terms) as PaymentTermModel)
-                          .description
+                        (
+                          JSON.parse(
+                            purchase?.payment_terms
+                          ) as PaymentTermModel
+                        ).description
                       }
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="text-data">
-                  {sales?.payment_terms && (
+                  {purchase?.payment_terms && (
                     <>
-                      <strong>{JSON.parse(sales?.payment_terms).name}</strong>{" "}
-                      {JSON.parse(sales?.payment_terms).description}{" "}
+                      <strong>
+                        {JSON.parse(purchase?.payment_terms).name}
+                      </strong>{" "}
+                      {JSON.parse(purchase?.payment_terms).description}{" "}
                     </>
                   )}
                 </div>
@@ -1035,13 +979,13 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       },
                     },
                   }}
-                  initialValue={sales?.term_condition ?? ""}
+                  initialValue={purchase?.term_condition ?? ""}
                   onChange={handleEditorChange}
                 />
               ) : (
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: sales?.term_condition ?? "",
+                    __html: purchase?.term_condition ?? "",
                   }}
                 />
               )}
@@ -1057,7 +1001,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       <strong className="text-sm">Sub Total</strong>
                     </td>
                     <td className="text-right px-4">
-                      <span>{money(sales?.total_before_disc)}</span>
+                      <span>{money(purchase?.total_before_disc)}</span>
                     </td>
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
@@ -1065,7 +1009,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       <strong className="text-sm">Total Discount</strong>
                     </td>
                     <td className="text-right px-4">
-                      <span>{money(sales?.total_discount)}</span>
+                      <span>{money(purchase?.total_discount)}</span>
                     </td>
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
@@ -1073,7 +1017,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       <strong className="text-sm">After Discount</strong>
                     </td>
                     <td className="text-right px-4">
-                      <span>{money(sales?.subtotal)}</span>
+                      <span>{money(purchase?.subtotal)}</span>
                     </td>
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
@@ -1081,7 +1025,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       <strong className="text-sm">Total Tax</strong>
                     </td>
                     <td className="text-right px-4">
-                      <span>{money(sales?.total_tax)}</span>
+                      <span>{money(purchase?.total_tax)}</span>
                     </td>
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
@@ -1089,7 +1033,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       <strong className="text-lg">Total</strong>
                     </td>
                     <td className="text-right px-4">
-                      <span className="text-lg">{money(sales?.total)}</span>
+                      <span className="text-lg">{money(purchase?.total)}</span>
                     </td>
                   </tr>
                 </table>
@@ -1156,13 +1100,13 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           </div>
         </Modal.Footer>
       </Modal>
-      <ModalListContact
+      {/* <ModalListContact
         show={modalShippingOpen}
         onClose={() => setModalShippingOpen(false)}
         onSelect={(val) => {
           setModalShippingOpen(false);
-          setSales({
-            ...sales,
+          setPurchase({
+            ...purchase,
             delivery_id: val.id,
             delivery: val,
             delivery_data: JSON.stringify(val),
@@ -1170,19 +1114,19 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           });
           setIsEdited(true);
         }}
-      />
-      {tempSales && (
-        <ModalSales
-          show={showCreateSales}
-          onClose={() => setShowCreateSales(false)}
-          title={salesTitle}
-          sales={tempSales}
-          setSales={setTempSales}
-          saveSales={saveSales}
+      /> */}
+      {tempPurchase && (
+        <ModalPurchase
+          show={showCreatePurchase}
+          onClose={() => setShowCreatePurchase(false)}
+          title={purchaseTitle}
+          purchase={tempPurchase}
+          setPurchase={setTempPurchase}
+          savePurchase={savePurchase}
         />
       )}
-      {sales && (
-        <DrawerPostInvoice
+      {purchase && (
+        <DrawerPostPurchase
           open={showPostModal}
           onClose={() => {
             setShowPostModal(false);
@@ -1190,14 +1134,14 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               getDetail();
             }, 300);
           }}
-          sales={{
-            ...sales!,
+          purchase={{
+            ...purchase!,
             items: items,
           }}
-          setSales={setSales}
+          setPurchase={setPurchase}
         />
       )}
     </AdminLayout>
   );
 };
-export default SalesDetail;
+export default PurchaseDetail;

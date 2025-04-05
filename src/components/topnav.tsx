@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { CollapsedContext } from "../contexts/CollapsedContext";
 import Logo from "./logo";
 import { CompaniesContext, CompanyIDContext } from "../contexts/CompanyContext";
@@ -8,6 +8,7 @@ import { initial } from "../utils/helper";
 import { useNavigate } from "react-router-dom";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { SearchContext } from "../contexts/SearchContext";
+import Moment from "react-moment";
 
 interface TopnavProps {}
 
@@ -17,8 +18,17 @@ const Topnav: React.FC<TopnavProps> = () => {
   const { companyID, setCompanyID } = useContext(CompanyIDContext);
   const { collapsed, setCollapsed } = useContext(CollapsedContext);
   const { profile, setProfile } = useContext(ProfileContext);
+  const [now, setNow] = useState<Date>(new Date());
   const nav = useNavigate();
   const timeout = useRef<number | null>(null);
+
+  const updateNow = () => {
+    setNow(new Date());
+  };
+  useEffect(() => {
+    const id = setInterval(updateNow, 60000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <nav className="fixed top-0 z-20 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -62,6 +72,9 @@ const Topnav: React.FC<TopnavProps> = () => {
             </div>
           </div>
           <div className="flex items-center">
+            <div>
+              <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">{now}</Moment>
+            </div>
             <div className="flex items-center ms-3 gap-4">
               <Dropdown
                 label={

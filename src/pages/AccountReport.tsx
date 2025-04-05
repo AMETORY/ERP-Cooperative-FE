@@ -81,77 +81,94 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
           </div>
         </div>
         <div className=" p-1">
-        <Table>
-          <Table.Head>
-            <Table.HeadCell>Date</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Account</Table.HeadCell>
-            <Table.HeadCell align="right">Debit</Table.HeadCell>
-            <Table.HeadCell align="right">Credit</Table.HeadCell>
-            <Table.HeadCell align="right">Saldo</Table.HeadCell>
-            <Table.HeadCell></Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {report?.transactions.length === 0 && (
-              <Table.Row>
-                <Table.Cell colSpan={5} className="text-center">
-                  No transactions found.
-                </Table.Cell>
-              </Table.Row>
-            )}
-            {(report?.balance_before ?? 0) > 0 && (
-              <Table.Row>
-                <Table.Cell colSpan={5} className="font-semibold">
-                  Saldo Sebelumnya{" "}
-                </Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.balance_before)}
-                </Table.Cell>
-              </Table.Row>
-            )}
-            {report?.transactions.map((transaction, i) => (
-              <Table.Row
-                key={i}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <Table.Cell
-                  className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
-                  onClick={() => {}}
+          <Table>
+            <Table.Head>
+              <Table.HeadCell>Date</Table.HeadCell>
+              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>Account</Table.HeadCell>
+              <Table.HeadCell align="right">Debit</Table.HeadCell>
+              <Table.HeadCell align="right">Credit</Table.HeadCell>
+              <Table.HeadCell align="right">Saldo</Table.HeadCell>
+              <Table.HeadCell></Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {report?.transactions.length === 0 && (
+                <Table.Row>
+                  <Table.Cell colSpan={5} className="text-center">
+                    No transactions found.
+                  </Table.Cell>
+                </Table.Row>
+              )}
+              {(report?.balance_before ?? 0) > 0 && (
+                <Table.Row>
+                  <Table.Cell colSpan={5} className="font-semibold">
+                    Saldo Sebelumnya{" "}
+                  </Table.Cell>
+                  <Table.Cell align="right" className="font-semibold">
+                    {money(report?.balance_before)}
+                  </Table.Cell>
+                </Table.Row>
+              )}
+              {report?.transactions.map((transaction, i) => (
+                <Table.Row
+                  key={i}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
-                  <Moment format="DD/MM/YYYY">{transaction.date}</Moment>
-                </Table.Cell>
-                <Table.Cell>{transaction.description}</Table.Cell>
-                <Table.Cell>
-                  {transaction?.transaction_ref && (
-                    <Link
-                      to={`/account/${transaction?.transaction_ref?.account?.id}/report`}
-                    >
-                      {transaction.transaction_ref?.account?.name}
-                    </Link>
-                  )}
-                  {transaction?.journal_ref && (
-                    <Link to={`/journal/${transaction?.journal_ref?.id}`} className="flex gap-1 items-center">
-                      <BsJournal />{" "} {transaction.journal_ref?.description}
-                    </Link>
-                  )}
-                  {transaction?.sales_ref && (
-                    <Link to={`/sales/${transaction?.sales_ref?.id}`} className="flex gap-1 items-center">
-                      <TbFileInvoice />{" "} {transaction.sales_ref?.sales_number}
-                    </Link>
-                  )}
-                </Table.Cell>
-                <Table.Cell align="right">
-                  {money(transaction.debit)}
-                </Table.Cell>
-                <Table.Cell align="right">
-                  {money(transaction.credit)}
-                </Table.Cell>
-                <Table.Cell align="right">
-                  {money(transaction.balance)}
-                </Table.Cell>
+                  <Table.Cell
+                    className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
+                    onClick={() => {}}
+                  >
+                    <Moment format="DD/MM/YYYY">{transaction.date}</Moment>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex flex-col">
+                      <span className="font-semibold">
+                        {transaction.description}
+                      </span>
+                      {transaction.notes && (
+                        <span className="text-xs text-gray-500">
+                          {transaction.notes}
+                        </span>
+                      )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {transaction?.transaction_ref && (
+                      <Link
+                        to={`/account/${transaction?.transaction_ref?.account?.id}/report`}
+                      >
+                        {transaction.transaction_ref?.account?.name}
+                      </Link>
+                    )}
+                    {transaction?.journal_ref && (
+                      <Link
+                        to={`/journal/${transaction?.journal_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <BsJournal /> {transaction.journal_ref?.description}
+                      </Link>
+                    )}
+                    {transaction?.sales_ref && (
+                      <Link
+                        to={`/sales/${transaction?.sales_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <TbFileInvoice /> {transaction.sales_ref?.sales_number}
+                      </Link>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell align="right">
+                    {money(transaction.debit)}
+                  </Table.Cell>
+                  <Table.Cell align="right">
+                    {money(transaction.credit)}
+                  </Table.Cell>
+                  <Table.Cell align="right">
+                    {money(transaction.balance)}
+                  </Table.Cell>
 
-                <Table.Cell>
-                  {/* <a
+                  <Table.Cell>
+                    {/* <a
                     href="#"
                     className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
                     onClick={(e) => {
@@ -169,31 +186,31 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                   >
                     Delete
                   </a> */}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+              <Table.Row>
+                <Table.Cell colSpan={5} className="font-semibold">
+                  Total{" "}
+                  <span>
+                    <Moment format="DD MMM YYYY">{report?.start_date}</Moment> -{" "}
+                    <Moment format="DD MMM YYYY">{report?.end_date}</Moment>
+                  </span>
+                </Table.Cell>
+                <Table.Cell align="right">
+                  {money(report?.current_balance)}
                 </Table.Cell>
               </Table.Row>
-            ))}
-            <Table.Row>
-              <Table.Cell colSpan={5} className="font-semibold">
-                Total{" "}
-                <span>
-                  <Moment format="DD MMM YYYY">{report?.start_date}</Moment> -{" "}
-                  <Moment format="DD MMM YYYY">{report?.end_date}</Moment>
-                </span>
-              </Table.Cell>
-              <Table.Cell align="right">
-                {money(report?.current_balance)}
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell colSpan={5} className="font-bold text-black">
-                Total{" "}
-              </Table.Cell>
-              <Table.Cell align="right" className="font-bold text-black">
-                {money(report?.total_balance)}
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
+              <Table.Row>
+                <Table.Cell colSpan={5} className="font-bold text-black">
+                  Total{" "}
+                </Table.Cell>
+                <Table.Cell align="right" className="font-bold text-black">
+                  {money(report?.total_balance)}
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
         </div>
         {/* <Pagination
           className="mt-4"

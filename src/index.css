@@ -162,5 +162,5 @@ label {
 }
 
 .text-data {
-  @apply text-gray-800
+  @apply text-gray-800 py-1
 }

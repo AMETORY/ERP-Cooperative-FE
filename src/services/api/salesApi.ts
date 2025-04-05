@@ -35,6 +35,11 @@ export const updateSales = async (id: string, sales: any) => {
     body: JSON.stringify(sales),
   });
 };
+export const publishSales = async (id: string) => {
+  return await customFetch(`api/v1/sales/${id}/publish`, {
+    method: "PUT",
+  });
+};
 export const postInvoice = async (id: string, data: any) => {
   return await customFetch(`api/v1/sales/${id}/post`, {
     method: "PUT",

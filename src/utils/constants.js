@@ -33,9 +33,22 @@ export const salesTypes = [
 ];
 
 
+
 export const salesDocTypes = [
     { value: "INVOICE", label: "Invoice" },
     { value: "SALES_ORDER", label: "Sales Order" },
     { value: "SALES_QUOTE", label: "Sales Quote" },
     { value: "DELIVERY", label: "Delivery" },
+];
+
+export const purchaseDocTypes = [
+    { value: "BILL", label: "Invoice" },
+    { value: "PURCHASE_ORDER", label: "Purchase Order" },
+];
+
+
+export const purchaseTypes = [
+    { value: "PROCUREMENT", label: "Procurement" },
+    { value: "PURCHASE", label: "Purchase" },
+    { value: "PURCHASE_ECOMMERCE", label: "E-commerce" },
 ];

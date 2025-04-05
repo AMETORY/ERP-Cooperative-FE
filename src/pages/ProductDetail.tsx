@@ -857,6 +857,12 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                         Merchant
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
+                        Warehouse
+                      </th>
+                      <th className="px-2 py-1 text-xs border border-gray-300">
+                        Type
+                      </th>
+                      <th className="px-2 py-1 text-xs border border-gray-300">
                         Notes
                       </th>
                     </tr>
@@ -878,6 +884,17 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                           }}
                         >
                           {v.merchant?.name}
+                        </td>
+                        <td
+                          className="px-2 py-1 text-xs border cursor-pointer hover:underline border-gray-300 text-center"
+                          onClick={() => {
+                            nav(`/warehouse/${v.warehouse?.id}`);
+                          }}
+                        >
+                          {v.warehouse?.name}
+                        </td>
+                        <td className="px-2 py-1 text-xs border border-gray-300 text-center">
+                          {v.type}
                         </td>
                         <td className="px-2 py-1 text-xs border border-gray-300 text-center">
                           {v.description}
