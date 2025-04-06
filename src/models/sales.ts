@@ -51,6 +51,7 @@ export interface SalesModel {
   tax_breakdown_parsed?: TaxModel[];
   payment_account_id?: string;
   payment_account?: AccountModel;
+  sales_payments?: SalesPaymentModel[]
 }
 
 export interface SalesItemModel {
@@ -103,5 +104,6 @@ export interface SalesPaymentModel {
   is_refund?: boolean;
   payment_method: string;
   payment_method_notes: string;
+  
 }
 

@@ -36,6 +36,12 @@ export const updatePurchase = async (id: string, purchase: any) => {
   });
 };
 
+export const paymentPurchase = async (id: string, data: any) => {
+  return await customFetch(`api/v1/purchase/${id}/payment`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
 export const publishPurchase = async (id: string) => {
     return await customFetch(`api/v1/purchase/${id}/publish`, {
       method: "PUT",

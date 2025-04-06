@@ -49,6 +49,7 @@ export interface PurchaseModel {
   secondary_purchase_ref?: PurchaseModel
   payment_account_id?: string;
   payment_account?: AccountModel;
+  purchase_payments: PurchasePaymentModel[]
 }
 
 
@@ -79,3 +80,23 @@ export interface PurchaseItemModel {
   is_cost?: boolean;
 }
 
+
+export interface PurchasePaymentModel {
+  id?: string;
+  payment_date: Date;
+  sales_id?: string | null;
+  sales?: PurchaseModel;
+  amount: number;
+  payment_discount: number;
+  notes: string;
+  company_id?: string | null;
+  company?: CompanyModel;
+  user_id?: string | null;
+  user?: UserModel;
+  asset_account_id?: string | null;
+  asset_account?: AccountModel;
+  is_refund?: boolean;
+  payment_method: string;
+  payment_method_notes: string;
+  
+}

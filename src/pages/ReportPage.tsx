@@ -42,10 +42,10 @@ const ReportPage: FC<ReportPageProps> = ({}) => {
   ];
   return (
     <AdminLayout>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 ">
         {reportCards.map((card, index) => (
           <Link to={card.link} key={index}>
-            <Card className=" p-4 hover:bg-gray-100 transition duration-300 justify-center">
+            <Card className=" p-4 hover:bg-gray-100 transition duration-300 justify-center min-h-[300px]">
                 <div className="flex flex-col items-center text-center space-y-4">
 
               <div className="mb-2">{card.icon}</div>

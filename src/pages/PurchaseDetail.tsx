@@ -5,6 +5,7 @@ import {
   Checkbox,
   Datepicker,
   Dropdown,
+  HelperText,
   HR,
   Label,
   Modal,
@@ -28,7 +29,11 @@ import ModalPurchase from "../components/ModalPurchase";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { PaymentTermModel } from "../models/payment_term";
 import { ProductModel } from "../models/product";
-import { PurchaseItemModel, PurchaseModel } from "../models/purchase";
+import {
+  PurchaseItemModel,
+  PurchaseModel,
+  PurchasePaymentModel,
+} from "../models/purchase";
 import { TaxModel } from "../models/tax";
 import { WarehouseModel } from "../models/warehouse";
 import { getPaymentTermGroups } from "../services/api/paymentTermApi";
@@ -37,6 +42,7 @@ import {
   createPurchase,
   getPurchaseDetail,
   getPurchaseItems,
+  paymentPurchase,
   publishPurchase,
   purchaseAddItem,
   purchaseDeleteItem,
@@ -54,6 +60,9 @@ import { MdOutlinePublish } from "react-icons/md";
 import { PiQuotes } from "react-icons/pi";
 import Moment from "react-moment";
 import DrawerPostPurchase from "../components/DrawerPostPurchase";
+import { AccountModel } from "../models/account";
+import { getAccounts } from "../services/api/accountApi";
+import { paymentMethods } from "../utils/constants";
 
 interface PurchaseDetailProps {}
 
@@ -81,6 +90,11 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
   const [showCreatePurchase, setShowCreatePurchase] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [payment, setPayment] = useState<PurchasePaymentModel>();
+  const [discountEnabled, setDiscountEnabled] = useState(false);
+  const [assets, setAssets] = useState<AccountModel[]>([]);
+  const [paymentPercentage, setPaymentPercentage] = useState(100);
+  const [balance, setBalance] = useState(0);
 
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
@@ -344,7 +358,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   value={moment(purchase?.purchase_date).toDate()}
                   onChange={(date) => {
                     setPurchase({
-                      ...purchase,
+                      ...purchase!,
                       purchase_date: moment(date).toISOString(),
                     });
                   }}
@@ -365,7 +379,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   value={purchase?.notes}
                   onChange={(e) => {
                     setPurchase({
-                      ...purchase,
+                      ...purchase!,
                       notes: e.target.value,
                     });
                     setIsEdited(true);
@@ -887,7 +901,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   value={purchase?.description}
                   onChange={(e) => {
                     setPurchase({
-                      ...purchase,
+                      ...purchase!,
                       description: e.target.value,
                     });
                     setIsEdited(true);
@@ -917,7 +931,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                       );
                       if (selected) {
                         setPurchase({
-                          ...purchase,
+                          ...purchase!,
                           payment_terms: JSON.stringify(selected),
                           payment_terms_code: selected.code,
                         });
@@ -1039,10 +1053,350 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 </table>
               </div>
             </div>
-            <h3 className="font-semibold text-lg">Payment</h3>
+            {purchase?.document_type == "BILL" && (
+              <div>
+                {purchase?.status == "POSTED" && (
+                  <>
+                    <div className="flex justify-between items-center ">
+                      <h3 className="font-semibold text-lg">Payment History</h3>
+                      {(purchase.total ?? 0) - (purchase.paid ?? 0) > 0 && (
+                        <Button
+                          size="xs"
+                          color="green"
+                          onClick={() => {
+                            let payment_discount = 0;
+                            let paymentTerm: PaymentTermModel;
+                            if (purchase?.payment_terms) {
+                              paymentTerm = JSON.parse(
+                                purchase?.payment_terms
+                              ) as PaymentTermModel;
+                              if (
+                                paymentTerm.discount_due_days &&
+                                moment(purchase?.discount_due_date) <
+                                  moment(purchase?.published_at).add(
+                                    paymentTerm.discount_due_days,
+                                    "days"
+                                  )
+                              ) {
+                                setDiscountEnabled(true);
+                                payment_discount =
+                                  paymentTerm.discount_amount ?? 0;
+                              }
+                            }
+                            setPayment({
+                              payment_date: new Date(),
+                              sales_id: purchase?.id!,
+                              amount:
+                                (purchase?.total ?? 0) - (purchase?.paid ?? 0),
+                              notes: "",
+                              payment_discount,
+                              payment_method: "CASH",
+                              payment_method_notes: "",
+                            });
+                            getAccounts({
+                              page: 1,
+                              size: 10,
+                              cashflow_sub_group: "cash_bank",
+                            }).then((e: any) => {
+                              setAssets(e.data.items);
+                            });
+                          }}
+                        >
+                          + Payment
+                        </Button>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4 mt-4">
+                      <div className="w-full h-fit">
+                        <table className="w-full">
+                          {(purchase?.purchase_payments ?? []).map(
+                            (payment) => (
+                              <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                                <td className="py-2 px-4">
+                                  <div className="flex flex-col">
+                                    <strong className="text-sm">
+                                      {payment.notes}
+                                    </strong>
+                                    <Moment
+                                      className="text-xs"
+                                      format="DD/MM/YYYY"
+                                    >
+                                      {payment?.payment_date}
+                                    </Moment>
+                                  </div>
+                                </td>
+                                <td className="text-right px-4">
+                                  <span>{money(payment?.amount)}</span>
+                                </td>
+                              </tr>
+                            )
+                          )}
+                          <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                            <td className="py-2 px-4">
+                              <div className="flex flex-col">
+                                <strong className="text-xl">Balance</strong>
+                              </div>
+                            </td>
+                            <td className="text-right px-4">
+                              <span className="text-xl">
+                                {money(
+                                  (purchase?.total ?? 0) - (purchase?.paid ?? 0)
+                                ) == 0
+                                  ? "PAID"
+                                  : money(
+                                      (purchase?.total ?? 0) -
+                                        (purchase?.paid ?? 0)
+                                    )}
+                              </span>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </>
+                )}
+                {purchase?.payment_account?.type == "ASSET" && (
+                  <div
+                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert"
+                  >
+                    <strong className="font-bold">Attention!</strong>
+                    <span className="block sm:inline">
+                      {" "}
+                      This invoice is already paid in cash, you cannot add
+                      payment
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
+      <Modal show={payment != undefined} onClose={() => setPayment(undefined)}>
+        <Modal.Header>Payment</Modal.Header>
+        <Modal.Body>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                await paymentPurchase(purchaseId!, payment!);
+                setPayment(undefined);
+                toast.success("Payment added successfully");
+                setTimeout(() => {
+                  getDetail();
+                }, 300);
+              } catch (error) {
+                toast.error(`${error}`);
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
+            <div className="flex flex-col space-y-4">
+              <div>
+                <label className="font-semibold text-sm">Payment Date</label>
+                <Datepicker
+                  required
+                  value={payment?.payment_date}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      payment_date: val!,
+                    });
+                  }}
+                  className="input-white"
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Description</label>
+                <Textarea
+                  required
+                  placeholder="Description"
+                  value={payment?.notes}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      notes: val!.target.value,
+                    });
+                  }}
+                  style={{ backgroundColor: "white" }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Payment Amount</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <CurrencyInput
+                      className="rs-input !p-1.5  text-xl"
+                      required
+                      value={payment?.amount ?? 0}
+                      groupSeparator="."
+                      decimalSeparator=","
+                      onValueChange={(_, __, val) => {
+                        if (
+                          (val?.float ?? 0) >
+                          (purchase?.total ?? 0) - (purchase?.paid ?? 0)
+                        ) {
+                          toast.error("Payment amount is greater than balance");
+                          return;
+                        }
+                        let balance =
+                          ((val?.float ?? 0) /
+                            ((purchase?.total ?? 0) - (purchase?.paid ?? 0))) *
+                          100;
+                        setPaymentPercentage(balance); // Update payment percentage
+                        setPayment({
+                          ...payment!,
+                          amount: val?.float ?? 0,
+                        });
+                      }}
+                      style={{ fontSize: "1.5rem" }}
+                    />
+                    <HelperText>
+                      Balance :{" "}
+                      {money(
+                        (purchase?.total ?? 0) -
+                          (purchase?.paid ?? 0) -
+                          (payment?.amount ?? 0),
+                        0
+                      )}
+                    </HelperText>
+                  </div>
+                  <div>
+                    <div className="relative">
+                      <CurrencyInput
+                        className="rs-input !p-1.5  text-xl text-right !pr-6"
+                        required
+                        value={paymentPercentage}
+                        // groupSeparator="."
+                        // decimalSeparator=","
+                        decimalsLimit={0}
+                        onValueChange={(_, __, val) => {
+                          if (
+                            (val?.float ?? 0) >
+                            100 -
+                              ((purchase?.paid ?? 0) / (purchase?.total ?? 0)) *
+                                100
+                          )
+                            return;
+                          setPaymentPercentage(val?.float ?? 0);
+                          let balance =
+                            ((purchase?.total ?? 0) * (val?.float ?? 0)) / 100;
+                          setPayment({
+                            ...payment!,
+                            amount: balance,
+                          });
+                        }}
+                        style={{ fontSize: "1.5rem" }}
+                      />
+                      <span className="absolute top-4 right-3">%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Account</label>
+                <Select
+                  options={assets.map((a) => ({
+                    label: a.name,
+                    value: a.id,
+                  }))}
+                  value={{
+                    label: assets.find(
+                      (a) => a.id === payment?.asset_account_id
+                    )?.name,
+                    value: payment?.asset_account_id,
+                  }}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      asset_account_id: val?.value!,
+                    });
+                  }}
+                  onInputChange={(val) => {
+                    getAccounts({
+                      page: 1,
+                      size: 10,
+                      cashflow_sub_group: "cash_bank",
+                      search: val,
+                    }).then((e: any) => {
+                      setAssets(e.data.items);
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">Payment Method</label>
+                <Select
+                  options={paymentMethods}
+                  required
+                  value={{
+                    value: payment?.payment_method,
+                    label: paymentMethods.find(
+                      (m) => m.value === payment?.payment_method
+                    )?.label,
+                  }}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      payment_method: val?.value!,
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-sm">
+                  Payment Method Notes
+                </label>
+                <Textarea
+                  placeholder="Payment Method Notes"
+                  value={payment?.payment_method_notes}
+                  onChange={(val) => {
+                    setPayment({
+                      ...payment!,
+                      payment_method_notes: val!.target.value,
+                    });
+                  }}
+                  style={{ backgroundColor: "white" }}
+                />
+              </div>
+              {discountEnabled && (
+                <div>
+                  <label className="font-semibold text-sm">
+                    Payment Discount
+                  </label>
+                  <div className="relative w-fit">
+                    <CurrencyInput
+                      disabled={!discountEnabled}
+                      className="rs-input !p-1.5 text-right !pr-6"
+                      value={payment?.payment_discount ?? 0}
+                      max={payment?.payment_discount ?? 0}
+                      groupSeparator="."
+                      decimalSeparator=","
+                      onValueChange={(_, __, val) => {
+                        setPayment({
+                          ...payment!,
+                          payment_discount: val?.float ?? 0,
+                        });
+                      }}
+                      style={{ width: 60 }}
+                    />
+                    <span className="absolute top-1.5 right-2">%</span>
+                  </div>
+                </div>
+              )}
+              <div className="h-6"></div>
+              <div className="w-full flex">
+                <Button type="submit" className="w-full">
+                  <IoPaperPlaneOutline className="mr-2" />
+                  Send Payment
+                </Button>
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
       <ModalProduct
         product={product}
         show={showModalProduct}

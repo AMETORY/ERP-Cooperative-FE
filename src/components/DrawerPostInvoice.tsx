@@ -6,6 +6,7 @@ import {
   Checkbox,
   Button,
   Datepicker,
+  Textarea,
 } from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
 import { SalesItemModel, SalesModel } from "../models/sales";
@@ -129,6 +130,27 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
       <DrawerItems>
         <div className="overflow-x-auto h-[calc(100vh-180px)] mt-4 p-2  space-y-4">
           <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Due Date</Label>
+              <Datepicker
+                value={dueDate ? moment(dueDate).toDate() : new Date()}
+                onChange={(e) => setDueDate(e!)}
+                className="w-full input-white"
+              />
+              <small>
+                <strong>{paymentTerm?.name}</strong> {paymentTerm?.description}
+              </small>
+            </div>
+            <div>
+              <Label>Transaction Date</Label>
+              <Datepicker
+                value={transactionDate}
+                onChange={(e: any) => setTransactionDate(e)}
+                className="w-full input-white"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="w-full">
               <Label className="">Payment Account</Label>
               <Select
@@ -154,29 +176,23 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                 onInputChange={(e) => getAllPayment(e)}
               />
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Due Date</Label>
-              <Datepicker
-                value={dueDate ? moment(dueDate).toDate() : new Date()}
-                onChange={(e) => setDueDate(e!)}
-                className="w-full input-white"
-              />
-              <small>
-                <strong>{paymentTerm?.name}</strong> {paymentTerm?.description}
-              </small>
-            </div>
-            <div>
-              <Label>Transaction Date</Label>
-              <Datepicker
-                value={transactionDate}
-                onChange={(e: any) => setTransactionDate(e)}
-                className="w-full input-white"
+            <div className="w-full">
+              <Label className="">Notes</Label>
+              <Textarea
+                value={sales?.notes}
+                onChange={(e) => {
+                  setSales({
+                    ...sales,
+                    notes: e.target.value,
+                  });
+                }}
+                className="input-white"
+                style={{
+                  backgroundColor: "white",
+                }}
               />
             </div>
           </div>
-
           <Table
             className=" border !rounded-none !shadow-none !drop-shadow-none"
             hoverable

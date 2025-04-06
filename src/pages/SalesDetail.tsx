@@ -5,6 +5,7 @@ import {
   Checkbox,
   Datepicker,
   Dropdown,
+  HelperText,
   HR,
   Label,
   Modal,
@@ -86,6 +87,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [payment, setPayment] = useState<SalesPaymentModel>();
   const [discountEnabled, setDiscountEnabled] = useState(false);
   const [assets, setAssets] = useState<AccountModel[]>([]);
+  const [paymentPercentage, setPaymentPercentage] = useState(100);
+  const [balance, setBalance] = useState(0);
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
   >([]);
@@ -125,6 +128,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   };
   useEffect(() => {
     if (sales) {
+      setPaymentPercentage(
+        100 - ((sales?.paid ?? 0) / (sales?.total ?? 0)) * 100
+      );
     }
   }, [sales]);
   useEffect(() => {
@@ -868,7 +874,11 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                           </Dropdown>
                         </div>
                       ) : (
-                        <div className="text-data">{item.tax?.amount}%</div>
+                        (item?.tax?.amount ?? 0) > 0 && (
+                          <div className="text-data">
+                            {money(item?.tax?.amount)}%
+                          </div> // TODO: fix this
+                        )
                       )}
                     </Table.Cell>
                   )}
@@ -1097,51 +1107,117 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </table>
               </div>
             </div>
-            {sales?.status == "POSTED" && (
-              <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg">Payment</h3>
-                <Button
-                  size="xs"
-                  color="green"
-                  onClick={() => {
-                    let payment_discount = 0;
-                    let paymentTerm: PaymentTermModel;
-                    if (sales?.payment_terms) {
-                      paymentTerm = JSON.parse(
-                        sales?.payment_terms
-                      ) as PaymentTermModel;
-                      if (
-                        paymentTerm.discount_due_days &&
-                        moment(sales?.discount_due_date) <
-                          moment(sales?.published_at).add(
-                            paymentTerm.discount_due_days,
-                            "days"
-                          )
-                      ) {
-                        setDiscountEnabled(true);
-                        payment_discount = paymentTerm.discount_amount ?? 0;
-                      }
-                    }
-                    setPayment({
-                      payment_date: new Date(),
-                      sales_id: sales?.id!,
-                      amount: sales?.total! - sales?.paid!,
-                      notes: "",
-                      payment_discount,
-                      payment_method: "CASH",
-                      payment_method_notes: "",
-                    });
-                    getAccounts({
-                      page: 1,
-                      size: 10,
-                      cashflow_sub_group: "cash_bank",
-                    }).then((e: any) => {
-                      setAssets(e.data.items);
-                    });
-                  }}
-                >
-                  + Payment
-                </Button>
+            {sales?.document_type == "INVOICE" && (
+              <div>
+                {sales?.status == "POSTED" && (
+                  <>
+                    <div className="flex justify-between items-center ">
+                      <h3 className="font-semibold text-lg">Payment History</h3>
+                      {(sales.total ?? 0) - (sales.paid ?? 0) > 0 && (
+                        <Button
+                          size="xs"
+                          color="green"
+                          onClick={() => {
+                            let payment_discount = 0;
+                            let paymentTerm: PaymentTermModel;
+                            if (sales?.payment_terms) {
+                              paymentTerm = JSON.parse(
+                                sales?.payment_terms
+                              ) as PaymentTermModel;
+                              if (
+                                paymentTerm.discount_due_days &&
+                                moment(sales?.discount_due_date) <
+                                  moment(sales?.published_at).add(
+                                    paymentTerm.discount_due_days,
+                                    "days"
+                                  )
+                              ) {
+                                setDiscountEnabled(true);
+                                payment_discount =
+                                  paymentTerm.discount_amount ?? 0;
+                              }
+                            }
+                            setPayment({
+                              payment_date: new Date(),
+                              sales_id: sales?.id!,
+                              amount: sales?.total! - sales?.paid!,
+                              notes: "",
+                              payment_discount,
+                              payment_method: "CASH",
+                              payment_method_notes: "",
+                            });
+                            getAccounts({
+                              page: 1,
+                              size: 10,
+                              cashflow_sub_group: "cash_bank",
+                            }).then((e: any) => {
+                              setAssets(e.data.items);
+                            });
+                          }}
+                        >
+                          + Payment
+                        </Button>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4 mt-4">
+                      <div className="w-full h-fit">
+                        <table className="w-full">
+                          {(sales?.sales_payments ?? []).map((payment) => (
+                            <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                              <td className="py-2 px-4">
+                                <div className="flex flex-col">
+                                  <strong className="text-sm">
+                                    {payment.notes}
+                                  </strong>
+                                  <Moment
+                                    className="text-xs"
+                                    format="DD/MM/YYYY"
+                                  >
+                                    {payment?.payment_date}
+                                  </Moment>
+                                </div>
+                              </td>
+                              <td className="text-right px-4">
+                                <span>{money(payment?.amount)}</span>
+                              </td>
+                            </tr>
+                          ))}
+                          <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                            <td className="py-2 px-4">
+                              <div className="flex flex-col">
+                                <strong className="text-xl">Balance</strong>
+                              </div>
+                            </td>
+                            <td className="text-right px-4">
+                              <span className="text-xl">
+                                {money(
+                                  (sales?.total ?? 0) - (sales?.paid ?? 0)
+                                ) == 0
+                                  ? "PAID"
+                                  : money(
+                                      (sales?.total ?? 0) - (sales?.paid ?? 0)
+                                    )}
+                              </span>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </>
+                )}
+                {sales?.payment_account?.type == "ASSET" && (
+                  <div
+                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert"
+                  >
+                    <strong className="font-bold">Attention!</strong>
+                    <span className="block sm:inline">
+                      {" "}
+                      This invoice is already paid in cash, you cannot add
+                      payment
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1199,20 +1275,74 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               </div>
               <div>
                 <label className="font-semibold text-sm">Payment Amount</label>
-                <CurrencyInput
-                  className="rs-input !p-1.5  text-xl"
-                  required
-                  value={payment?.amount}
-                  groupSeparator="."
-                  decimalSeparator=","
-                  onValueChange={(_, __, val) => {
-                    setPayment({
-                      ...payment!,
-                      amount: val?.float ?? 0,
-                    });
-                  }}
-                  style={{ fontSize: "1.5rem" }}
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <CurrencyInput
+                      className="rs-input !p-1.5  text-xl"
+                      required
+                      value={payment?.amount}
+                      groupSeparator="."
+                      decimalSeparator=","
+                      
+                      onValueChange={(_, __, val) => {
+                        if (
+                          (val?.float ?? 0) >
+                          (sales?.total ?? 0) - (sales?.paid ?? 0)
+                        ) {
+                          toast.error("Payment amount is greater than balance");
+                          return;
+                        }
+                        let balance =
+                          ((val?.float ?? 0) /
+                            ((sales?.total ?? 0) - (sales?.paid ?? 0))) *
+                          100;
+                        setPaymentPercentage(balance); // Update payment percentage
+                        setPayment({
+                          ...payment!,
+                          amount: val?.float ?? 0,
+                        });
+                      }}
+                      style={{ fontSize: "1.5rem" }}
+                    />
+                    <HelperText>
+                      Balance :{" "}
+                      {money(
+                        (sales?.total ?? 0) -
+                          (sales?.paid ?? 0) -
+                          (payment?.amount ?? 0)
+                      ,0)}
+                    </HelperText>
+                  </div>
+                  <div>
+                    <div className="relative">
+                      <CurrencyInput
+                        className="rs-input !p-1.5  text-xl text-right !pr-6"
+                        required
+                        value={paymentPercentage}
+                        // groupSeparator="."
+                        // decimalSeparator=","
+                        decimalsLimit={0}
+                        onValueChange={(_, __, val) => {
+                          if (
+                            (val?.float ?? 0) >
+                            100 -
+                              ((sales?.paid ?? 0) / (sales?.total ?? 0)) * 100
+                          )
+                            return;
+                          setPaymentPercentage(val?.float ?? 0);
+                          let balance =
+                            ((sales?.total ?? 0) * (val?.float ?? 0)) / 100;
+                          setPayment({
+                            ...payment!,
+                            amount: balance,
+                          });
+                        }}
+                        style={{ fontSize: "1.5rem" }}
+                      />
+                      <span className="absolute top-4 right-3">%</span>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div>
                 <label className="font-semibold text-sm">Account</label>

@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Datepicker,
   Label,
@@ -46,7 +47,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
   const [notes, setNotes] = useState<string>("");
   const [contacts, setContacts] = useState<ContactModel[]>([]);
   const [tempContact, setTempContact] = useState<ContactModel>();
-  
+
   const nav = useNavigate();
 
   const [salesType, setSalesType] = useState<{
@@ -92,7 +93,6 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
     });
     setContacts(res.data.items);
   };
-
 
   const saveInvoice = async () => {
     try {
@@ -173,7 +173,13 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
               <Table.Cell>{sale.status}</Table.Cell>
               <Table.Cell>{money(sale.total)}</Table.Cell>
               <Table.Cell>
-                {money((sale.total ?? 0) - (sale.paid ?? 0))}
+                <div className="w-fit">
+                  {(sale.total ?? 0) - (sale.paid ?? 0) > 0 ? (
+                    money((sale.total ?? 0) - (sale.paid ?? 0))
+                  ) : (
+                    <Badge color="green">PAID</Badge>
+                  )}
+                </div>
               </Table.Cell>
               <Table.Cell>
                 <a
@@ -315,7 +321,6 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           }}
         />
       )}
-     
     </div>
   );
 };
