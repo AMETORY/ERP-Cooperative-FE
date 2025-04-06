@@ -17,4 +17,8 @@ export interface AccountModel {
     company_id?: string;
     user_id?: string;
     balance?: number;
+    is_inventory_account?: boolean;
+    is_cogs_account?: boolean;
+    is_discount?: boolean;
+    is_return?: boolean;
 }

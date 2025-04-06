@@ -84,8 +84,8 @@ export interface PurchaseItemModel {
 export interface PurchasePaymentModel {
   id?: string;
   payment_date: Date;
-  sales_id?: string | null;
-  sales?: PurchaseModel;
+  purchase_id?: string | null;
+  purchase?: PurchaseModel;
   amount: number;
   payment_discount: number;
   notes: string;

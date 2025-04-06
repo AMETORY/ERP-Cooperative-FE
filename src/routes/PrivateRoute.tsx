@@ -25,6 +25,7 @@ import ProfitLoss from "../pages/ProfitLossReport";
 import BalanceSheet from "../pages/BalanceSheetReport";
 import CapitalChange from "../pages/CapitalChangeReport";
 import CashFlow from "../pages/CashFlow";
+import PurchaseReturnDetail from "../pages/PurchaseReturnDetail";
 
 interface PrivateRouteProps {}
 
@@ -47,6 +48,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/sales/:salesId" element={<SalesDetail />} />
       <Route path="/purchase" element={<PurchasePage />} />
       <Route path="/purchase/:purchaseId" element={<PurchaseDetail />} />
+      <Route path="/purchase-return/:returnId" element={<PurchaseReturnDetail />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/product" element={<ProductPage />} />
       <Route path="/product/:productId" element={<ProductDetail />} />

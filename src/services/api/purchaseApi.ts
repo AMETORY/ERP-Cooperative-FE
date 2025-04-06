@@ -9,6 +9,7 @@ export const getPurchases = async (req: PaginationRequest) => {
   if (req.is_customer) queryParams.set("is_customer", "1");
   if (req.is_vendor) queryParams.set("is_vendor", "1");
   if (req.is_supplier) queryParams.set("is_supplier", "1");
+  if (req.is_published) queryParams.set("is_published", "1");
   if (req.doc_type) queryParams.set("doc_type", req.doc_type);
   return await customFetch(`api/v1/purchase/list?${queryParams}`, {
     method: "GET",

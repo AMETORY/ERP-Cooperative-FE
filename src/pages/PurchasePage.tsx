@@ -13,10 +13,11 @@ import {
   import toast from "react-hot-toast";
   import { BsCart2 } from "react-icons/bs";
   import { PiQuotes } from "react-icons/pi";
-  import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+  import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
   import { useNavigate } from "react-router-dom";
   import PurchaseTable from "../components/PurchaseTable";
   import { createPurchase } from "../services/api/purchaseApi";
+import ReturnPurchaseTable from "../components/ReturnPurchaseTable";
   interface PurchasePageProps {}
   
   const PurchasePage: FC<PurchasePageProps> = ({}) => {
@@ -114,6 +115,13 @@ import {
               icon={TbTruckDelivery}
             >
               <PurchaseTable title="Purchase Order" docType="PURCHASE_ORDER" />
+            </Tabs.Item>
+            <Tabs.Item
+              active={activeTab === 2}
+              title="Purchase Return"
+              icon={TbTruckReturn}
+            >
+              <ReturnPurchaseTable />
             </Tabs.Item>
         
           </Tabs>

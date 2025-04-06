@@ -80,7 +80,7 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
             />
           </div>
         </div>
-        <div className=" p-1">
+        <div className=" p-1 h-[calc(100vh-200px)] overflow-y-scroll">
           <Table>
             <Table.Head>
               <Table.HeadCell>Date</Table.HeadCell>

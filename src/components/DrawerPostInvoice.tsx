@@ -157,10 +157,12 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                 value={{
                   label: sales?.payment_account?.name!,
                   value: sales?.payment_account?.id!,
+                  type: sales?.payment_account?.type!,
                 }}
                 options={paymentAccounts.map((c) => ({
                   label: c.name!,
                   value: c.id!,
+                  type: c.type!,
                 }))}
                 onChange={(val) => {
                   let selected = paymentAccounts.find(
@@ -172,6 +174,22 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                     payment_account_id: selected?.id,
                   });
                 }}
+                formatOptionLabel={(option) => (
+                  <div className="flex justify-between">
+                    <span className="text-sm">{option.label}</span>
+                    {option.type && (
+                      <span
+                        className="text-[8pt] text-white rounded-lg px-2 py-0.5"
+                        style={{
+                          backgroundColor:
+                            option.type == "ASSET" ? "#8BC34A" : "#F56565",
+                        }}
+                      >
+                        {option.type == "ASSET" ? "CASH" : "CREDIT"}
+                      </span>
+                    )}
+                  </div>
+                )}
                 inputValue={""}
                 onInputChange={(e) => getAllPayment(e)}
               />

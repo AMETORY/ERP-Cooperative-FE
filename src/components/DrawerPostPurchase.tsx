@@ -82,6 +82,7 @@ const DrawerPostPurchase: FC<DrawerPostPurchaseProps> = ({
       page: 1,
       size: 10,
       search: s,
+      type: "LIABILITY,ASSET",
       cashflow_sub_group: "cash_bank,payment_to_vendors",
     }).then((e: any) => {
       setPaymentAccounts(e.data.items);
@@ -113,10 +114,12 @@ const DrawerPostPurchase: FC<DrawerPostPurchaseProps> = ({
                 value={{
                   label: purchase?.payment_account?.name!,
                   value: purchase?.payment_account?.id!,
+                  type: purchase?.payment_account?.type,
                 }}
-                options={paymentAccounts.map((c) => ({
+                options={paymentAccounts.filter((c) => !c.is_inventory_account).map((c) => ({
                   label: c.name!,
                   value: c.id!,
+                  type: c.type,
                 }))}
                 onChange={(val) => {
                   let selected = paymentAccounts.find(
@@ -128,6 +131,22 @@ const DrawerPostPurchase: FC<DrawerPostPurchaseProps> = ({
                     payment_account_id: selected?.id,
                   });
                 }}
+                formatOptionLabel={(option) => (
+                  <div className="flex justify-between">
+                    <span className="text-sm">{option.label}</span>
+                    {option.type && (
+                      <span
+                        className="text-[8pt] text-white rounded-lg px-2 py-0.5"
+                        style={{
+                          backgroundColor:
+                            option.type == "ASSET" ? "#8BC34A" : "#F56565",
+                        }}
+                      >
+                        {option.type == "ASSET" ? "CASH" : "CREDIT"}
+                      </span>
+                    )}
+                  </div>
+                )}
                 inputValue={""}
                 onInputChange={(e) => getAllPayment(e)}
               />

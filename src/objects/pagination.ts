@@ -20,6 +20,7 @@ export interface PaginationRequest {
     is_customer?: boolean;
     is_vendor?: boolean;
     is_supplier?: boolean;
+    is_published?: boolean;
   }
   
   

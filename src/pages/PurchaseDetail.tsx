@@ -801,7 +801,11 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                           </Dropdown>
                         </div>
                       ) : (
-                        <div className="text-data">{item.tax?.amount}%</div>
+                        (item?.tax?.amount ?? 0) > 0 && (
+                          <div className="text-data">
+                            {money(item?.tax?.amount)}%
+                          </div> // TODO: fix this
+                        )
                       )}
                     </Table.Cell>
                   )}
@@ -1085,7 +1089,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                             }
                             setPayment({
                               payment_date: new Date(),
-                              sales_id: purchase?.id!,
+                              purchase_id: purchase?.id!,
                               amount:
                                 (purchase?.total ?? 0) - (purchase?.paid ?? 0),
                               notes: "",
