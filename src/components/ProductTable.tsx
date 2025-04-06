@@ -7,7 +7,7 @@ import { LoadingContext } from "../contexts/LoadingContext";
 import { SearchContext } from "../contexts/SearchContext";
 import { PaginationResponse } from "../objects/pagination";
 import { deleteProduct, getProducts } from "../services/api/productApi";
-import { getPagination } from "../utils/helper";
+import { getPagination, money } from "../utils/helper";
 import { useNavigate } from "react-router-dom";
 
 interface ProductTableProps {}
@@ -64,6 +64,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
         <Table.Head>
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Description</Table.HeadCell>
+          <Table.HeadCell>Stock</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body>
@@ -78,6 +79,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
             <Table.Row key={product.id}>
               <Table.Cell>{product.name}</Table.Cell>
               <Table.Cell>{product.description}</Table.Cell>
+              <Table.Cell>{money(product.total_stock)} {product?.default_unit?.code}</Table.Cell>
               <Table.Cell>
                 <a
                   className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"

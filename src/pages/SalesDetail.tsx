@@ -1097,51 +1097,53 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </table>
               </div>
             </div>
-            <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-lg">Payment</h3>
-              <Button
-                size="xs"
-                color="green"
-                onClick={() => {
-                  let payment_discount = 0;
-                  let paymentTerm: PaymentTermModel;
-                  if (sales?.payment_terms) {
-                    paymentTerm = JSON.parse(
-                      sales?.payment_terms
-                    ) as PaymentTermModel;
-                    if (
-                      paymentTerm.discount_due_days &&
-                      moment(sales?.discount_due_date) <
-                        moment(sales?.published_at).add(
-                          paymentTerm.discount_due_days,
-                          "days"
-                        )
-                    ) {
-                      setDiscountEnabled(true);
-                      payment_discount = paymentTerm.discount_amount ?? 0;
+            {sales?.status == "POSTED" && (
+              <div className="flex justify-between items-center">
+                <h3 className="font-semibold text-lg">Payment</h3>
+                <Button
+                  size="xs"
+                  color="green"
+                  onClick={() => {
+                    let payment_discount = 0;
+                    let paymentTerm: PaymentTermModel;
+                    if (sales?.payment_terms) {
+                      paymentTerm = JSON.parse(
+                        sales?.payment_terms
+                      ) as PaymentTermModel;
+                      if (
+                        paymentTerm.discount_due_days &&
+                        moment(sales?.discount_due_date) <
+                          moment(sales?.published_at).add(
+                            paymentTerm.discount_due_days,
+                            "days"
+                          )
+                      ) {
+                        setDiscountEnabled(true);
+                        payment_discount = paymentTerm.discount_amount ?? 0;
+                      }
                     }
-                  }
-                  setPayment({
-                    payment_date: new Date(),
-                    sales_id: sales?.id!,
-                    amount: sales?.total! - sales?.paid!,
-                    notes: "",
-                    payment_discount,
-                    payment_method: "CASH",
-                    payment_method_notes: "",
-                  });
-                  getAccounts({
-                    page: 1,
-                    size: 10,
-                    cashflow_sub_group: "cash_bank",
-                  }).then((e: any) => {
-                    setAssets(e.data.items);
-                  });
-                }}
-              >
-                + Payment
-              </Button>
-            </div>
+                    setPayment({
+                      payment_date: new Date(),
+                      sales_id: sales?.id!,
+                      amount: sales?.total! - sales?.paid!,
+                      notes: "",
+                      payment_discount,
+                      payment_method: "CASH",
+                      payment_method_notes: "",
+                    });
+                    getAccounts({
+                      page: 1,
+                      size: 10,
+                      cashflow_sub_group: "cash_bank",
+                    }).then((e: any) => {
+                      setAssets(e.data.items);
+                    });
+                  }}
+                >
+                  + Payment
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
