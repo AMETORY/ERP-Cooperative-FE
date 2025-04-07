@@ -50,13 +50,14 @@ import { groupBy, money } from "../utils/helper";
 import DrawerPostInvoice from "../components/DrawerPostInvoice";
 import { FaPaperPlane, FaPlane } from "react-icons/fa6";
 import { IoPaperPlaneOutline } from "react-icons/io5";
-import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
 import { MdOutlinePublish } from "react-icons/md";
 import { PiQuotes } from "react-icons/pi";
 import Moment from "react-moment";
 import { paymentMethods } from "../utils/constants";
 import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
+import ModalSalesReturn from "../components/ModalSalesReturn";
 
 interface SalesDetailProps {}
 
@@ -89,6 +90,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [assets, setAssets] = useState<AccountModel[]>([]);
   const [paymentPercentage, setPaymentPercentage] = useState(100);
   const [balance, setBalance] = useState(0);
+  const [showReturn, setShowReturn] = useState(false);
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
   >([]);
@@ -299,6 +301,16 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   }}
                 >
                   POST INVOICE
+                </Dropdown.Item>
+              )}
+              {sales?.published_at && sales?.document_type == "INVOICE" && (
+                <Dropdown.Item
+                  icon={TbTruckReturn}
+                  onClick={() => {
+                    setShowReturn(true);
+                  }}
+                >
+                  Create Return
                 </Dropdown.Item>
               )}
               {!sales?.published_at && sales?.document_type != "INVOICE" && (
@@ -1283,7 +1295,6 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       value={payment?.amount}
                       groupSeparator="."
                       decimalSeparator=","
-                      
                       onValueChange={(_, __, val) => {
                         if (
                           (val?.float ?? 0) >
@@ -1309,8 +1320,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       {money(
                         (sales?.total ?? 0) -
                           (sales?.paid ?? 0) -
-                          (payment?.amount ?? 0)
-                      ,0)}
+                          (payment?.amount ?? 0),
+                        0
+                      )}
                     </HelperText>
                   </div>
                   <div>
@@ -1541,9 +1553,26 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
             ...sales!,
             items: items,
           }}
-          setSales={setSales}
+          setSales={(val) => {
+            setSales(val);
+            setItems(val.items ?? []);
+          }}
         />
       )}
+      <ModalSalesReturn
+        show={showReturn}
+        onClose={() => setShowReturn(false)}
+        salesList={[]}
+        sales={sales}
+        onInputChange={(val) => {}}
+        onSuccess={(val) => {
+          nav(`/sales-return/${val.id}`);
+        }}
+        setSales={(val) => {
+          // setSelectedPurchase(val);
+        }}
+        hideSelectSales
+      />
     </AdminLayout>
   );
 };

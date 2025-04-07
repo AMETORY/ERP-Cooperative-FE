@@ -13,10 +13,11 @@ import { getContacts } from "../services/api/contactApi";
 import toast from "react-hot-toast";
 import { BsCart2 } from "react-icons/bs";
 import { PiQuotes } from "react-icons/pi";
-import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import SalesTable from "../components/SalesTable";
 import { createSales } from "../services/api/salesApi";
+import ReturnSalesTable from "../components/ReturnSalesTable";
 interface SalesPageProps {}
 
 const SalesPage: FC<SalesPageProps> = ({}) => {
@@ -120,6 +121,9 @@ const SalesPage: FC<SalesPageProps> = ({}) => {
           </Tabs.Item>
           <Tabs.Item active={activeTab === 3} title="Sales Quote" icon={PiQuotes}>
             <SalesTable title="Sales Quote" docType="SALES_QUOTE" />
+          </Tabs.Item>
+          <Tabs.Item active={activeTab === 4} title="Sales Return" icon={TbTruckReturn}>
+            <ReturnSalesTable />
           </Tabs.Item>
         </Tabs>
       </div>

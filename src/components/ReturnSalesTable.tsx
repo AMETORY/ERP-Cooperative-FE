@@ -15,28 +15,28 @@ import { ReturnItemModel, ReturnModel } from "../models/return";
 import { PaginationResponse } from "../objects/pagination";
 import { getPagination, money } from "../utils/helper";
 import {
-  createPurchaseReturn,
-  getPurchaseReturns,
-} from "../services/api/purchaseReturnApi";
-import { PurchaseModel } from "../models/purchase";
-import { getPurchases } from "../services/api/purchaseApi";
+  createSalesReturn,
+  getSalesReturns,
+} from "../services/api/salesReturnApi";
+import { SalesModel } from "../models/sales";
+import { getSales } from "../services/api/salesApi";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Moment from "react-moment";
-import ModalPurchaseReturn from "./ModalPurchaseReturn";
+import ModalSalesReturn from "./ModalSalesReturn";
 
-interface ReturnPurchaseTableProps {}
+interface ReturnSalesTableProps {}
 
-const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
+const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
   const [returns, setReturns] = useState<ReturnModel[]>([]);
-  const [purchases, setPurchases] = useState<PurchaseModel[]>([]);
-  const [selectedPurchase, setSelectedPurchase] = useState<PurchaseModel>();
+  const [sales, setSales] = useState<SalesModel[]>([]);
+  const [selectedSales, setSelectedSales] = useState<SalesModel>();
   const [page, setPage] = useState(1);
   const [size, setsize] = useState(20);
   const [pagination, setPagination] = useState<PaginationResponse>();
@@ -53,24 +53,24 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
   useEffect(() => {
     if (mounted) {
       getAllReturns();
-      getAllPurchases("");
+      getAllSales("");
     }
   }, [mounted, page, size, search]);
 
-  const getAllPurchases = (s: string) => {
-    getPurchases({
+  const getAllSales = (s: string) => {
+    getSales({
       page,
       size,
       search: s,
-      doc_type: "BILL",
+      doc_type: "INVOICE",
       is_published: true,
     }).then((res: any) => {
-      setPurchases(res.data.items);
+      setSales(res.data.items);
     });
   };
   const getAllReturns = () => {
     setLoading(true);
-    getPurchaseReturns({ page, size, search })
+    getSalesReturns({ page, size, search })
       .then((res: any) => {
         setLoading(false);
         setReturns(res.data.items);
@@ -84,7 +84,7 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Purchase Return</h1>
+        <h1 className="text-3xl font-bold ">Sales Return</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -93,7 +93,7 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
               setShowModal(true);
             }}
           >
-            + Purchase Return
+            + Sales Return
           </Button>
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -126,9 +126,9 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                 <Moment format="DD-MM-YYYY">{item?.date}</Moment>
               </Table.Cell>
-              <Table.Cell>{item?.purchase_ref?.purchase_number}</Table.Cell>
+              <Table.Cell>{item?.sales_ref?.sales_number}</Table.Cell>
               <Table.Cell>
-                {item?.purchase_ref?.contact_data_parsed?.name}
+                {item?.sales_ref?.contact_data_parsed?.name}
               </Table.Cell>
               <Table.Cell>
                 {money(
@@ -140,7 +140,7 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
                 <a
                   className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
                   onClick={() => {
-                    nav(`/purchase-return/${item.id}`);
+                    nav(`/sales-return/${item.id}`);
                   }}
                 >
                   View
@@ -150,21 +150,21 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
           ))}
         </Table.Body>
       </Table>
-      <ModalPurchaseReturn
+      <ModalSalesReturn
         show={showModal}
         onClose={() => setShowModal(false)}
-        purchases={purchases}
-        purchase={selectedPurchase}
-        onInputChange={getAllPurchases}
+        salesList={sales}
+        sales={selectedSales}
+        onInputChange={getAllSales}
         onSuccess={(val) => {
-          nav(`/purchase-return/${val.id}`);
+          nav(`/sales-return/${val.id}`);
         }}
-        setPurchase={(val) => {
-          setSelectedPurchase(val);
+        setSales={(val) => {
+          setSelectedSales(val);
         }}
       />
       
     </div>
   );
 };
-export default ReturnPurchaseTable;
+export default ReturnSalesTable;

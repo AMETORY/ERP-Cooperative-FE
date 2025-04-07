@@ -2,12 +2,12 @@ import { useContext, useEffect, useState, type FC } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminLayout from "../components/layouts/admin";
 import {
-  deletePurchaseReturnItem,
-  getPurchaseReturn,
-  releasePurchaseReturn,
-  updatePurchaseReturn,
-  updatePurchaseReturnItem,
-} from "../services/api/purchaseReturnApi";
+  deleteSalesReturnItem,
+  getSalesReturn,
+  releaseSalesReturn,
+  updateSalesReturn,
+  updateSalesReturnItem,
+} from "../services/api/salesReturnApi";
 import { ReturnItemModel, ReturnModel } from "../models/return";
 import { LoadingContext } from "../contexts/LoadingContext";
 import toast from "react-hot-toast";
@@ -28,13 +28,13 @@ import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
 import Select from "react-select";
 
-interface PurchaseReturnDetailProps {}
+interface SalesReturnDetailProps {}
 
-const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
+const SalesReturnDetail: FC<SalesReturnDetailProps> = ({}) => {
   const { loading, setLoading } = useContext(LoadingContext);
   const { returnId } = useParams();
   const [mounted, setMounted] = useState(false);
-  const [returnPurchase, setReturnPurchase] = useState<ReturnModel>();
+  const [returnSales, setReturnSales] = useState<ReturnModel>();
   const [selectedItem, setSelectedItem] = useState<ReturnItemModel>();
   const [modalNoteOpen, setModalNoteOpen] = useState(false);
   const [itemNotes, setItemNotes] = useState("");
@@ -53,15 +53,15 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
   const getDetail = async () => {
     setLoading(true);
     try {
-      const res: any = await getPurchaseReturn(returnId!);
-      setReturnPurchase(res.data);
+      const res: any = await getSalesReturn(returnId!);
+      setReturnSales(res.data);
       setIsEditable(res.data.status == "DRAFT");
       getAccounts({
         page: 1,
         size: 10,
         search: "",
-        type: "ASSET,RECEIVABLE",
-        cashflow_sub_group: "cash_bank,acceptance_from_customers",
+        type: "ASSET,LIABILITY",
+        cashflow_sub_group: "cash_bank,payment_to_vendors",
       }).then((e: any) => {
         setAssetAccounts(e.data.items);
       });
@@ -82,14 +82,14 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-700">
-              {returnPurchase?.return_number}
+              {returnSales?.return_number}
             </h1>
           </div>
           <div className="flex gap-2 items-center">
-            <div>{returnPurchase?.status}</div>
+            <div>{returnSales?.status}</div>
             {/* <Dropdown inline>
               <Dropdown.Item icon={MdOutlinePublish}>
-                Release Purchase Return
+                Release Sales Return
               </Dropdown.Item>
             </Dropdown> */}
           </div>
@@ -98,44 +98,44 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col">
               <Label>Date</Label>
-              <Moment format="DD MMM YYYY">{returnPurchase?.date}</Moment>
+              <Moment format="DD MMM YYYY">{returnSales?.date}</Moment>
             </div>
             <div className="flex flex-col">
               <Label>Invoice</Label>
-              <Link to={`/purchase/${returnPurchase?.purchase_ref?.id}`}>
-                {returnPurchase?.purchase_ref?.purchase_number}
+              <Link to={`/sales/${returnSales?.sales_ref?.id}`}>
+                {returnSales?.sales_ref?.sales_number}
               </Link>
             </div>
             <div className="flex flex-col">
               <Label>Description</Label>
-              <div>{returnPurchase?.description}</div>
+              <div>{returnSales?.description}</div>
             </div>
-            {returnPurchase?.released_at && (
+            {returnSales?.released_at && (
               <div className="flex flex-col">
                 <Label>Released</Label>
                 <div>
                   <Moment format="DD MMM YYYY, hh:mm">
-                    {returnPurchase?.released_at}
+                    {returnSales?.released_at}
                   </Moment>
                 </div>
-                <small>{returnPurchase?.released_by?.full_name}</small>
+                <small>{returnSales?.released_by?.full_name}</small>
               </div>
             )}
           </div>
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col">
-              <Label>Supplier / Vendor</Label>
+              <Label>Customer</Label>
               <div>
-                {returnPurchase?.purchase_ref?.contact_data_parsed?.name}
+                {returnSales?.sales_ref?.contact_data_parsed?.name}
               </div>
               <div>
-                {returnPurchase?.purchase_ref?.contact_data_parsed?.address}
+                {returnSales?.sales_ref?.contact_data_parsed?.address}
               </div>
               <div>
-                {returnPurchase?.purchase_ref?.contact_data_parsed?.phone}{" "}
-                {returnPurchase?.purchase_ref?.contact_data_parsed?.email &&
+                {returnSales?.sales_ref?.contact_data_parsed?.phone}{" "}
+                {returnSales?.sales_ref?.contact_data_parsed?.email &&
                   "-"}{" "}
-                {returnPurchase?.purchase_ref?.contact_data_parsed?.email}
+                {returnSales?.sales_ref?.contact_data_parsed?.email}
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
               <Table.HeadCell className="w-10"></Table.HeadCell>
             </Table.Head>
             <Table.Body>
-              {(returnPurchase?.items ?? []).map((item) => (
+              {(returnSales?.items ?? []).map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>
                     <div className="font-semibold text-lg">
@@ -214,9 +214,9 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                               return;
                             }
                             item.quantity = values?.float ?? 0;
-                            setReturnPurchase({
-                              ...returnPurchase,
-                              items: (returnPurchase?.items ?? []).map((i) => {
+                            setReturnSales({
+                              ...returnSales,
+                              items: (returnSales?.items ?? []).map((i) => {
                                 if (i.id === item.id) {
                                   return item;
                                 }
@@ -226,8 +226,8 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                           }}
                           onKeyUp={(e) => {
                             if (e.key === "Enter") {
-                              updatePurchaseReturnItem(
-                                returnPurchase!.id!,
+                              updateSalesReturnItem(
+                                returnSales!.id!,
                                 item!.id!,
                                 item
                               ).then(() => {
@@ -258,8 +258,8 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                               "Are you sure you want to delete this item?"
                             )
                           ) {
-                            deletePurchaseReturnItem(
-                              returnPurchase!.id!,
+                            deleteSalesReturnItem(
+                              returnSales!.id!,
                               item!.id!
                             ).then(() => {
                               getDetail();
@@ -279,7 +279,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                 </Table.Cell>
                 <Table.Cell>
                   {money(
-                    returnPurchase?.items?.reduce(
+                    returnSales?.items?.reduce(
                       (acc, item) => acc + item.total!,
                       0
                     )
@@ -291,7 +291,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
           </Table>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {returnPurchase?.purchase_ref && isEditable && (
+          {returnSales?.sales_ref && isEditable && (
             <div className="mt-4  rounded-lg bg-gray-50 p-4 border min-h-[200px]">
               <div className="flex flex-col space-y-4">
                 <div>
@@ -307,27 +307,27 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
 
                 <div>
                   <Label>Account</Label>
-                  {returnPurchase?.purchase_ref?.payment_account?.type ==
+                  {returnSales?.sales_ref?.payment_account?.type ==
                     "ASSET" && (
                     <div>
-                      {returnPurchase?.purchase_ref?.payment_account?.name}
+                      {returnSales?.sales_ref?.payment_account?.name}
                     </div>
                   )}
-                  {returnPurchase?.purchase_ref?.payment_account?.type !=
+                  {returnSales?.sales_ref?.payment_account?.type !=
                     "ASSET" &&
-                    returnPurchase!.purchase_ref!.paid! > 0 && (
+                    returnSales!.sales_ref!.paid! > 0 && (
                       <Select
                         options={assetAccounts
                           .filter((a) => {
                             let returnTotal =
-                              returnPurchase?.items?.reduce(
+                              returnSales?.items?.reduce(
                                 (acc, item) => acc + item.total!,
                                 0
                               ) ?? 0;
                             return (
                               (a.type === "ASSET" &&
                                 returnTotal <
-                                  returnPurchase?.purchase_ref?.paid!) ||
+                                  returnSales?.sales_ref?.paid!) ||
                               a.type !== "ASSET"
                             );
                           })
@@ -371,11 +371,11 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                     )}
                 </div>
 
-                {(returnPurchase?.purchase_ref?.paid ?? 0) > 0 && (
+                {(returnSales?.sales_ref?.paid ?? 0) > 0 && (
                   <div>
                     <Label>Invoice Paid</Label>
                     <h3 className="text-2xl font-semibold">
-                      {money(returnPurchase?.purchase_ref?.paid)}
+                      {money(returnSales?.sales_ref?.paid)}
                     </h3>
                   </div>
                 )}
@@ -384,7 +384,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                   <Label>Return Amount</Label>
                   <h3 className="text-2xl font-semibold">
                     {money(
-                      returnPurchase?.items?.reduce(
+                      returnSales?.items?.reduce(
                         (acc, item) => acc + item.total!,
                         0
                       )
@@ -398,14 +398,14 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                     onClick={async () => {
                       try {
                         setLoading(true);
-                        await updatePurchaseReturn(
-                          returnPurchase!.id!,
-                          returnPurchase!
+                        await updateSalesReturn(
+                          returnSales!.id!,
+                          returnSales!
                         );
-                        await releasePurchaseReturn(returnPurchase!.id!, {
+                        await releaseSalesReturn(returnSales!.id!, {
                           date,
                           account_id: selectedAssetAccount?.id,
-                          notes: returnPurchase?.notes,
+                          notes: returnSales?.notes,
                         });
                         toast.success("Return released successfully");
                         getDetail();
@@ -427,10 +427,10 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
             {isEditable ? (
               <Textarea
                 rows={9}
-                value={returnPurchase?.notes}
+                value={returnSales?.notes}
                 onChange={(val) => {
-                  setReturnPurchase({
-                    ...returnPurchase!,
+                  setReturnSales({
+                    ...returnSales!,
                     notes: val.target.value,
                   });
                 }}
@@ -439,7 +439,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                 style={{ backgroundColor: "white" }}
               />
             ) : (
-              <div>{returnPurchase?.notes}</div>
+              <div>{returnSales?.notes}</div>
             )}
           </div>
         </div>
@@ -460,8 +460,8 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
           <div className="flex w-full justify-end">
             <Button
               onClick={() => {
-                updatePurchaseReturnItem(
-                  returnPurchase!.id!,
+                updateSalesReturnItem(
+                  returnSales!.id!,
                   selectedItem!.id!,
                   {
                     ...selectedItem,
@@ -482,4 +482,4 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
     </AdminLayout>
   );
 };
-export default PurchaseReturnDetail;
+export default SalesReturnDetail;

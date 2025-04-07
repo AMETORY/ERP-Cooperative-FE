@@ -1,5 +1,7 @@
 import { MerchantModel } from "./merchant";
 import {  ProductModel } from "./product";
+import { PurchaseModel } from "./purchase";
+import { ReturnModel } from "./return";
 import { SalesModel } from "./sales";
 import { UnitModel } from "./unit";
 import { WarehouseModel } from "./warehouse";
@@ -30,4 +32,6 @@ export interface StockMovementModel {
   reference_id?: string | null;
   reference_type?: string | null;
   sales_ref?: SalesModel;
+  purchase_ref?: PurchaseModel;
+  return_ref?: ReturnModel;
 }

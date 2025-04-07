@@ -55,7 +55,7 @@ import { groupBy, money } from "../utils/helper";
 import DrawerPostInvoice from "../components/DrawerPostInvoice";
 import { FaPaperPlane } from "react-icons/fa6";
 import { IoPaperPlaneOutline } from "react-icons/io5";
-import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
 import { MdOutlinePublish } from "react-icons/md";
 import { PiQuotes } from "react-icons/pi";
 import Moment from "react-moment";
@@ -63,6 +63,7 @@ import DrawerPostPurchase from "../components/DrawerPostPurchase";
 import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
 import { paymentMethods } from "../utils/constants";
+import ModalPurchaseReturn from "../components/ModalPurchaseReturn";
 
 interface PurchaseDetailProps {}
 
@@ -95,7 +96,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
   const [assets, setAssets] = useState<AccountModel[]>([]);
   const [paymentPercentage, setPaymentPercentage] = useState(100);
   const [balance, setBalance] = useState(0);
-
+  const [showReturn, setShowReturn] = useState(false);
   const [paymentTermGroups, setPaymentTermGroups] = useState<
     { group: string; terms: PaymentTermModel[] }[]
   >([]);
@@ -273,6 +274,16 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   }}
                 >
                   POST INVOICE
+                </Dropdown.Item>
+              )}
+              {purchase?.published_at && purchase?.document_type == "BILL" && (
+                <Dropdown.Item
+                  icon={TbTruckReturn}
+                  onClick={() => {
+                    setShowReturn(true);
+                  }}
+                >
+                  Create Return
                 </Dropdown.Item>
               )}
               {!purchase?.published_at && purchase?.document_type != "BILL" && (
@@ -1513,6 +1524,20 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
           }}
         />
       )}
+      <ModalPurchaseReturn
+        show={showReturn}
+        onClose={() => setShowReturn(false)}
+        purchases={[]}
+        purchase={purchase}
+        onInputChange={(val) => {}}
+        onSuccess={(val) => {
+          nav(`/purchase-return/${val.id}`);
+        }}
+        setPurchase={(val) => {
+          // setSelectedPurchase(val);
+        }}
+        hideSelectPurchase
+      />
     </AdminLayout>
   );
 };

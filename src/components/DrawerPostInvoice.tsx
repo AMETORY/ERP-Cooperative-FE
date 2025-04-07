@@ -172,6 +172,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                     ...sales,
                     payment_account: selected,
                     payment_account_id: selected?.id,
+                    items: items,
                   });
                 }}
                 formatOptionLabel={(option) => (
@@ -202,6 +203,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                   setSales({
                     ...sales,
                     notes: e.target.value,
+                    items
                   });
                 }}
                 className="input-white"

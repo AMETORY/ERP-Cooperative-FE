@@ -12,7 +12,8 @@ import {
 import { getPagination } from "../utils/helper";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
-import { TbFileInvoice } from "react-icons/tb";
+import { TbFileInvoice, TbTruckReturn } from "react-icons/tb";
+import { BsCartCheck } from "react-icons/bs";
 // import ModalStockMovement from "./ModalStockMovement";
 
 interface StockMovementTableProps {}
@@ -109,6 +110,22 @@ const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
                       className="flex gap-1 items-center"
                     >
                       <TbFileInvoice /> {stockMovement.sales_ref?.sales_number}
+                    </Link>
+                  )}
+                  {stockMovement.purchase_ref && (
+                    <Link
+                      to={`/purchase/${stockMovement.purchase_ref?.id}`}
+                      className="flex gap-1 items-center"
+                    >
+                      <BsCartCheck /> {stockMovement.purchase_ref?.purchase_number}
+                    </Link>
+                  )}
+                  {stockMovement.return_ref && (
+                    <Link
+                      to={`/purchase-return/${stockMovement.return_ref?.id}`}
+                      className="flex gap-1 items-center"
+                    >
+                      <TbTruckReturn /> {stockMovement.return_ref?.return_number}
                     </Link>
                   )}
                 </Table.Cell>
