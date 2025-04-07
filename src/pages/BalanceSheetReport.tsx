@@ -44,7 +44,7 @@ const BalanceSheet: FC<BalanceSheetProps> = ({}) => {
         <div className=" mt-4 h-[calc(100vh-200px)] overflow-y-auto p-4">
           <div className="grid grid-cols-2 gap-8">
             <div className="bg-white rounded-lg shadow-md h-fit">
-              <Table className="">
+              <Table className="" hoverable>
                 <Table.Body className="divide-y">
                   <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
@@ -165,7 +165,7 @@ const BalanceSheet: FC<BalanceSheetProps> = ({}) => {
               </Table>
             </div>
             <div className="bg-white rounded-lg shadow-md  h-fit">
-              <Table className="">
+              <Table className="" hoverable>
                 <Table.Body className="divide-y">
                   <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">

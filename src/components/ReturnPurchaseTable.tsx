@@ -11,15 +11,19 @@ import { useContext, useEffect, useState, type FC } from "react";
 import { LuFilter } from "react-icons/lu";
 import { SearchContext } from "../contexts/SearchContext";
 import { LoadingContext } from "../contexts/LoadingContext";
-import { ReturnModel } from "../models/return";
+import { ReturnItemModel, ReturnModel } from "../models/return";
 import { PaginationResponse } from "../objects/pagination";
-import { getPagination } from "../utils/helper";
-import { createPurchaseReturn, getPurchaseReturns } from "../services/api/purchaseReturnApi";
+import { getPagination, money } from "../utils/helper";
+import {
+  createPurchaseReturn,
+  getPurchaseReturns,
+} from "../services/api/purchaseReturnApi";
 import { PurchaseModel } from "../models/purchase";
 import { getPurchases } from "../services/api/purchaseApi";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Moment from "react-moment";
 
 interface ReturnPurchaseTableProps {}
 
@@ -99,12 +103,51 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
       <Table>
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
+          <Table.HeadCell>Invoice</Table.HeadCell>
           <Table.HeadCell>Supplier</Table.HeadCell>
           <Table.HeadCell>Total</Table.HeadCell>
           <Table.HeadCell>Status</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
-        <Table.Body></Table.Body>
+        <Table.Body>
+          {returns.length === 0 && (
+            <Table.Row>
+              <Table.Cell colSpan={5} className="text-center">
+                No data found.
+              </Table.Cell>
+            </Table.Row>
+          )}
+          {returns.map((item: ReturnModel) => (
+            <Table.Row
+              key={item.id}
+              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
+              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                <Moment format="DD-MM-YYYY">{item?.date}</Moment>
+              </Table.Cell>
+              <Table.Cell>
+                {item?.purchase_ref?.purchase_number}
+              </Table.Cell>
+              <Table.Cell>
+                {item?.purchase_ref?.contact_data_parsed?.name}
+              </Table.Cell>
+              <Table.Cell>
+                {money(item?.items?.reduce((acc, item) => acc + item.total!, 0))}
+              </Table.Cell>
+              <Table.Cell>{item.status}</Table.Cell>
+              <Table.Cell>
+              <a
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                  onClick={() => {
+                    nav(`/purchase-return/${item.id}`);
+                  }}
+                >
+                  View
+                </a>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
       </Table>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Create Purchase Return</Modal.Header>
@@ -190,8 +233,8 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
                   notes,
                   description,
                 };
-                  let resp : any = await createPurchaseReturn(data);
-                  nav(`/purchase-return/${resp.data.id}`);
+                let resp: any = await createPurchaseReturn(data);
+                nav(`/purchase-return/${resp.data.id}`);
                 setLoading(true);
               } catch (error) {
                 toast.error(`${error}`);

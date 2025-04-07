@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, type FC } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AdminLayout from "../components/layouts/admin";
 import {
   deletePurchaseReturnItem,
@@ -40,6 +40,8 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
   const [itemNotes, setItemNotes] = useState("");
   const [assetAccounts, setAssetAccounts] = useState<AccountModel[]>([]);
   const [date, setDate] = useState<Date>(new Date());
+  const [isEditable, setIsEditable] = useState(false);
+
   const [selectedAssetAccount, setSelectedAssetAccount] =
     useState<AccountModel>();
 
@@ -53,6 +55,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
     try {
       const res: any = await getPurchaseReturn(returnId!);
       setReturnPurchase(res.data);
+      setIsEditable(res.data.status == "DRAFT");
       getAccounts({
         page: 1,
         size: 10,
@@ -99,12 +102,23 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
             </div>
             <div className="flex flex-col">
               <Label>Invoice</Label>
-              <div>{returnPurchase?.purchase_ref?.purchase_number}</div>
+              <Link to={`/purchase/${returnPurchase?.purchase_ref?.id}`}>{returnPurchase?.purchase_ref?.purchase_number}</Link>
             </div>
             <div className="flex flex-col">
               <Label>Description</Label>
               <div>{returnPurchase?.description}</div>
             </div>
+            {returnPurchase?.released_at && (
+              <div className="flex flex-col">
+                <Label>Released</Label>
+                <div>
+                  <Moment format="DD MMM YYYY, hh:mm">
+                    {returnPurchase?.released_at}
+                  </Moment>
+                </div>
+                <small>{returnPurchase?.released_by?.full_name}</small>
+              </div>
+            )}
           </div>
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col">
@@ -142,99 +156,116 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
               {(returnPurchase?.items ?? []).map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>
-                    <div>{item.description}</div>
-                    {!item?.notes ? (
-                      <div
-                        className="text-xs italic cursor-pointer"
-                        onClick={() => {
-                          setSelectedItem(item);
-                          setModalNoteOpen(true);
-                        }}
-                      >
-                        + Notes
-                      </div>
+                    <div className="font-semibold text-lg">{item.description}</div>
+                    {!isEditable ? (
+                      <span>{item.notes}</span>
                     ) : (
-                      <div
-                        className="bg-gray-50 px-2 text-xs py-1 mt-2 rounded-lg cursor-pointer"
-                        onClick={() => {
-                          setItemNotes(item.notes ?? "");
-                          setSelectedItem(item);
-                          setModalNoteOpen(true);
-                        }}
-                      >
-                        {item.notes}
-                      </div>
+                      <>
+                        {!item?.notes ? (
+                          <div
+                            className="text-xs italic cursor-pointer"
+                            onClick={() => {
+                              setSelectedItem(item);
+                              setModalNoteOpen(true);
+                            }}
+                          >
+                            + Notes
+                          </div>
+                        ) : (
+                          <div
+                            className="bg-gray-50 px-2 text-xs py-1 mt-2 rounded-lg cursor-pointer"
+                            onClick={() => {
+                              setItemNotes(item.notes ?? "");
+                              setSelectedItem(item);
+                              setModalNoteOpen(true);
+                            }}
+                          >
+                            {item.notes}
+                          </div>
+                        )}
+                      </>
                     )}
                   </Table.Cell>
                   <Table.Cell>{item.warehouse?.name}</Table.Cell>
                   <Table.Cell>
-                    <div className=" relative min-w-[32px]">
-                      <CurrencyInput
-                        className="rs-input !p-1.5 "
-                        value={item.quantity ?? 0}
-                        groupSeparator="."
-                        decimalSeparator=","
-                        onValueChange={(value, name, values) => {
-                          if ((values?.float ?? 0) > item.original_quantity!) {
-                            toast.error(
-                              "Quantity must be less than or equal to original quantity"
-                            );
-                            return;
-                          }
-                          item.quantity = values?.float ?? 0;
-                          setReturnPurchase({
-                            ...returnPurchase,
-                            items: (returnPurchase?.items ?? []).map((i) => {
-                              if (i.id === item.id) {
-                                return item;
-                              }
-                              return i;
-                            }),
-                          });
-                        }}
-                        onKeyUp={(e) => {
-                          if (e.key === "Enter") {
-                            updatePurchaseReturnItem(
-                              returnPurchase!.id!,
-                              item!.id!,
-                              item
-                            ).then(() => {
-                              getDetail();
+                    {!isEditable ? (
+                      <span>
+                        {item.quantity}
+                        <span className="text-xs ml-1">{item.unit?.code}</span>
+                      </span>
+                    ) : (
+                      <div className=" relative min-w-[32px]">
+                        <CurrencyInput
+                          className="rs-input !p-1.5 "
+                          value={item.quantity ?? 0}
+                          groupSeparator="."
+                          decimalSeparator=","
+                          onValueChange={(value, name, values) => {
+                            if (
+                              (values?.float ?? 0) > item.original_quantity!
+                            ) {
+                              toast.error(
+                                "Quantity must be less than or equal to original quantity"
+                              );
+                              return;
+                            }
+                            item.quantity = values?.float ?? 0;
+                            setReturnPurchase({
+                              ...returnPurchase,
+                              items: (returnPurchase?.items ?? []).map((i) => {
+                                if (i.id === item.id) {
+                                  return item;
+                                }
+                                return i;
+                              }),
                             });
-                          }
-                        }}
-                      />
-                      {item.unit && (
-                        <div className="absolute top-2.5 right-2 text-xs">
-                          {item?.unit?.code}
-                        </div>
-                      )}
-                    </div>
+                          }}
+                          onKeyUp={(e) => {
+                            if (e.key === "Enter") {
+                              updatePurchaseReturnItem(
+                                returnPurchase!.id!,
+                                item!.id!,
+                                item
+                              ).then(() => {
+                                getDetail();
+                              });
+                            }
+                          }}
+                        />
+                        {item.unit && (
+                          <div className="absolute top-2.5 right-2 text-xs">
+                            {item?.unit?.code}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell>{money(item.unit_price)}</Table.Cell>
                   <Table.Cell>{money(item.discount_percent)} %</Table.Cell>
                   <Table.Cell>{money(item.tax?.amount)} %</Table.Cell>
                   <Table.Cell>{money(item.total)}</Table.Cell>
                   <Table.Cell className="text-center">
-                    <div
-                      className="font-medium text-red-400 hover:text-red-600 text-xs hover:underline dark:text-red-500 cursor-pointer"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Are you sure you want to delete this item?"
-                          )
-                        ) {
-                          deletePurchaseReturnItem(
-                            returnPurchase!.id!,
-                            item!.id!
-                          ).then(() => {
-                            getDetail();
-                          });
-                        }
-                      }}
-                    >
-                      Delete
-                    </div>
+                    {isEditable && (
+                      <div
+                        className="font-medium text-red-400 hover:text-red-600 text-xs hover:underline dark:text-red-500 cursor-pointer"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this item?"
+                            )
+                          ) {
+                            deletePurchaseReturnItem(
+                              returnPurchase!.id!,
+                              item!.id!
+                            ).then(() => {
+                              getDetail();
+                            });
+                          }
+                        }}
+                      >
+                        Delete
+                      </div>
+                    )}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -256,7 +287,7 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
           </Table>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {returnPurchase?.purchase_ref && (
+          {returnPurchase?.purchase_ref && isEditable && (
             <div className="mt-4  rounded-lg bg-gray-50 p-4 border min-h-[200px]">
               <div className="flex flex-col space-y-4">
                 <div>
@@ -274,8 +305,10 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                   <Label>Account</Label>
                   {returnPurchase?.purchase_ref?.payment_account?.type ==
                     "ASSET" && (
-                      <div>{returnPurchase?.purchase_ref?.payment_account?.name}</div>
-                    )}
+                    <div>
+                      {returnPurchase?.purchase_ref?.payment_account?.name}
+                    </div>
+                  )}
                   {returnPurchase?.purchase_ref?.payment_account?.type !=
                     "ASSET" &&
                     returnPurchase!.purchase_ref!.paid! > 0 && (
@@ -363,19 +396,23 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
           )}
           <div className="py-4">
             <Label>Notes</Label>
-            <Textarea
-              rows={9}
-              value={returnPurchase?.notes}
-              onChange={(val) => {
-                setReturnPurchase({
-                  ...returnPurchase!,
-                  notes: val.target.value,
-                });
-              }}
-              className="input-white"
-              placeholder="Notes..."
-              style={{ backgroundColor: "white" }}
-            />
+            {isEditable ? (
+              <Textarea
+                rows={9}
+                value={returnPurchase?.notes}
+                onChange={(val) => {
+                  setReturnPurchase({
+                    ...returnPurchase!,
+                    notes: val.target.value,
+                  });
+                }}
+                className="input-white"
+                placeholder="Notes..."
+                style={{ backgroundColor: "white" }}
+              />
+            ) : (
+              <div>{returnPurchase?.notes}</div>
+            )}
           </div>
         </div>
       </div>

@@ -393,6 +393,17 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 <div className="text-data">{purchase?.notes}</div>
               )}
             </div>
+            {purchase?.published_at && (
+              <div className="flex flex-col">
+                <Label>Released</Label>
+                <div>
+                  <Moment format="DD MMM YYYY, hh:mm">
+                    {purchase?.published_at}
+                  </Moment>
+                </div>
+                <small>{purchase?.published_by?.full_name}</small>
+              </div>
+            )}
           </div>
           <div className="flex flex-col space-y-4">
             <div>

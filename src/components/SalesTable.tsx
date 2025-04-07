@@ -26,6 +26,7 @@ import ModalContact from "./ModalContact";
 import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
 import ModalSales from "./ModalSales";
+import { isEditable } from "@testing-library/user-event/dist/utils";
 
 interface SalesTableProps {
   docType: string;
@@ -78,6 +79,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
       setLoading(false);
       setSales(res.data.items);
       setPagination(getPagination(res.data));
+      
     });
   };
 
