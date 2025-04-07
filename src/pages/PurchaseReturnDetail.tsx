@@ -4,16 +4,29 @@ import AdminLayout from "../components/layouts/admin";
 import {
   deletePurchaseReturnItem,
   getPurchaseReturn,
+  releasePurchaseReturn,
+  updatePurchaseReturn,
   updatePurchaseReturnItem,
 } from "../services/api/purchaseReturnApi";
-import { ReturnModel } from "../models/return";
+import { ReturnItemModel, ReturnModel } from "../models/return";
 import { LoadingContext } from "../contexts/LoadingContext";
 import toast from "react-hot-toast";
-import { Dropdown, Label, Table } from "flowbite-react";
+import {
+  Button,
+  Datepicker,
+  Dropdown,
+  Label,
+  Modal,
+  Table,
+  Textarea,
+} from "flowbite-react";
 import Moment from "react-moment";
 import { MdOutlinePublish } from "react-icons/md";
 import { money } from "../utils/helper";
 import CurrencyInput from "react-currency-input-field";
+import { AccountModel } from "../models/account";
+import { getAccounts } from "../services/api/accountApi";
+import Select from "react-select";
 
 interface PurchaseReturnDetailProps {}
 
@@ -22,24 +35,38 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
   const { returnId } = useParams();
   const [mounted, setMounted] = useState(false);
   const [returnPurchase, setReturnPurchase] = useState<ReturnModel>();
+  const [selectedItem, setSelectedItem] = useState<ReturnItemModel>();
+  const [modalNoteOpen, setModalNoteOpen] = useState(false);
+  const [itemNotes, setItemNotes] = useState("");
+  const [assetAccounts, setAssetAccounts] = useState<AccountModel[]>([]);
+  const [date, setDate] = useState<Date>(new Date());
+  const [selectedAssetAccount, setSelectedAssetAccount] =
+    useState<AccountModel>();
 
   useEffect(() => {
     setMounted(true);
 
     return () => {};
   }, []);
-  const getDetail = () => {
+  const getDetail = async () => {
     setLoading(true);
-    getPurchaseReturn(returnId!)
-      .then((res: any) => {
-        setReturnPurchase(res.data);
-      })
-      .catch((error) => {
-        toast.error(`${error}`);
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      const res: any = await getPurchaseReturn(returnId!);
+      setReturnPurchase(res.data);
+      getAccounts({
+        page: 1,
+        size: 10,
+        search: "",
+        type: "ASSET,RECEIVABLE",
+        cashflow_sub_group: "cash_bank,acceptance_from_customers",
+      }).then((e: any) => {
+        setAssetAccounts(e.data.items);
       });
+    } catch (error) {
+      toast.error(`${error}`);
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     if (mounted && returnId) {
@@ -57,11 +84,11 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
           </div>
           <div className="flex gap-2 items-center">
             <div>{returnPurchase?.status}</div>
-            <Dropdown inline>
+            {/* <Dropdown inline>
               <Dropdown.Item icon={MdOutlinePublish}>
                 Release Purchase Return
               </Dropdown.Item>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
         <div className="grid grid-cols-3 gap-8 mt-4">
@@ -73,6 +100,10 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
             <div className="flex flex-col">
               <Label>Invoice</Label>
               <div>{returnPurchase?.purchase_ref?.purchase_number}</div>
+            </div>
+            <div className="flex flex-col">
+              <Label>Description</Label>
+              <div>{returnPurchase?.description}</div>
             </div>
           </div>
           <div className="flex flex-col space-y-4">
@@ -96,7 +127,10 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
         <div className="overflow-x-auto mt-8">
           <Table className=" overflow-x-auto border rounded-none" hoverable>
             <Table.Head>
-              <Table.HeadCell style={{ width: "300px" }}>Item</Table.HeadCell>
+              <Table.HeadCell style={{ width: "200px" }}>Item</Table.HeadCell>
+              <Table.HeadCell style={{ width: "100px" }}>
+                Warehouse
+              </Table.HeadCell>
               <Table.HeadCell style={{ width: "100px" }}>Qty</Table.HeadCell>
               <Table.HeadCell style={{ width: "120px" }}>Price</Table.HeadCell>
               <Table.HeadCell style={{ width: "40px" }}>Disc</Table.HeadCell>
@@ -107,7 +141,32 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
             <Table.Body>
               {(returnPurchase?.items ?? []).map((item) => (
                 <Table.Row key={item.id}>
-                  <Table.Cell>{item.description} {item.original_quantity}</Table.Cell>
+                  <Table.Cell>
+                    <div>{item.description}</div>
+                    {!item?.notes ? (
+                      <div
+                        className="text-xs italic cursor-pointer"
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setModalNoteOpen(true);
+                        }}
+                      >
+                        + Notes
+                      </div>
+                    ) : (
+                      <div
+                        className="bg-gray-50 px-2 text-xs py-1 mt-2 rounded-lg cursor-pointer"
+                        onClick={() => {
+                          setItemNotes(item.notes ?? "");
+                          setSelectedItem(item);
+                          setModalNoteOpen(true);
+                        }}
+                      >
+                        {item.notes}
+                      </div>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>{item.warehouse?.name}</Table.Cell>
                   <Table.Cell>
                     <div className=" relative min-w-[32px]">
                       <CurrencyInput
@@ -117,7 +176,9 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                         decimalSeparator=","
                         onValueChange={(value, name, values) => {
                           if ((values?.float ?? 0) > item.original_quantity!) {
-                            toast.error("Quantity must be less than or equal to original quantity");
+                            toast.error(
+                              "Quantity must be less than or equal to original quantity"
+                            );
                             return;
                           }
                           item.quantity = values?.float ?? 0;
@@ -138,8 +199,8 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                               item!.id!,
                               item
                             ).then(() => {
-                              getDetail ();
-                            })
+                              getDetail();
+                            });
                           }
                         }}
                       />
@@ -175,19 +236,184 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                       Delete
                     </div>
                   </Table.Cell>
-                  
                 </Table.Row>
               ))}
-            <Table.Row>
-              <Table.Cell colSpan={5} className="font-semibold">Subtotal</Table.Cell>
-              <Table.Cell>{money(returnPurchase?.items?.reduce((acc, item) => acc + item.total!, 0))}</Table.Cell>
-              <Table.Cell></Table.Cell>
-            </Table.Row>
+              <Table.Row className="border-t">
+                <Table.Cell colSpan={6} className="font-semibold">
+                  Subtotal
+                </Table.Cell>
+                <Table.Cell>
+                  {money(
+                    returnPurchase?.items?.reduce(
+                      (acc, item) => acc + item.total!,
+                      0
+                    )
+                  )}
+                </Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
             </Table.Body>
-            
           </Table>
         </div>
+        <div className="grid grid-cols-2 gap-4">
+          {returnPurchase?.purchase_ref && (
+            <div className="mt-4  rounded-lg bg-gray-50 p-4 border min-h-[200px]">
+              <div className="flex flex-col space-y-4">
+                <div>
+                  <Label>Date</Label>
+                  <Datepicker
+                    value={date}
+                    onChange={(e) => {
+                      setDate(e!);
+                    }}
+                    className="input-white"
+                  />
+                </div>
+
+                <div>
+                  <Label>Account</Label>
+                  {returnPurchase?.purchase_ref?.payment_account?.type ==
+                    "ASSET" && (
+                      <div>{returnPurchase?.purchase_ref?.payment_account?.name}</div>
+                    )}
+                  {returnPurchase?.purchase_ref?.payment_account?.type !=
+                    "ASSET" &&
+                    returnPurchase!.purchase_ref!.paid! > 0 && (
+                      <Select
+                        options={assetAccounts.map((a) => {
+                          return {
+                            value: a.id,
+                            label: a.name,
+                            type: a.type,
+                          };
+                        })}
+                        value={{
+                          value: selectedAssetAccount?.id,
+                          label: selectedAssetAccount?.name,
+                          type: selectedAssetAccount?.type,
+                        }}
+                        onChange={(e) => {
+                          let selected = assetAccounts.find(
+                            (a) => a.id === e?.value
+                          );
+                          setSelectedAssetAccount(selected);
+                        }}
+                        formatOptionLabel={(option) => (
+                          <div className="flex justify-between">
+                            <span className="text-sm">{option.label}</span>
+                            {option.type && (
+                              <span
+                                className="text-[8pt] text-white rounded-lg px-2 py-0.5"
+                                style={{
+                                  backgroundColor:
+                                    option.type == "ASSET"
+                                      ? "#8BC34A"
+                                      : "#F56565",
+                                }}
+                              >
+                                {option.type == "ASSET" ? "CASH" : "CREDIT"}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      />
+                    )}
+                </div>
+
+                <div>
+                  <Label>Total</Label>
+                  <h3 className="text-2xl font-semibold">
+                    {money(
+                      returnPurchase?.items?.reduce(
+                        (acc, item) => acc + item.total!,
+                        0
+                      )
+                    )}
+                  </h3>
+                </div>
+                <div>
+                  <Button
+                    className="w-full"
+                    onClick={async () => {
+                      try {
+                        setLoading(true);
+                        await updatePurchaseReturn(
+                          returnPurchase!.id!,
+                          returnPurchase!
+                        );
+                        await releasePurchaseReturn(returnPurchase!.id!, {
+                          date,
+                          account_id: selectedAssetAccount?.id,
+                          notes: returnPurchase?.notes,
+                        });
+                        toast.success("Return released successfully");
+                        getDetail();
+                      } catch (error) {
+                        toast.error(`${error}`);
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    Release Return
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="py-4">
+            <Label>Notes</Label>
+            <Textarea
+              rows={9}
+              value={returnPurchase?.notes}
+              onChange={(val) => {
+                setReturnPurchase({
+                  ...returnPurchase!,
+                  notes: val.target.value,
+                });
+              }}
+              className="input-white"
+              placeholder="Notes..."
+              style={{ backgroundColor: "white" }}
+            />
+          </div>
+        </div>
       </div>
+      <Modal show={modalNoteOpen} onClose={() => setModalNoteOpen(false)}>
+        <Modal.Header>{selectedItem?.description}'s Notes</Modal.Header>
+        <Modal.Body>
+          <Textarea
+            value={itemNotes}
+            onChange={(val) => {
+              setItemNotes(val.target.value);
+            }}
+            rows={9}
+            placeholder="Item's Notes"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex w-full justify-end">
+            <Button
+              onClick={() => {
+                updatePurchaseReturnItem(
+                  returnPurchase!.id!,
+                  selectedItem!.id!,
+                  {
+                    ...selectedItem,
+                    notes: itemNotes,
+                  }
+                ).then(() => {
+                  getDetail();
+                  setItemNotes("");
+                  setModalNoteOpen(false);
+                });
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </AdminLayout>
   );
 };

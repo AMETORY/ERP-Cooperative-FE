@@ -4,6 +4,7 @@ import { SalesModel } from "./sales";
 import { TaxModel } from "./tax";
 import { UnitModel } from "./unit";
 import { UserModel } from "./user";
+import { WarehouseModel } from "./warehouse";
 
 export interface ReturnModel {
   id?: string;
@@ -15,6 +16,7 @@ export interface ReturnModel {
   user?: UserModel;
   reason?: string;
   notes?: string;
+  description?: string;
   status?: string;
   released_at?: Date;
   released_by_id?: string;
@@ -27,6 +29,7 @@ export interface ReturnModel {
 export interface ReturnItemModel {
   id?: string;
   description?: string;
+  notes?: string;
   return_id?: string;
   return?: ReturnModel;
   product_id?: string;
@@ -40,6 +43,8 @@ export interface ReturnItemModel {
   unit?: UnitModel;
   tax_id?: string;
   tax?: TaxModel;
+  warehouse_id?: string;
+  warehouse?: WarehouseModel;
   value?: number;
   total?: number;
   discount_percent?: number;

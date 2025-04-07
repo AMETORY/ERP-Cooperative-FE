@@ -129,6 +129,9 @@ const DrawerPostPurchase: FC<DrawerPostPurchaseProps> = ({
                     ...purchase,
                     payment_account: selected,
                     payment_account_id: selected?.id,
+                    items: [
+                      ...items
+                    ]
                   });
                 }}
                 formatOptionLabel={(option) => (

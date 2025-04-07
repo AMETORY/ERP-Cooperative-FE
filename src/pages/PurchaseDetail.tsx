@@ -1496,7 +1496,10 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
             ...purchase!,
             items: items,
           }}
-          setPurchase={setPurchase}
+          setPurchase={(val) => {
+            setPurchase(val);
+            setItems(val.items ?? []);
+          }}
         />
       )}
     </AdminLayout>

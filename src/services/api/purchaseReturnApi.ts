@@ -24,6 +24,19 @@ export const createPurchaseReturn = async (data: any) => {
   });
 };
 
+export const updatePurchaseReturn = async (id: string, data: any) => {
+  return await customFetch(`api/v1/purchase-return/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const releasePurchaseReturn = async (id: string, data: any) => {
+  return await customFetch(`api/v1/purchase-return/${id}/release`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
 export const addPurchaseReturnItem = async (id: string, itemId: string, data: any) => {
   return await customFetch(`api/v1/purchase-return/${id}/add-item`, {
     method: "PUT",
