@@ -240,6 +240,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({
                 children
               ) : (
                 <div className="flex flex-col space-y-4 items-center justify-center h-full   w-full">
+                  {/* {JSON.stringify(profile?.roles![0].permission_names)} */}
                   <RiFolderForbidLine className="w-12 h-12 text-gray-600" />
                   <span>You don't have permission to access this page</span>
                 </div>

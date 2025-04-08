@@ -348,21 +348,23 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             >
               Cooperative{" "}
             </li>
-            <li className="" style={{}}>
-              <span
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-                onClick={handleNavigation("/cooperative/activities")}
-              >
-                <Tooltip content=" My Activities">
-                  <BsActivity />
-                </Tooltip>
-                {!collapsed && (
-                  <span className="flex-1 ms-3 whitespace-nowrap">
-                    My Activities
-                  </span>
-                )}
-              </span>
-            </li>
+            {member && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/activities")}
+                >
+                  <Tooltip content=" My Activities">
+                    <BsActivity />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      My Activities
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
             {checkPermission("cooperative:cooperative_member:invite") && (
               <li className="" style={{}}>
                 <span
@@ -413,7 +415,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 </span>
               </li>
             )}
-          
+
             {checkPermission("cooperative:net_surplus:read") && (
               <li className="" style={{}}>
                 <span

@@ -1,3 +1,4 @@
+import { CooperationSetting } from "./setting";
 import { UserModel } from "./user";
 
 export interface CompanyModel {
@@ -18,6 +19,7 @@ export interface CompanyModel {
   status: string;
   setting?: CompanySetting 
   is_cooperation?: boolean;
+  cooperative_setting?: CooperationSetting
 }
 
 export interface CompanySetting {
