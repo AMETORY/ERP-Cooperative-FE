@@ -2,6 +2,7 @@ import { HR, Tooltip } from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
 import { AiOutlineDashboard, AiOutlineTransaction } from "react-icons/ai";
 import {
+  BsActivity,
   BsBank,
   BsCartCheck,
   BsGear,
@@ -347,6 +348,21 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             >
               Cooperative{" "}
             </li>
+            <li className="" style={{}}>
+              <span
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                onClick={handleNavigation("/cooperative/activities")}
+              >
+                <Tooltip content=" My Activities">
+                  <BsActivity />
+                </Tooltip>
+                {!collapsed && (
+                  <span className="flex-1 ms-3 whitespace-nowrap">
+                    My Activities
+                  </span>
+                )}
+              </span>
+            </li>
             {checkPermission("cooperative:cooperative_member:invite") && (
               <li className="" style={{}}>
                 <span
@@ -359,23 +375,6 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Member
-                    </span>
-                  )}
-                </span>
-              </li>
-            )}
-            {checkPermission("cooperative:loan_application:request") && (
-              <li className="" style={{}}>
-                <span
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-                  onClick={handleNavigation("/cooperative/loan/request")}
-                >
-                  <Tooltip content="Loan Request">
-                    <FaWpforms />
-                  </Tooltip>
-                  {!collapsed && (
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Loan Request
                     </span>
                   )}
                 </span>
@@ -396,21 +395,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 </span>
               </li>
             )}
-            {checkPermission("cooperative:loan_application:my") && (
-              <li className="" style={{}}>
-                <span
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-                  onClick={handleNavigation("/cooperative/loan/my")}
-                >
-                  <Tooltip content="Loan ">
-                    <BsBank />
-                  </Tooltip>
-                  {!collapsed && (
-                    <span className="flex-1 ms-3 whitespace-nowrap">My Loan</span>
-                  )}
-                </span>
-              </li>
-            )}
+
             {checkPermission("cooperative:saving:read") && (
               <li className="" style={{}}>
                 <span
@@ -428,23 +413,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 </span>
               </li>
             )}
-            {checkPermission("cooperative:saving:my") && (
-              <li className="" style={{}}>
-                <span
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-                  onClick={handleNavigation("/cooperative/saving/my")}
-                >
-                  <Tooltip content="Saving">
-                    <MdOutlineSavings />
-                  </Tooltip>
-                  {!collapsed && (
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      My Saving
-                    </span>
-                  )}
-                </span>
-              </li>
-            )}
+          
             {checkPermission("cooperative:net_surplus:read") && (
               <li className="" style={{}}>
                 <span

@@ -10,3 +10,11 @@ export const getCooperativeMembers = async (req: PaginationRequest) => {
     method: "GET",
   });
 };
+
+export const updateCooperativeMember = async (memberId: string, data: any) => {
+  return await customFetch(`api/v1/cooperative/member/${memberId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+

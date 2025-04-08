@@ -3,6 +3,7 @@ import { UserModel } from "./user";
 
 import { FileModel } from "./file";
 import { TransactionModel } from "./transaction";
+import { RoleModel } from "./role";
 
 export interface CooperativeMemberModel {
     id?: string;
@@ -31,4 +32,6 @@ export interface CooperativeMemberModel {
     approved_by_user?: UserModel;
     approved_at?: Date;
     status: string;
+    role?: RoleModel
+    role_id?: string;
 }

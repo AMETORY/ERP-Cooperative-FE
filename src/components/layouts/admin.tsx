@@ -100,6 +100,9 @@ const AdminLayout: FC<AdminLayoutProps> = ({
   }, [mounted]);
 
   const checkPermission = () => {
+    if (isCooperative) {
+      if (!activeCompany?.is_cooperation) return false
+    };
     if (!permission) return true;
     if (profile?.roles?.length == 0) return false;
     if (profile?.roles![0].permission_names) {

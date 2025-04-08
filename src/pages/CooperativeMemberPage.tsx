@@ -1,12 +1,12 @@
 import {
-    Avatar,
-    Badge,
-    Button,
-    Modal,
-    Pagination,
-    Table,
-    Tabs,
-    TextInput,
+  Avatar,
+  Badge,
+  Button,
+  Modal,
+  Pagination,
+  Table,
+  Tabs,
+  TextInput,
 } from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
 import toast from "react-hot-toast";
@@ -18,13 +18,15 @@ import { MemberInvitationModel } from "../models/member";
 import { RoleModel } from "../models/role";
 import { PaginationResponse } from "../objects/pagination";
 import {
-    deleteInvitation,
-    getInvitedMembers,
-    getRoles,
-    inviteMember
+  deleteInvitation,
+  getInvitedMembers,
+  getRoles,
+  inviteMember,
 } from "../services/api/commonApi";
 import { getCooperativeMembers } from "../services/api/cooperativeMemberApi";
 import { getPagination, initial } from "../utils/helper";
+import { MdCardMembership, MdOutlineInsertInvitation } from "react-icons/md";
+import ModalMemberEdit from "../components/ModalMemberEdit";
 
 interface CooperativeMemberPageProps {}
 
@@ -146,15 +148,8 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
               </Table.Cell>
               <Table.Cell>{invited?.inviter?.full_name}</Table.Cell>
               <Table.Cell>
-                {/* <a
-                    href="#"
-                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  >
-                    Edit
-                  </a> */}
                 <a
-                  href="#"
-                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     if (
@@ -181,8 +176,10 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
     <div>
       <Table>
         <Table.Head>
+          <Table.HeadCell>ID</Table.HeadCell>
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
+          <Table.HeadCell>Role</Table.HeadCell>
           <Table.HeadCell>Status</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
@@ -200,34 +197,51 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
               key={member.id}
               className="bg-white dark:border-gray-700 dark:bg-gray-800"
             >
+              <Table.Cell>{member.member_id_number}</Table.Cell>
               <Table.Cell
                 className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
                 onClick={() => navigate(`/member/${member.id}`)}
               >
-                {member.user?.full_name}
+                <div className="flex justify-between">
+                  <div>{member?.name ?? member.user?.full_name}</div>
+                  <Avatar
+                    key={member.id}
+                    size="xs"
+                    img={member?.user?.profile_picture?.url}
+                    rounded
+                    stacked
+                    placeholderInitials={initial(member?.user?.full_name)}
+                  />
+                </div>
               </Table.Cell>
               <Table.Cell>{member?.user?.email}</Table.Cell>
-              
+
+              <Table.Cell>{member?.role?.name}</Table.Cell>
               <Table.Cell>
-                <Avatar
-                  key={member.id}
-                  size="xs"
-                  img={member?.user?.profile_picture?.url}
-                  rounded
-                  stacked
-                  placeholderInitials={initial(member?.user?.full_name)}
-                />
-              </Table.Cell>
+                <div className="w-fit">
+                <Badge
+                  color={
+                    member?.status === "ACTIVE"
+                      ? "success"
+                      : member?.status === "PENDING"
+                      ? "warning"
+                      : "danger"
+                  }
+                >
+                  {member?.status}
+                </Badge>
+                </div>
+                </Table.Cell>
               <Table.Cell>
-                {/* <a
-                    href="#"
-                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  >
-                    Edit
-                  </a> */}
+                <a
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                  onClick={() => setMember(member)}
+                >
+                  Edit
+                </a>
                 <a
                   href="#"
-                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     if (
@@ -260,7 +274,7 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
     </div>
   );
   return (
-    <AdminLayout>
+    <AdminLayout isCooperative>
       <div className="p-8">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold ">Member</h1>
@@ -274,11 +288,13 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
             + Invite Member
           </Button>
         </div>
-        <Tabs aria-label="Pills" variant="pills">
-          <Tabs.Item active title="Members">
+        <Tabs>
+          <Tabs.Item icon={MdCardMembership} active title="Members">
             {renderMembers()}
           </Tabs.Item>
-          <Tabs.Item title="Invited">{renderInvited()}</Tabs.Item>
+          <Tabs.Item icon={MdOutlineInsertInvitation} title="Invited">
+            {renderInvited()}
+          </Tabs.Item>
         </Tabs>
       </div>
       <Modal
@@ -377,6 +393,17 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      {member && (
+        <ModalMemberEdit
+          member={member}
+          setMember={setMember}
+          onClose={() => {
+            setMember(null);
+            getAllMembers();
+          }}
+          show={!!member}
+        />
+      )}
     </AdminLayout>
   );
 };
