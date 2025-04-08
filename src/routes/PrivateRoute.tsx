@@ -2,31 +2,32 @@ import type { FC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AccountPage from "../pages/AccountPage";
 import AccountReport from "../pages/AccountReport";
+import BalanceSheet from "../pages/BalanceSheetReport";
+import CapitalChange from "../pages/CapitalChangeReport";
+import CashFlow from "../pages/CashFlow";
+import CogsReport from "../pages/CogsReport";
 import ConnectionDetail from "../pages/ConnectionDetail";
+import ContactPage from "../pages/ContactPage";
+import CooperativeMemberPage from "../pages/CooperativeMemberPage";
 import CreateCompanyPage from "../pages/CreateCompanyPage";
 import Home from "../pages/Home";
 import JournalDetail from "../pages/JournalDetail";
 import JournalPage from "../pages/JournalPage";
+import ProductDetail from "../pages/ProductDetail";
+import ProductPage from "../pages/ProductPage";
 import ProfilePage from "../pages/ProfilePage";
+import ProfitLoss from "../pages/ProfitLossReport";
+import PurchaseDetail from "../pages/PurchaseDetail";
+import PurchasePage from "../pages/PurchasePage";
+import PurchaseReturnDetail from "../pages/PurchaseReturnDetail";
+import ReportPage from "../pages/ReportPage";
+import SalesDetail from "../pages/SalesDetail";
 import SalesPage from "../pages/SalesPage";
+import SalesReturnDetail from "../pages/SalesReturnDetail";
 import SettingPage from "../pages/SettingPage";
 import TaxPage from "../pages/TaxPage";
 import TransactionPage from "../pages/TransactionPage";
-import ContactPage from "../pages/ContactPage";
-import SalesDetail from "../pages/SalesDetail";
-import ProductPage from "../pages/ProductPage";
 import WarehousePage from "../pages/WarehousePage";
-import ProductDetail from "../pages/ProductDetail";
-import PurchasePage from "../pages/PurchasePage";
-import PurchaseDetail from "../pages/PurchaseDetail";
-import ReportPage from "../pages/ReportPage";
-import CogsReport from "../pages/CogsReport";
-import ProfitLoss from "../pages/ProfitLossReport";
-import BalanceSheet from "../pages/BalanceSheetReport";
-import CapitalChange from "../pages/CapitalChangeReport";
-import CashFlow from "../pages/CashFlow";
-import PurchaseReturnDetail from "../pages/PurchaseReturnDetail";
-import SalesReturnDetail from "../pages/SalesReturnDetail";
 
 interface PrivateRouteProps {}
 
@@ -63,6 +64,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/balance-sheet" element={<BalanceSheet />} />
       <Route path="/cashflow-statement" element={<CashFlow />} />
       <Route path="/capital-change-statement" element={<CapitalChange />} />
+      <Route path="/cooperative/member" element={<CooperativeMemberPage />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />

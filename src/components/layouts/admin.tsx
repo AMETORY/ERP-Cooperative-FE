@@ -22,12 +22,19 @@ import {
 import Loading from "../Loading";
 import Sidebar from "../sidebar";
 import Topnav from "../topnav";
+import { RiFolderForbidLine } from "react-icons/ri";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
+  isCooperative?: boolean;
+  permission?: string;
 }
 
-const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
+const AdminLayout: FC<AdminLayoutProps> = ({
+  children,
+  isCooperative,
+  permission,
+}) => {
   const { activeCompany, setActiveCompany } = useContext(ActiveCompanyContext);
   const { profile, setProfile } = useContext(ProfileContext);
   const { member, setMember } = useContext(MemberContext);
@@ -91,6 +98,15 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       });
     });
   }, [mounted]);
+
+  const checkPermission = () => {
+    if (!permission) return true;
+    if (profile?.roles?.length == 0) return false;
+    if (profile?.roles![0].permission_names) {
+      return profile?.roles![0].permission_names.includes(permission);
+    }
+    return false;
+  };
 
   const renderCreateCompany = () => {
     return (
@@ -217,7 +233,14 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
               }}
               className=" fixed  "
             >
-              {children}
+              {checkPermission() ? (
+                children
+              ) : (
+                <div className="flex flex-col space-y-4 items-center justify-center h-full   w-full">
+                  <RiFolderForbidLine className="w-12 h-12 text-gray-600" />
+                  <span>You don't have permission to access this page</span>
+                </div>
+              )}
             </div>
           ) : (
             renderSelectCompany()

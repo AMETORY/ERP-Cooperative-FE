@@ -2,43 +2,34 @@ import { HR, Tooltip } from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
 import { AiOutlineDashboard, AiOutlineTransaction } from "react-icons/ai";
 import {
-  BsAsterisk,
+  BsBank,
   BsCartCheck,
   BsGear,
   BsJournal,
-  BsKanban,
   BsPeople,
-  BsPercent,
-  BsWhatsapp,
 } from "react-icons/bs";
-import { GoReport, GoTasklist } from "react-icons/go";
-import { HiOutlineChat } from "react-icons/hi";
+import { GoTasklist } from "react-icons/go";
 import {
-  HiOutlineInboxArrowDown,
+  HiChartPie,
+  HiOutlineChartPie,
   HiOutlineReceiptPercent,
 } from "react-icons/hi2";
-import { LuContact2, LuLink2, LuPowerOff, LuWarehouse } from "react-icons/lu";
-import { SiGoogleforms } from "react-icons/si";
+import { LuContact2, LuPowerOff, LuWarehouse } from "react-icons/lu";
+import { RiShoppingBagLine } from "react-icons/ri";
+import { TbFileInvoice, TbReportAnalytics } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { CollapsedContext } from "../contexts/CollapsedContext";
-import {
-  getInboxMessagesCount,
-  getSentMessagesCount,
-} from "../services/api/inboxApi";
+import { ActiveCompanyContext } from "../contexts/CompanyContext";
+import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import { asyncStorage } from "../utils/async_storage";
 import {
   LOCAL_STORAGE_COMPANIES,
   LOCAL_STORAGE_COMPANY_ID,
-  LOCAL_STORAGE_DEFAULT_CHANNEL,
-  LOCAL_STORAGE_DEFAULT_WHATSAPP_SESSION,
   LOCAL_STORAGE_TOKEN,
 } from "../utils/constants";
-import { MdOutlineAssistant } from "react-icons/md";
-import { MemberContext, ProfileContext } from "../contexts/ProfileContext";
 import Logo from "./logo";
-import { TbFileInvoice, TbReportAnalytics, TbReportMoney } from "react-icons/tb";
-import { RiShoppingBagLine } from "react-icons/ri";
-import { PiWarehouse } from "react-icons/pi";
+import { FaChartLine, FaWpforms } from "react-icons/fa6";
+import { MdOutlineSavings, MdSavings } from "react-icons/md";
 
 interface SidebarProps {}
 
@@ -51,6 +42,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
   const [sentUnreadCount, setSentUnreadCount] = useState(0);
   const [indexUnreadChat, setIndexUnreadChat] = useState(0);
   const [waUnreadChat, setWaUnreadChat] = useState(0);
+  const { activeCompany } = useContext(ActiveCompanyContext);
 
   useEffect(() => {
     setMounted(true);
@@ -86,22 +78,33 @@ const Sidebar: FC<SidebarProps> = ({}) => {
     <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 flex flex-col">
       <Logo collapsed={collapsed} />
       <div className="mb-4"></div>
-      <ul className="space-y-2 font-medium flex-1">
-        <li className="" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/")}
-          >
-            <Tooltip content="Dashboard">
-              <AiOutlineDashboard />
-            </Tooltip>
-            {!collapsed && <span className="ms-3">Dashboard</span>}
-          </span>
-        </li>
-        <HR />
-        <li className="text-xs text-gray-300 truncate" style={{}}>
-          Feature
-        </li>
+      <ul className="space-y-2 font-medium flex-1 h-[calc(100vh-100px)] overflow-y-auto">
+        <>
+          <li className="" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/")}
+            >
+              <Tooltip content="Dashboard">
+                <AiOutlineDashboard />
+              </Tooltip>
+              {!collapsed && <span className="ms-3">Dashboard</span>}
+            </span>
+          </li>
+        </>
+        {checkPermission("menu:admin:feature") && (
+          <>
+            <HR />
+            <li
+              className="text-xs text-gray-300 truncate !-mt-2 bg-gray-50 w-fit pr-2"
+              style={{
+                width: collapsed ? 50 : "fit-content",
+              }}
+            >
+              Feature
+            </li>
+          </>
+        )}
         {checkPermission("finance:account:read") && (
           <li className="" style={{}}>
             <span
@@ -289,11 +292,19 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         </li>
         )}
         */}
-
-        <HR />
-        <li className="text-xs text-gray-300 truncate" style={{}}>
-          Inventory
-        </li>
+        {checkPermission("menu:admin:inventory") && (
+          <>
+            <HR />
+            <li
+              className="text-xs text-gray-300 truncate !-mt-2 bg-gray-50 w-fit pr-2"
+              style={{
+                width: collapsed ? 50 : "fit-content",
+              }}
+            >
+              Inventory
+            </li>
+          </>
+        )}
         {checkPermission("inventory:product:read") && (
           <li className="" style={{}}>
             <span
@@ -324,41 +335,199 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )}
-        <HR />
 
-        <li className="text-xs text-gray-300 truncate" style={{}}>
-          Preferences
-        </li>
-        {checkPermission("finance:tax:read") && (
-          <li className="" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/tax")}
+        {activeCompany?.is_cooperation && (
+          <>
+            <HR />
+            <li
+              className="text-xs text-gray-300 truncate !-mt-2 bg-gray-50 w-fit pr-2"
+              style={{
+                width: collapsed ? 50 : "fit-content",
+              }}
             >
-              <Tooltip content="Tax">
-                <HiOutlineReceiptPercent />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
-              )}
-            </span>
-          </li>
+              Cooperative{" "}
+            </li>
+            {checkPermission("cooperative:cooperative_member:invite") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/member")}
+                >
+                  <Tooltip content="Member">
+                    <BsPeople />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Member
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("cooperative:loan_application:request") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/loan/request")}
+                >
+                  <Tooltip content="Loan Request">
+                    <FaWpforms />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Loan Request
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("cooperative:loan_application:read") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/loan")}
+                >
+                  <Tooltip content="Loan ">
+                    <BsBank />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">Loan</span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("cooperative:loan_application:my") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/loan/my")}
+                >
+                  <Tooltip content="Loan ">
+                    <BsBank />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">My Loan</span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("cooperative:saving:read") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/saving")}
+                >
+                  <Tooltip content="Saving">
+                    <MdOutlineSavings />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Saving
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("cooperative:saving:my") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/saving/my")}
+                >
+                  <Tooltip content="Saving">
+                    <MdOutlineSavings />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      My Saving
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("cooperative:net_surplus:read") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/cooperative/net_surplus")}
+                >
+                  <Tooltip content="Net Surplus">
+                    <HiOutlineChartPie />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Net Surplus
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+          </>
         )}
-        {checkPermission("contact:all:read") && (
-          <li className="" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/contact")}
+        {checkPermission("menu:admin:preferences") && (
+          <>
+            <HR />
+
+            <li
+              className="text-xs text-gray-300 truncate !-mt-2 bg-gray-50 w-fit pr-2"
+              style={{
+                width: collapsed ? 50 : "fit-content",
+              }}
             >
-              <Tooltip content="Contact">
-                <LuContact2 />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Contact</span>
-              )}
-            </span>
-          </li>
+              Preferences
+            </li>
+            {checkPermission("finance:tax:read") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/tax")}
+                >
+                  <Tooltip content="Tax">
+                    <HiOutlineReceiptPercent />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
+                  )}
+                </span>
+              </li>
+            )}
+            {checkPermission("contact:all:read") && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/contact")}
+                >
+                  <Tooltip content="Contact">
+                    <LuContact2 />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Contact
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+            {profile?.roles && profile?.roles[0].is_super_admin && (
+              <li className="" style={{}}>
+                <span
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                  onClick={handleNavigation("/setting")}
+                >
+                  <Tooltip content="Setting">
+                    <BsGear />
+                  </Tooltip>
+                  {!collapsed && (
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Setting
+                    </span>
+                  )}
+                </span>
+              </li>
+            )}
+          </>
         )}
+
         {/* 
         {checkPermission("customer_relationship:form:read") && (
         <li className="" style={{}}>
@@ -427,24 +596,9 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )} */}
-        {profile?.roles && profile?.roles[0].is_super_admin && (
-          <li className="" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/setting")}
-            >
-              <Tooltip content="Setting">
-                <BsGear />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Setting</span>
-              )}
-            </span>
-          </li>
-        )}
       </ul>
       <div
-        className="flex flex-row gap-2 items-center cursor-pointer hover:font-bold px-2"
+        className="flex flex-row gap-2 items-center cursor-pointer hover:font-bold px-2 mt-4"
         onClick={async () => {
           await asyncStorage.removeItem(LOCAL_STORAGE_TOKEN);
           await asyncStorage.removeItem(LOCAL_STORAGE_COMPANIES);

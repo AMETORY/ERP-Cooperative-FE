@@ -17,6 +17,7 @@ export interface CompanyModel {
   user?: UserModel;
   status: string;
   setting?: CompanySetting 
+  is_cooperation?: boolean;
 }
 
 export interface CompanySetting {

@@ -83,7 +83,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
       });
   };
   return (
-    <AdminLayout>
+    <AdminLayout permission="finance:journal:read">
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold ">Journal</h1>
