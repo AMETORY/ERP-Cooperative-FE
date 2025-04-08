@@ -58,3 +58,17 @@ export const paymentMethods = [
     { value: "BANK_TRANSFER", label: "Bank Transfer" },
     { value: "QRIS", label: "QRIS" },
 ];
+
+export let AUTO_NUMERIC_FORMAL = [
+    "{month-roman}",
+    "{month-mm}",
+    "{month-mmm}",
+    "{month-mmmm}",
+    "{year-yyyy}",
+    "{year-yy}",
+    "{auto-numeric}",
+    "{random-numeric}",
+    "{random-character}",
+    "{static-character}",
+]
+

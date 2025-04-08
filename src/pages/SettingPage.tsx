@@ -34,7 +34,8 @@ import Select, { InputActionMeta } from "react-select";
 import { LuLink, LuLink2 } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { ActiveCompanyContext } from "../contexts/CompanyContext";
-
+import LogoKoperasi from "../koperasi.svg"
+import CooperativeSetting from "../components/cooperative/setting";
 interface SettingPageProps {}
 
 const SettingPage: FC<SettingPageProps> = ({}) => {
@@ -370,6 +371,14 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           >
             {renderPlugin()}
           </Tabs.Item> */}
+          <Tabs.Item
+            active={activeTab === 3}
+            title={<div className="flex justify-center items-center"><img src={"/logo-koperasi.jpg"} className="w-6 mr-2" alt=""  />Pengaturan Koperasi</div>}
+            // icon={LogoKoperasi}
+            className=""
+          >
+            <CooperativeSetting />
+          </Tabs.Item>
         </Tabs>
       </div>
       <Modal show={modalPluginOpen} onClose={() => setModalPluginOpen(false)}>
