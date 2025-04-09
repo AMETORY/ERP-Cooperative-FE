@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState, type FC } from "react";
 import AdminLayout from "../components/layouts/admin";
 import {
+    Badge,
   Button,
   Datepicker,
   Label,
@@ -16,13 +17,18 @@ import { LoadingContext } from "../contexts/LoadingContext";
 import { LoanApplicationModel } from "../models/loan_application";
 import { CooperativeMemberModel } from "../models/cooperative_member";
 import { AccountModel } from "../models/account";
-import { getPagination } from "../utils/helper";
-import { createLoan, getLoans } from "../services/api/cooperativeLoanApi";
+import { getPagination, money } from "../utils/helper";
+import {
+  createLoan,
+  deleteLoan,
+  getLoans,
+} from "../services/api/cooperativeLoanApi";
 import { getMembers } from "../services/api/commonApi";
 import Select from "react-select";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Moment from "react-moment";
 
 interface LoanApplicationPageProps {}
 
@@ -106,6 +112,7 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
           <Table>
             <Table.Head>
               <Table.HeadCell>Date</Table.HeadCell>
+              <Table.HeadCell>Loan No.</Table.HeadCell>
               <Table.HeadCell>Member</Table.HeadCell>
               <Table.HeadCell>Amount</Table.HeadCell>
               <Table.HeadCell>Balance</Table.HeadCell>
@@ -120,6 +127,70 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
                   </Table.Cell>
                 </Table.Row>
               )}
+              {loans.map((loan, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell>
+                    <Moment format="DD MMM YYY">{loan?.submission_date}</Moment>
+                  </Table.Cell>
+                  <Table.Cell>{loan?.loan_number}</Table.Cell>
+                  <Table.Cell>{loan?.member?.name}</Table.Cell>
+                  <Table.Cell>{money(loan?.loan_amount)}</Table.Cell>
+                  <Table.Cell>
+                    {money(
+                      loan.last_payment?.remaining_loan ?? loan.loan_amount,
+                      0
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="w-fit">
+                    <Badge
+                      color={
+                        loan?.status === "DRAFT"
+                          ? "gray"
+                          : loan?.status === "APPROVED"
+                          ? "success"
+                          : loan?.status === "REJECTED"
+                          ? "danger"
+                          : loan?.status === "DISBURSED"
+                          ? "blue"
+                          : loan?.status === "SETTLEMENT"
+                          ? "indigo"
+                          : "gray"
+                      }
+                    >
+                      {loan?.status}
+                    </Badge>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <a
+                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                      onClick={() => {
+                        nav(`/cooperative/loan/${loan.id}`);
+                      }}
+                    >
+                      View
+                    </a>
+                    <a
+                      className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (
+                          window.confirm(
+                            `Are you sure you want to delete [${loan?.member?.name}] ${loan.loan_number}?`
+                          )
+                        ) {
+                          deleteLoan(loan!.id!).then(() => {
+                            getAllLoans();
+                          });
+                        }
+                      }}
+                    >
+                      Delete
+                    </a>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
             </Table.Body>
           </Table>
         </div>
@@ -233,12 +304,12 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
                     setLoading(true);
 
                     let resp: any = await createLoan({
-                        ...loan!,
-                        data:"[]"
+                      ...loan!,
+                      data: "[]",
                     });
                     setShowModal(false);
                     getAllLoans();
-                    
+
                     toast.success("Loan created successfully");
                     nav(`/cooperative/loan/${resp.data.id}`);
                   } catch (error: any) {

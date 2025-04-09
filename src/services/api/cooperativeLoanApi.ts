@@ -36,3 +36,21 @@ export const updateLoan = async (loanId: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
+export const disbursementLoan = async (loanId: string, data: any) => {
+  return await customFetch(`api/v1/cooperative/loan/${loanId}/disbursement`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const createLoanPayment = async (loanId: string, data: any) => {
+  return await customFetch(`api/v1/cooperative/loan/${loanId}/payment`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const approvalLoan = async (loanId: string, data: {approval_status: string, remarks: string}) => {
+  return await customFetch(`api/v1/cooperative/loan/${loanId}/approval`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};

@@ -1,3 +1,4 @@
+import { AccountModel } from "./account";
 import { CooperativeMemberModel } from "./cooperative_member";
 import { TransactionModel } from "./transaction";
 
@@ -26,6 +27,10 @@ export interface LoanApplicationModel {
   account_income_id?: string;
   account_admin_fee_id?: string;
   account_asset_id?: string;
+  account_receivable?: AccountModel;
+  account_income?: AccountModel;
+  account_admin_fee?: AccountModel;
+  account_asset?: AccountModel;
   data?: string;
   preview?: { [key: string]: InstallmentDetail[] };
   term_condition?: string;
@@ -50,6 +55,8 @@ export interface InstallmentPayment {
   remaining_loan: number; // Remaining loan balance after the payment
   payment_amount: number;
   remarks?: string; // Additional remarks or notes (optional)
+  account_asset_id?: string;
+  account_asset?: AccountModel;
 }
 
 export interface InstallmentDetail {
