@@ -19,6 +19,7 @@ import {
   getAccountCode,
   getAccounts,
   getAccountTypes,
+  updateAccount,
 } from "../services/api/accountApi";
 import toast from "react-hot-toast";
 import { getPagination, money } from "../utils/helper";
@@ -192,6 +193,18 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                     {money(account.balance)}
                   </Table.Cell>
                   <Table.Cell>
+                    <a
+                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                      onClick={() => {
+                        getAccountTypes().then((res: any) => {
+                          setAccountTypes(res.data);
+                        });
+                        setSelectedAccount(account);
+                        setShowModal(true);
+                      }}
+                    >
+                      View
+                    </a>
                     {account.is_deletable && (account.balance ?? 0) == 0 && (
                       <a
                         href="#"
@@ -253,7 +266,9 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
         </div>
       </Drawer>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Header>Create Account</Modal.Header>
+        <Modal.Header>
+          {selectedAccount?.id ? "Update" : "Create"} Account
+        </Modal.Header>
         <Modal.Body>
           <form
             onSubmit={async (e) => {
@@ -261,8 +276,16 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
 
               try {
                 setLoading(true);
-                await createAccount(selectedAccount);
-                toast.success("Account created successfully");
+                if (selectedAccount?.id) {
+                  await updateAccount(selectedAccount!.id, selectedAccount);
+                } else {
+                  await createAccount(selectedAccount);
+                }
+                toast.success(
+                  "Account " + selectedAccount?.id
+                    ? "Updated"
+                    : "Created" + " successfully"
+                );
                 setShowModal(false);
                 getAllAccounts();
               } catch (error) {
@@ -317,6 +340,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
               <div>
                 <Label>Type</Label>
                 <Select
+                  isDisabled={selectedAccount?.id ? true : false}
                   name="type"
                   options={types.map((t) => ({ label: t, value: t }))}
                   required
