@@ -399,7 +399,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
 
                 <div className="flex justify-between">
                   <div className="flex gap-2">
-                    {loan?.status == "DRAFT" && (
+                    {loan?.status == "DRAFT"  && (
                       <Button
                         color="failure"
                         onClick={async () => {

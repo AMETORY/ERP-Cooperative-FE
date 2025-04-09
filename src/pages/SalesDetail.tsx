@@ -18,7 +18,7 @@ import { useContext, useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
 import { BsAirplane, BsCart2, BsPlusCircle, BsTrash } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import AdminLayout from "../components/layouts/admin";
@@ -614,7 +614,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                     ) : (
                       <div className="flex flex-col">
                         <div className="text-data font-semibold">
+                          <Link to={item.product_id ? `/product/${item.product_id}` : "#"}>
                           {item.description}
+                          </Link>
                         </div>
                         <small className="text-data">{item.notes}</small>
                       </div>

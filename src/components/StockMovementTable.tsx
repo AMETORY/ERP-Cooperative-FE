@@ -9,7 +9,7 @@ import {
   deleteStockMovement,
   getStockMovements,
 } from "../services/api/stockMovementApi";
-import { getPagination } from "../utils/helper";
+import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
 import { TbFileInvoice, TbTruckReturn } from "react-icons/tb";
@@ -97,9 +97,15 @@ const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
                   <Moment format="DD MMM YYYY">{stockMovement.date}</Moment>
                 </Table.Cell>
                 <Table.Cell>{stockMovement.description}</Table.Cell>
-                <Table.Cell>{stockMovement.product?.display_name}</Table.Cell>
                 <Table.Cell>
-                  {stockMovement.quantity} {stockMovement.unit?.name}
+                  <Link 
+                  to={`/product/${stockMovement.product_id}`}
+                  >
+                  {stockMovement.product?.display_name}
+                  </Link>
+                  </Table.Cell>
+                <Table.Cell>
+                  {money(stockMovement.quantity)} {stockMovement.unit?.name}
                 </Table.Cell>
                 <Table.Cell>{stockMovement.warehouse?.name}</Table.Cell>
                 <Table.Cell>{stockMovement.type}</Table.Cell>

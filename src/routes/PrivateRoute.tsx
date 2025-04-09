@@ -32,6 +32,8 @@ import CooperativeActivitiesPage from "../pages/CooperativeActivitiesPage";
 import LoanApplicationPage from "../pages/LoanApplicationPage";
 import SavingPage from "../pages/SavingPage";
 import LoanApplicationDetail from "../pages/LoanApplicationDetail";
+import NetSurplusPage from "../pages/NetSurplusPage";
+import NetSurplusDetail from "../pages/NetSurplusDetail";
 
 interface PrivateRouteProps {}
 
@@ -73,6 +75,8 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/cooperative/loan" element={<LoanApplicationPage />} />
       <Route path="/cooperative/loan/:loanId" element={<LoanApplicationDetail />} />
       <Route path="/cooperative/saving" element={<SavingPage />} />
+      <Route path="/cooperative/net-surplus" element={<NetSurplusPage />} />
+      <Route path="/cooperative/net-surplus/:netSurplusId" element={<NetSurplusDetail />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />
