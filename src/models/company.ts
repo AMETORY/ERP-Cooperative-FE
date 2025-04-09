@@ -1,4 +1,4 @@
-import { CooperationSetting } from "./setting";
+import { CashFlowSetting, CooperationSetting } from "./setting";
 import { UserModel } from "./user";
 
 export interface CompanyModel {
@@ -17,17 +17,18 @@ export interface CompanyModel {
   user_id?: string;
   user?: UserModel;
   status: string;
-  setting?: CompanySetting 
+  setting?: CompanySetting;
   is_cooperation?: boolean;
-  cooperative_setting?: CooperationSetting
+  cooperative_setting?: CooperationSetting;
+  cashflow_group_setting: CashFlowSetting;
 }
 
 export interface CompanySetting {
-  company_id?: string
-  gemini_api_key?: string
-  whatsapp_web_host?: string
-  whatsapp_web_mock_number?: string
-  whatsapp_web_is_mocked?: boolean
+  company_id?: string;
+  gemini_api_key?: string;
+  whatsapp_web_host?: string;
+  whatsapp_web_mock_number?: string;
+  whatsapp_web_is_mocked?: boolean;
 }
 
 export interface CompanySectorModel {

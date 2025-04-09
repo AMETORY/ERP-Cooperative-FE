@@ -34,8 +34,14 @@ import Select, { InputActionMeta } from "react-select";
 import { LuLink, LuLink2 } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { ActiveCompanyContext } from "../contexts/CompanyContext";
-import LogoKoperasi from "../koperasi.svg"
+import LogoKoperasi from "../koperasi.svg";
 import CooperativeSetting from "../components/cooperative/setting";
+import { TbReportAnalytics } from "react-icons/tb";
+import {
+  defaultCashflowsubgroups,
+  getCashflowsubgroups,
+} from "../services/api/accountApi";
+import { CashFlowCategory } from "../models/setting";
 interface SettingPageProps {}
 
 const SettingPage: FC<SettingPageProps> = ({}) => {
@@ -49,11 +55,15 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
   const [plugins, setPlugins] = useState<RapidApiPluginModel[]>([]);
   const [modalPluginOpen, setModalPluginOpen] = useState(false);
   const [selectedPlugin, setSelectedPlugin] = useState<RapidApiPluginModel>();
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [companyPlugins, setCompanyPlugins] = useState<
     CompanyRapidApiPluginModel[]
   >([]);
   const [pluginKey, setPluginKey] = useState("");
   const [pluginHost, setPluginHost] = useState("");
+  const [subgroups, setSubgroups] = useState<
+    { name: string; description: string }[]
+  >([]);
 
   useEffect(() => {
     setMounted(true);
@@ -63,6 +73,9 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
     if (mounted) {
       setLoading(true);
       getAllSetting();
+      getCashflowsubgroups().then((res: any) => {
+        setSubgroups(res.data);
+      });
       // getAllPlugins();
       // getAllCompanyPlugins();
     }
@@ -96,7 +109,6 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
       setLoading(true);
       const resp: any = await getCompanyRapidAPIPlugins();
       setCompanyPlugins(resp.data);
-      
     } catch (error: any) {
       toast.error(`${error}`);
     } finally {
@@ -108,7 +120,12 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
     try {
       setLoading(true);
       //   await updateProfile(profile!);
-      await updateSetting(company!);
+      await updateSetting({
+        ...company!,
+        cashflow_group_setting_data: JSON.stringify(
+          company!.cashflow_group_setting
+        ),
+      });
       toast.success("Company updated successfully");
     } catch (error) {
       toast.error(`${error}`);
@@ -117,6 +134,123 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
     }
   };
 
+  const renderReport = () => (
+    <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-200px)] p-2">
+      <h1 className="text-3xl font-bold">Report Setting</h1>
+      <div className="bg-white rounded-lg p-4 border">
+        <h3 className="text-xl font-semibold mb-8">Cash Flow Group</h3>
+        <div className="flex justify-between">
+          <h4 className="text-lg font-semibold mb-4">Operating</h4>
+          <a
+            className="font-medium text-green-600 hover:underline dark:text-green-500 ms-2 cursor-pointer text-xs"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedGroup("operating");
+            }}
+          >
+            Add Sub Group
+          </a>
+        </div>
+        {company?.cashflow_group_setting.operating.map((item, index) => (
+          <div className="flex justify-between mb-4" key={index}>
+            <h5 className="text-md ">{item.description}</h5>
+            <a
+              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                company?.cashflow_group_setting.operating.splice(index, 1);
+                setCompany({
+                  ...company,
+                });
+              }}
+            >
+              Delete
+            </a>
+          </div>
+        ))}
+        <HR />
+        <div className="flex justify-between">
+          <h4 className="text-lg font-semibold mb-4">Investing</h4>
+          <a
+            className="font-medium text-green-600 hover:underline dark:text-green-500 ms-2 cursor-pointer text-xs"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedGroup("investing");
+            }}
+          >
+            Add Sub Group
+          </a>
+        </div>
+        {company?.cashflow_group_setting.investing.map((item, index) => (
+          <div className="flex justify-between mb-4" key={index}>
+            <h5 className="text-md ">{item.description}</h5>
+            <a
+              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                company?.cashflow_group_setting.investing.splice(index, 1);
+                setCompany({
+                  ...company,
+                });
+              }}
+            >
+              Delete
+            </a>
+          </div>
+        ))}
+        <HR />
+        <div className="flex justify-between">
+          <h4 className="text-lg font-semibold mb-4">Financing</h4>
+          <a
+            className="font-medium text-green-600 hover:underline dark:text-green-500 ms-2 cursor-pointer text-xs"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedGroup("financing");
+            }}
+          >
+            Add Sub Group
+          </a>
+        </div>
+        {company?.cashflow_group_setting.financing.map((item, index) => (
+          <div className="flex justify-between mb-4" key={index}>
+            <h5 className="text-md ">{item.description}</h5>
+            <a
+              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                company?.cashflow_group_setting.financing.splice(index, 1);
+                setCompany({
+                  ...company,
+                });
+              }}
+            >
+              Delete
+            </a>
+          </div>
+        ))}
+        <HR />
+        <div className="flex gap-4 justify-between">
+          <Button
+            className="w-32"
+            color="success"
+            onClick={() => {
+              defaultCashflowsubgroups().then((res: any) => {
+                company!.cashflow_group_setting = res.data;
+                setCompany({
+                  ...company!,
+                });
+              });
+            }}
+          >
+            Reset
+          </Button>
+          <Button className="w-32" onClick={updateCompanySetting}>
+            Save
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
   const renderInfo = () => (
     <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-160px)] p-2">
       <h1 className="text-3xl font-bold">Edit Company</h1>
@@ -373,11 +507,24 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           </Tabs.Item> */}
           <Tabs.Item
             active={activeTab === 3}
-            title={<div className="flex justify-center items-center"><img src={"/logo-koperasi.jpg"} className="w-6 mr-2" alt=""  />Pengaturan Koperasi</div>}
+            title={
+              <div className="flex justify-center items-center">
+                <img src={"/logo-koperasi.jpg"} className="w-6 mr-2" alt="" />
+                Pengaturan Koperasi
+              </div>
+            }
             // icon={LogoKoperasi}
             className=""
           >
             <CooperativeSetting />
+          </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 4}
+            title="Report Setting"
+            icon={TbReportAnalytics}
+            className=""
+          >
+            {renderReport()}
           </Tabs.Item>
         </Tabs>
       </div>
@@ -448,6 +595,54 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             <Button onClick={addPlugin}>Save</Button>
           </div>
         </Modal.Footer>
+      </Modal>
+      <Modal show={selectedGroup != ""} onClose={() => setSelectedGroup("")}>
+        <Modal.Header>
+          Add {selectedGroup.charAt(0).toUpperCase() + selectedGroup.slice(1)}'s
+          Sub Group
+        </Modal.Header>
+        <Modal.Body>
+          <div className="">
+            <Label>Sub Group</Label>
+            <Select
+              options={subgroups.map((g) => ({
+                label: g.description,
+                value: g.name,
+              }))}
+              onChange={(option) => {
+                console.log(option);
+                switch (selectedGroup) {
+                  case "operating":
+                    company?.cashflow_group_setting.operating.push({
+                      name: option!.value,
+                      description: option!.label,
+                    });
+                    break;
+                  case "financing":
+                    company?.cashflow_group_setting.financing.push({
+                      name: option!.value,
+                      description: option!.label,
+                    });
+                    break;
+                  case "investing":
+                    company?.cashflow_group_setting.investing.push({
+                      name: option!.value,
+                      description: option!.label,
+                    });
+                    break;
+
+                  default:
+                    break;
+                }
+                setCompany({
+                  ...company!,
+                });
+                setSelectedGroup("");
+              }}
+            />
+          </div>
+          <div className="min-h-[160px]"></div>
+        </Modal.Body>
       </Modal>
     </AdminLayout>
   );

@@ -8,6 +8,12 @@ export const getChartOfAccounts = async (template: string) => {
 export const getAccountTypes = async () => {
   return await customFetch(`api/v1/account/account-types`);
 };
+export const getCashflowsubgroups = async () => {
+  return await customFetch(`api/v1/account/cashflow-subgroups`);
+};
+export const defaultCashflowsubgroups = async () => {
+  return await customFetch(`api/v1/account/default-subgroups`);
+};
 export const getAccountCode = async (type: string) => {
   return await customFetch(`api/v1/account/get-code?type=${type}`);
 };

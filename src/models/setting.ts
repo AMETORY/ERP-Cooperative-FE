@@ -16,6 +16,7 @@ export interface SettingModel {
   bank_account: string | null;
   bank_code: string | null;
   beneficiary_name: string | null;
+  cashflow_group_setting: CashFlowSetting;
 }
 
 export interface CooperationSetting {
@@ -65,4 +66,17 @@ export interface CooperationSetting {
   net_surplus_education_fund_account?: AccountModel;
   net_surplus_management_account?: AccountModel;
   net_surplus_other_funds_account?: AccountModel;
+  
+}
+
+
+export interface CashFlowCategory {
+  name: string;
+  description: string;
+}
+
+export interface CashFlowSetting {
+  operating: CashFlowCategory[];
+  investing: CashFlowCategory[];
+  financing: CashFlowCategory[];
 }
