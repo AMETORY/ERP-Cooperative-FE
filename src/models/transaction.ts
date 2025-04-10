@@ -1,5 +1,6 @@
 import { AccountModel } from "./account";
 import { JournalModel } from "./journal";
+import { NetSurplusModel } from "./net_surplus";
 import { PurchaseModel } from "./purchase";
 import { SalesModel } from "./sales";
 
@@ -32,6 +33,7 @@ export interface TransactionModel {
   journal_ref?: JournalModel;
   sales_ref?: SalesModel;
   purchase_ref?: PurchaseModel;
+  net_surplus_ref?: NetSurplusModel;
   company_id: string;
   user_id: string;
 }

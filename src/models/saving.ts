@@ -18,6 +18,7 @@ export interface SavingModel {
   saving_type: "PRINCIPAL" | "MANDATORY" | "VOLUNTARY";
   amount: number;
   notes?: string;
+  saving_number?: string;
   description?: string;
   date?: Date;
   transactions?: TransactionModel[]

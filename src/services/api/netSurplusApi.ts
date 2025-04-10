@@ -36,21 +36,21 @@ export const updateNetSurplus = async (netSurplusId: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
-export const disbursementNetSurplus = async (netSurplusId: string, data: any) => {
-  return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/disbursement`, {
+export const distributeNetSurplus = async (netSurplusId: string, data: any) => {
+  return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/distribute`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
 };
-export const createNetSurplusPayment = async (netSurplusId: string, data: any) => {
-  return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/payment`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-  });
-};
-export const approvalNetSurplus = async (netSurplusId: string, data: {approval_status: string, remarks: string}) => {
-  return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/approval`, {
-    method: "PUT",
-    body: JSON.stringify(data),
-  });
-};
+// export const createNetSurplusPayment = async (netSurplusId: string, data: any) => {
+//   return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/payment`, {
+//     method: "PUT",
+//     body: JSON.stringify(data),
+//   });
+// };
+// export const approvalNetSurplus = async (netSurplusId: string, data: {approval_status: string, remarks: string}) => {
+//   return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/approval`, {
+//     method: "PUT",
+//     body: JSON.stringify(data),
+//   });
+// };

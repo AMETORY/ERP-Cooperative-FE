@@ -45,7 +45,6 @@ export interface CooperationSetting {
   net_surplus_management_account_id: string | null;
   net_surplus_other_funds_account_id: string | null;
   term_condition: string;
-  static_character: string;
   number_format: string;
   auto_numeric_length: number;
   random_numeric_length: number;
@@ -66,6 +65,9 @@ export interface CooperationSetting {
   net_surplus_education_fund_account?: AccountModel;
   net_surplus_management_account?: AccountModel;
   net_surplus_other_funds_account?: AccountModel;
+  static_character: string;
+  saving_static_character: string;
+  net_surplus_static_character: string;
   
 }
 

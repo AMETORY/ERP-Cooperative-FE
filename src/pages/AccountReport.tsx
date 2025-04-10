@@ -14,6 +14,7 @@ import { PaginationResponse } from "../objects/pagination";
 import { getAccountReport } from "../services/api/accountApi";
 import { money } from "../utils/helper";
 import { TbFileInvoice } from "react-icons/tb";
+import { HiOutlineChartPie } from "react-icons/hi2";
 
 interface AccountReportProps {}
 
@@ -161,7 +162,17 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                         to={`/purchase/${transaction?.purchase_ref?.id}`}
                         className="flex gap-1 items-center"
                       >
-                        <BsCartCheck /> {transaction.purchase_ref?.purchase_number}
+                        <BsCartCheck />{" "}
+                        {transaction.purchase_ref?.purchase_number}
+                      </Link>
+                    )}
+                    {transaction?.net_surplus_ref && (
+                      <Link
+                        to={`/cooperative/net-surplus/${transaction?.net_surplus_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <HiOutlineChartPie />{" "}
+                        {transaction.net_surplus_ref?.net_surplus_number}
                       </Link>
                     )}
                   </Table.Cell>

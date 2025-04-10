@@ -147,6 +147,7 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
           <Table>
             <Table.Head>
               <Table.HeadCell>Date</Table.HeadCell>
+              <Table.HeadCell>Number</Table.HeadCell>
               <Table.HeadCell>Description</Table.HeadCell>
               <Table.HeadCell>Type</Table.HeadCell>
               <Table.HeadCell>Member</Table.HeadCell>
@@ -168,6 +169,7 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                   <Table.Cell>
                     <Moment format="DD MMM YYYY">{saving?.date}</Moment>
                   </Table.Cell>
+                  <Table.Cell>{saving?.saving_number}</Table.Cell>
                   <Table.Cell>{saving?.notes}</Table.Cell>
                   <Table.Cell>
                     {convertSavingType(saving?.saving_type)}

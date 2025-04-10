@@ -208,7 +208,9 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
                 label: setting?.loan_account?.name,
               }}
               onChange={(val) => {
-                let selected = receivableAccounts.find((e) => e.id == val?.value);
+                let selected = receivableAccounts.find(
+                  (e) => e.id == val?.value
+                );
                 setSetting({
                   ...setting!,
                   loan_account_id: val?.value!,
@@ -646,7 +648,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
   );
   const renderLoan = () => (
     <div className="rounded-lg border p-4">
-      <h3 className="font-bold text-lg mb-4">Loan</h3>
+      <h3 className="font-bold text-lg mb-4">Auto Number</h3>
       <div className="flex flex-col space-y-4">
         <div>
           <Label>Panjang Auto Number</Label>
@@ -701,6 +703,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             ))}
           </div>
         </div>
+
         <div>
           <Label>Panjang Random Karakter</Label>
           <TextInput
@@ -724,6 +727,46 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
               setSetting({
                 ...setting!,
                 random_numeric_length: Number(e.target.value),
+              })
+            }
+            className="input-white"
+          />
+        </div>
+
+        <div>
+          <Label>Loan Static Character</Label>
+          <TextInput
+            value={setting?.static_character ?? 0}
+            onChange={(e) =>
+              setSetting({
+                ...setting!,
+                static_character: e.target.value,
+              })
+            }
+            className="input-white"
+          />
+        </div>
+        <div>
+          <Label>Saving Static Character</Label>
+          <TextInput
+            value={setting?.saving_static_character ?? 0}
+            onChange={(e) =>
+              setSetting({
+                ...setting!,
+                saving_static_character: e.target.value,
+              })
+            }
+            className="input-white"
+          />
+        </div>
+        <div>
+          <Label>Net Surplus Static Character</Label>
+          <TextInput
+            value={setting?.net_surplus_static_character ?? 0}
+            onChange={(e) =>
+              setSetting({
+                ...setting!,
+                net_surplus_static_character: e.target.value,
               })
             }
             className="input-white"
