@@ -34,6 +34,8 @@ import SavingPage from "../pages/SavingPage";
 import LoanApplicationDetail from "../pages/LoanApplicationDetail";
 import NetSurplusPage from "../pages/NetSurplusPage";
 import NetSurplusDetail from "../pages/NetSurplusDetail";
+import TrialBalanceReport from "../pages/TrialBalanceReport";
+import ClosingBook from "../pages/ClosingBook";
 
 interface PrivateRouteProps {}
 
@@ -69,6 +71,8 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/profit-loss-statement" element={<ProfitLoss />} />
       <Route path="/balance-sheet" element={<BalanceSheet />} />
       <Route path="/cashflow-statement" element={<CashFlow />} />
+      <Route path="/trial-balance" element={<TrialBalanceReport />} />
+      <Route path="/closing-the-book" element={<ClosingBook />} />
       <Route path="/capital-change-statement" element={<CapitalChange />} />
       <Route path="/cooperative/member" element={<CooperativeMemberPage />} />
       <Route path="/cooperative/activities" element={<CooperativeActivitiesPage />} />

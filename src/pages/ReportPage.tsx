@@ -38,14 +38,27 @@ const ReportPage: FC<ReportPageProps> = ({}) => {
       description: "Review changes in equity capital over a period.",
       link: "/capital-change-statement",
     },
+    {
+      icon: <img src="/icon/trial.png" width={40} />,
+      title: "Trial Balance",
+      description: "View detailed trial balance.",
+      link: "/trial-balance",
+    },
+    {
+      icon: <img src="/icon/closed-book.png" width={40} />,
+      title: "Closing The Book",
+      description: "Finalize your financial records for the period.",
+      link: "/closing-the-book",
+    },
+   
 
   ];
   return (
     <AdminLayout>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 h-[calc(100vh-80px)] overflow-y-auto">
         {reportCards.map((card, index) => (
           <Link to={card.link} key={index}>
-            <Card className=" p-4 hover:bg-gray-100 transition duration-300 justify-center min-h-[300px]">
+            <Card className=" p-4 hover:bg-gray-100 transition duration-300 justify-center min-h-[280px]">
                 <div className="flex flex-col items-center text-center space-y-4">
 
               <div className="mb-2">{card.icon}</div>

@@ -9,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { SearchContext } from "../contexts/SearchContext";
 import Moment from "react-moment";
+import { DateRangeContext } from "../contexts/LoadingContext";
 
 interface TopnavProps {}
 
 const Topnav: React.FC<TopnavProps> = () => {
+  const { dateRange, setDateRange } = useContext(DateRangeContext);
   const { search, setSearch } = useContext(SearchContext);
   const { companies, setCompanies } = useContext(CompaniesContext);
   const { companyID, setCompanyID } = useContext(CompanyIDContext);
@@ -30,11 +32,23 @@ const Topnav: React.FC<TopnavProps> = () => {
     return () => clearInterval(id);
   }, []);
 
+  const searchBox = (<div className="relative w-full max-w-[500px] mr-6 focus-within:text-purple-500">
+    <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+      <HiMagnifyingGlass />
+    </div>
+    <input
+      type="text"
+      className="w-full py-2 pl-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+      placeholder="Search"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  </div>)
   return (
     <nav className="fixed top-0 z-20 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center justify-start rtl:justify-end ">
+          <div className="flex items-center justify-start rtl:justify-end  w-full">
             <button
               onClick={() => setCollapsed(!collapsed)}
               data-drawer-target="logo-sidebar"
@@ -58,20 +72,15 @@ const Topnav: React.FC<TopnavProps> = () => {
                 />
               </svg>
             </button>
-            <div className="relative w-full max-w-[500px] mr-6 focus-within:text-purple-500">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <HiMagnifyingGlass />
-              </div>
-              <input
-                type="text"
-                className="w-full py-2 pl-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
-                placeholder="Search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            <div className="flex justify-between w-full items-center">
+              {dateRange &&
+              <div className="text-sm  px-4 py-2 hover:bg-gray-50 rounded-lg border cursor-pointer"><Moment format="DD/MM/YYYY">{dateRange[0]}</Moment> - <Moment format="DD/MM/YYYY">{dateRange[1]}</Moment></div>
+              }
+            {searchBox}
+            <div></div>
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center w-[600px]">
             <div>
               <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">{now}</Moment>
             </div>
