@@ -40,9 +40,11 @@ export interface ProfitLossModel {
     currency_code: string;
     company_id: string;
     profit: ProfitLossAccount[];
+    net_surplus: ProfitLossAccount[];
     loss: ProfitLossAccount[];
     gross_profit: number;
     total_expense: number;
+    total_net_surplus: number;
     net_profit: number;
 }
 

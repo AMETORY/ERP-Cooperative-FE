@@ -145,6 +145,45 @@ const ProfitLoss: FC<ProfitLossProps> = ({}) => {
                   {money(report?.net_profit)}
                 </Table.Cell>
               </Table.Row>
+              {(report?.total_net_surplus ?? 0) != 0 && (
+                <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
+                    Sisa Hasil Usaha Sudah Dibagi
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
+                  <Table.Cell
+                    className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
+                    align="right"
+                  >
+                    Jumlah
+                  </Table.Cell>
+                </Table.Row>
+              )}
+              {report?.net_surplus
+                .filter((item) => item.sum !== 0)
+                .map((item: ProfitLossAccount, index: number) => (
+                  <Table.Row
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    key={index}
+                  >
+                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
+                      <Link
+                        to={
+                          item.link != ""
+                            ? item.link
+                            : `/account/${item.id}/report`
+                        }
+                        className="hover:font-semibold"
+                      >
+                        {item.name}
+                      </Link>
+                    </Table.Cell>
+                    <Table.Cell></Table.Cell>
+                    <Table.Cell></Table.Cell>
+                    <Table.Cell align="right">{money(item.sum)}</Table.Cell>
+                  </Table.Row>
+                ))}
             </Table.Body>
           </Table>
         </div>
