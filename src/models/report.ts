@@ -110,3 +110,18 @@ export interface CashflowSubGroup {
   description: string;
   amount: number;
 }
+
+
+export interface ClosingBookReport {
+  title: string;
+  start_date: string;
+  notes: string;
+  status: string;
+  profit_loss: ProfitLossModel
+  balance_sheet: BalanceSheetModel
+  cash_flow: CashFlowReport
+  trial_balance: CapitalChangeModel
+  capital_change: CapitalChangeModel
+}
+
+
