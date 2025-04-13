@@ -21,6 +21,10 @@ export interface PaginationRequest {
     is_vendor?: boolean;
     is_supplier?: boolean;
     is_published?: boolean;
+    is_profit_loss_account?: boolean;
+    is_profit_loss_closing_account?: boolean;
+    is_net_surplus?: boolean;
+    is_cogs_closing_account?: boolean;
   }
   
   

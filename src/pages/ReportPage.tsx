@@ -50,6 +50,18 @@ const ReportPage: FC<ReportPageProps> = ({}) => {
       description: "Finalize your financial records for the period.",
       link: "/closing-the-book",
     },
+    {
+      icon: <img src="/icon/journal.png" width={40} />,
+      title: "General Journal",
+      description: "View detailed general journal, including all transactions, debits and credits, and account balances.",
+      link: "/general-journal",
+    },
+    {
+      icon: <img src="/icon/ledger.png" width={40} />,
+      title: "General Ledger",
+      description: "View detailed ledger accounts, including debit and credit transactions.",
+      link: "/general-ledger",
+    },
    
 
   ];

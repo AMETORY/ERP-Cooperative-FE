@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import { LuLink } from "react-icons/lu";
+import CashFlowComponent from "../components/report/CashFlowComponent";
 
 interface CashFlowProps {}
 
@@ -42,119 +43,7 @@ const CashFlow: FC<CashFlowProps> = ({}) => {
       <div className="p-6">
         <h1 className="text-3xl text-gray-900 font-bold">Cash Flow Report</h1>
         <div className=" mt-8 h-[calc(100vh-180px)] overflow-y-auto">
-          <Table className="" hoverable>
-            <Table.Body className="divide-y">
-              <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  OPERASIONAL
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell
-                  className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
-                  align="right"
-                >
-                  Jumlah
-                </Table.Cell>
-              </Table.Row>
-              {report?.operating.map(
-                (item: CashflowSubGroup, index: number) => (
-                  <Table.Row
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    key={index}
-                  >
-                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                      {item.description}
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell align="right">{money(item.amount)}</Table.Cell>
-                  </Table.Row>
-                )
-              )}
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.total_operating)}
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  INVESTASI
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell
-                  className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
-                  align="right"
-                >
-                  Jumlah
-                </Table.Cell>
-              </Table.Row>
-
-              {report?.investing.map(
-                (item: CashflowSubGroup, index: number) => (
-                  <Table.Row
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    key={index}
-                  >
-                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                      {item.description}
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell align="right">{money(item.amount)}</Table.Cell>
-                  </Table.Row>
-                )
-              )}
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.total_investing)}
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  PENDANAAN
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell
-                  className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
-                  align="right"
-                >
-                  Jumlah
-                </Table.Cell>
-              </Table.Row>
-              {report?.financing.map(
-                (item: CashflowSubGroup, index: number) => (
-                  <Table.Row
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    key={index}
-                  >
-                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                      {item.description}
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell align="right">{money(item.amount)}</Table.Cell>
-                  </Table.Row>
-                )
-              )}
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.total_financing)}
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
+          {report && <CashFlowComponent cashFlow={report} />}
         </div>
       </div>
     </AdminLayout>

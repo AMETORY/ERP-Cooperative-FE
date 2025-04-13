@@ -81,7 +81,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
       <div className="mb-4"></div>
       <ul className="space-y-2 font-medium flex-1 h-[calc(100vh-100px)] overflow-y-auto">
         <>
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/")}
@@ -107,7 +107,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </>
         )}
         {checkPermission("finance:account:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/account")}
@@ -122,7 +122,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         {checkPermission("finance:transaction:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/transaction")}
@@ -139,7 +139,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         {checkPermission("finance:journal:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/journal")}
@@ -154,7 +154,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         {checkPermission("order:sales:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/sales")}
@@ -169,7 +169,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         {checkPermission("inventory:purchase:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/purchase")}
@@ -184,7 +184,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         {checkPermission("finance:report:menu") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/report")}
@@ -200,7 +200,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         )}
         {/* 
         {checkPermission("project_management:project:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/project")}
@@ -214,7 +214,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             </span>
           </li>
         )}
-        <li className="" style={{}}>
+        <li className=" cursor-pointer" style={{}}>
           <span
             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
             onClick={handleNavigation("/inbox")}
@@ -232,7 +232,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             )}
           </span>
         </li>
-        <li className="" style={{}}>
+        <li className=" cursor-pointer" style={{}}>
           <span
             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
             onClick={async () => {
@@ -264,7 +264,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           Omni Channel
         </li>
         {checkPermission("customer_relationship:whatsapp:read") && (
-        <li className="" style={{}}>
+        <li className=" cursor-pointer" style={{}}>
           <span
             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
             onClick={async () => {
@@ -307,7 +307,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </>
         )}
         {checkPermission("inventory:product:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/product")}
@@ -322,7 +322,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </li>
         )}
         {checkPermission("inventory:warehouse:read") && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/warehouse")}
@@ -349,7 +349,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               Cooperative{" "}
             </li>
             {member && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/activities")}
@@ -366,7 +366,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </li>
             )}
             {checkPermission("cooperative:cooperative_member:invite") && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/member")}
@@ -383,7 +383,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </li>
             )}
             {checkPermission("cooperative:loan_application:read") && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/loan")}
@@ -399,7 +399,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             )}
 
             {checkPermission("cooperative:saving:read") && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/saving")}
@@ -417,7 +417,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
             )}
 
             {checkPermission("cooperative:net_surplus:read") && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/net-surplus")}
@@ -448,7 +448,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               Preferences
             </li>
             {checkPermission("finance:tax:read") && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/tax")}
@@ -463,7 +463,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </li>
             )}
             {checkPermission("contact:all:read") && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/contact")}
@@ -480,7 +480,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </li>
             )}
             {profile?.roles && profile?.roles[0].is_super_admin && (
-              <li className="" style={{}}>
+              <li className=" cursor-pointer" style={{}}>
                 <span
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/setting")}
@@ -501,7 +501,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
 
         {/* 
         {checkPermission("customer_relationship:form:read") && (
-        <li className="" style={{}}>
+        <li className=" cursor-pointer" style={{}}>
           <span
             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
             onClick={handleNavigation("/form")}
@@ -516,7 +516,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         </li>
         )}
         {checkPermission("project_management:project:update") && (
-        <li className="" style={{}}>
+        <li className=" cursor-pointer" style={{}}>
           <span
             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
             onClick={handleNavigation("/task-attribute")}
@@ -533,7 +533,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         </li>
         )}
         {member?.role?.is_super_admin && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/gemini-agent")}
@@ -551,7 +551,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         )}
       
         {/* {member?.role?.is_super_admin && (
-          <li className="" style={{}}>
+          <li className=" cursor-pointer" style={{}}>
             <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/connection")}

@@ -28,6 +28,10 @@ export const getAccounts = async (req: PaginationRequest) => {
   if (req.cashflow_group) queryParams.set("cashflow_group", req.cashflow_group);
   if (req.cashflow_sub_group) queryParams.set("cashflow_sub_group", req.cashflow_sub_group);
   if (req.is_tax) queryParams.set("is_tax", "1");
+  if (req.is_profit_loss_account) queryParams.set("is_profit_loss_account", "1");
+  if (req.is_profit_loss_closing_account) queryParams.set("is_profit_loss_closing_account", "1");
+  if (req.is_cogs_closing_account) queryParams.set("is_cogs_closing_account", "1");
+  if (req.is_net_surplus) queryParams.set("is_net_surplus", "1");
   return await customFetch(`api/v1/account/list?${queryParams}`);
 };
 export const getAccountReport = async (accountId: string, req: PaginationRequest) => {

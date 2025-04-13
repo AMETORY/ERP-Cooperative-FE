@@ -72,7 +72,7 @@ const Topnav: React.FC<TopnavProps> = () => {
                 />
               </svg>
             </button>
-            <div className="flex justify-between w-full items-center">
+            <div className="flex justify-between w-full items-center min-w-[500px]">
               {dateRange &&
               <div className="text-sm  px-4 py-2 hover:bg-gray-50 rounded-lg border cursor-pointer"><Moment format="DD/MM/YYYY">{dateRange[0]}</Moment> - <Moment format="DD/MM/YYYY">{dateRange[1]}</Moment></div>
               }
@@ -80,7 +80,7 @@ const Topnav: React.FC<TopnavProps> = () => {
             <div></div>
             </div>
           </div>
-          <div className="flex items-center w-[600px]">
+          <div className="flex items-center min-w-[500px] justify-end">
             <div>
               <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">{now}</Moment>
             </div>

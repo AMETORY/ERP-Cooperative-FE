@@ -55,11 +55,15 @@ export const createClosingBook = async (data: any) => {
 export const getClosingBookDetail = async (id: string) => {
   return await customFetch(`api/v1/report/closing-book/${id}`);
 };
-
+export const deleteClosingBook = async (id: string) => {
+  return await customFetch(`api/v1/report/closing-book/${id}`, {
+    method: "DELETE",
+  });
+};
 
 export const generateClosingBook = async (id: string, data: any) => {
   return await customFetch(`api/v1/report/closing-book/${id}/generate`, {
-    method: "POST",
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };

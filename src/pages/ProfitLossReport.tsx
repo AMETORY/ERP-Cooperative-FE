@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import { LuLink } from "react-icons/lu";
+import ProfitLossComponent from "../components/report/ProfitLossComponent";
 
 interface ProfitLossProps {}
 
@@ -38,155 +39,8 @@ const ProfitLoss: FC<ProfitLossProps> = ({}) => {
       <div className="p-6">
         <h1 className="text-3xl text-gray-900 font-bold">Profit Loss Report</h1>
         <div className=" mt-8">
-          <Table className="">
-            <Table.Body className="divide-y">
-              <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  PENDAPATAN
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell
-                  className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
-                  align="right"
-                >
-                  Jumlah
-                </Table.Cell>
-              </Table.Row>
-              {report?.profit
-                .filter((item) => item.sum !== 0)
-                .map((item: ProfitLossAccount, index: number) => (
-                  <Table.Row
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    key={index}
-                  >
-                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                      <Link
-                        to={
-                          item.link != ""
-                            ? item.link
-                            : `/account/${item.id}/report`
-                        }
-                        className="hover:font-semibold"
-                      >
-                        {item.name}
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell align="right">{money(item.sum)}</Table.Cell>
-                  </Table.Row>
-                ))}
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Laba Kotor
-                </Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.gross_profit)}
-                </Table.Cell>
-              </Table.Row>
-
-              <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  PENGELUARAN
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                <Table.Cell
-                  className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
-                  align="right"
-                >
-                  Jumlah
-                </Table.Cell>
-              </Table.Row>
-              {report?.loss
-                .filter((item) => item.sum !== 0)
-                .map((item: ProfitLossAccount, index: number) => (
-                  <Table.Row
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    key={index}
-                  >
-                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                      <Link
-                        to={
-                          item.link != ""
-                            ? item.link
-                            : `/account/${item.id}/report`
-                        }
-                        className="hover:font-semibold"
-                      >
-                        {item.name}
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell align="right">{money(item.sum)}</Table.Cell>
-                  </Table.Row>
-                ))}
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Total Pengeluaran
-                </Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.total_expense)}
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  LABA RUGI
-                </Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell align="right" className="font-semibold">
-                  {money(report?.net_profit)}
-                </Table.Cell>
-              </Table.Row>
-              {(report?.total_net_surplus ?? 0) != 0 && (
-                <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                    Sisa Hasil Usaha Sudah Dibagi
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
-                  <Table.Cell
-                    className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
-                    align="right"
-                  >
-                    Jumlah
-                  </Table.Cell>
-                </Table.Row>
-              )}
-              {report?.net_surplus
-                .filter((item) => item.sum !== 0)
-                .map((item: ProfitLossAccount, index: number) => (
-                  <Table.Row
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    key={index}
-                  >
-                    <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                      <Link
-                        to={
-                          item.link != ""
-                            ? item.link
-                            : `/account/${item.id}/report`
-                        }
-                        className="hover:font-semibold"
-                      >
-                        {item.name}
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell align="right">{money(item.sum)}</Table.Cell>
-                  </Table.Row>
-                ))}
-            </Table.Body>
-          </Table>
-        </div>
+          {report && <ProfitLossComponent profitLoss={report} />}
+          </div>
       </div>
     </AdminLayout>
   );

@@ -28,6 +28,7 @@ import Select from "react-select";
 import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
 import toast from "react-hot-toast";
+import { ClosingBookReport } from "../models/report";
 
 interface NetSurplusDetailProps {}
 
@@ -40,6 +41,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
   const [showModal, setShowModal] = useState(false);
   const [cashAccounts, setCashAccounts] = useState<AccountModel[]>([]);
   const [equityAccounts, setEquityAccounts] = useState<AccountModel[]>([]);
+  const [netSurplusAccounts, setNetSurplusAccounts] = useState<AccountModel[]>([]);
   const [sourceAccount, setSourceAccount] = useState<AccountModel>();
   const [selectedMembers, setSelectedMembers] = useState<NetSurplusMember[]>(
     []
@@ -54,6 +56,11 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
   const getDetail = () => {
     getNetSurplusDetail(netSurplusId!).then((resp: any) => {
       setNetSurplus(resp.data);
+      if (resp.data.closing_book) {
+        let closingBook = resp.data.closing_book as ClosingBookReport;
+        console.log(closingBook)
+        setSourceAccount(closingBook.closing_summary.earning_retain);
+      }
       // setIsEditable(resp.data.status == "DRAFT");
     });
   };
@@ -65,6 +72,9 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
       );
       getAccounts({ page: 1, size: 100, type: "EQUITY" }).then((v: any) =>
         setEquityAccounts(v.data.items)
+      );
+      getAccounts({ page: 1, size: 100, type: "EQUITY", is_profit_loss_closing_account: true }).then((v: any) =>
+        setNetSurplusAccounts(v.data.items)
       );
       // getAccounts({ page: 1, size: 100, cashflow_sub_group: "cash_bank" }).then(
       //   (v: any) => setCashAccounts(v.data.items)
@@ -358,9 +368,9 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
           <div className="space-y-6">
             <div className="flex flex-col ">
               <div className="border-b last:border-b-0 pb-4 pt-2">
-                <Label>Source Account</Label>
+                <Label>Net Surplus Account</Label>
                 <Select
-                  options={equityAccounts.map((v) => ({
+                  options={netSurplusAccounts.map((v) => ({
                     label: v.name,
                     value: v.id,
                   }))}
@@ -370,7 +380,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                   }}
                   onChange={(e: any) => {
                     setSourceAccount(
-                      equityAccounts.find((v) => v.id == e.value)
+                      netSurplusAccounts.find((v) => v.id == e.value)
                     );
                   }}
                   placeholder="Select Source Account"

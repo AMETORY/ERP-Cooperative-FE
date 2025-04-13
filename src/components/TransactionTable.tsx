@@ -309,6 +309,13 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 toast.success("Transaction created successfully");
                 setModalOpen(false);
                 getAllTransactions();
+                setDate(new Date());
+                setAmount(0);
+                setDescription("");
+                setSelectedSource(null);
+                setSelectedDestination(null);
+                setIsPrive(false);
+
               } catch (error) {
                 toast.error(`${error}`);
               } finally {
@@ -454,6 +461,7 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 toast.success("Transaction updated successfully");
                 setSelectedTransaction(undefined);
                 getAllTransactions();
+
               } catch (error) {
                 toast.error(`${error}`);
               } finally {

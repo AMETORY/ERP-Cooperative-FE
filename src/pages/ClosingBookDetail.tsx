@@ -1,10 +1,37 @@
 import { useContext, useEffect, useState, type FC } from "react";
 import AdminLayout from "../components/layouts/admin";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { LoadingContext } from "../contexts/LoadingContext";
-import { getClosingBookDetail } from "../services/api/reportApi";
-import { Tabs } from "flowbite-react";
+import {
+  generateClosingBook,
+  getClosingBookDetail,
+} from "../services/api/reportApi";
+import {
+  Badge,
+  Button,
+  Label,
+  Modal,
+  Table,
+  Tabs,
+  Textarea,
+  TextInput,
+} from "flowbite-react";
 import { ClosingBookReport } from "../models/report";
+import { MdOutlineBalance } from "react-icons/md";
+import Moment from "react-moment";
+import TrialBalanceComponent from "../components/report/TrialBalanceComponent";
+import ProfitLossComponent from "../components/report/ProfitLossComponent";
+import BalanceSheetComponent from "../components/report/BalanceSheetComponent";
+import CashFlowComponent from "../components/report/CashFlowComponent";
+import CapitalChangeComponent from "../components/report/CapitalChangeComponent";
+import { AccountModel } from "../models/account";
+import { getAccounts } from "../services/api/accountApi";
+import Select from "react-select";
+import { BsCartCheck, BsJournal, BsPercent } from "react-icons/bs";
+import toast from "react-hot-toast";
+import { TbFileInvoice } from "react-icons/tb";
+import { HiOutlineChartPie } from "react-icons/hi2";
+import { money } from "../utils/helper";
 
 interface ClosingBookDetailProps {}
 
@@ -14,42 +41,525 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [closingBook, setClosingBook] = useState<ClosingBookReport>();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [notes, setNotes] = useState("");
+  //   const [retainEarning, setRetainEarning] = useState<{
+  //     value: string;
+  //     label: string;
+  //   }>();
+  const [taxPercentage, setTaxPercentage] = useState<number>(0);
 
+  const [selectedSumAccount, setSelectedSumAccount] =
+    useState<AccountModel | null>(null);
+  const [sumAccounts, setSumAccounts] = useState<AccountModel[]>([]);
+  const [taxPayableAccounts, setTaxPayableAccounts] = useState<AccountModel[]>(
+    []
+  );
+  const [selectedTaxPayable, setSelectedTaxPayable] = useState<AccountModel>();
+  const [taxExpenseAccounts, setTaxExpenseAccounts] = useState<AccountModel[]>(
+    []
+  );
+  const [selectedTaxExpense, setSelectedTaxExpense] = useState<AccountModel>();
+
+  const [selectedProfitLossAccount, setSelectedProfitLossAccount] =
+    useState<AccountModel | null>(null);
+  const [profitLossAccounts, setProfitLossAccounts] = useState<AccountModel[]>(
+    []
+  );
   useEffect(() => {
     setMounted(true);
   }, []);
+  const getDetail = () => {
+    getClosingBookDetail(closingBookId!)
+      .then((res: any) => {
+        setClosingBook(res.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   useEffect(() => {
     if (mounted && closingBookId) {
-      setLoading(true);
-      getClosingBookDetail(closingBookId)
-        .then((res: any) => {
-          setClosingBook(res.data);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      getDetail();
+      getAccounts({
+        page: 1,
+        size: 10,
+        search: "",
+        type: "EQUITY",
+        is_profit_loss_account: true,
+      }).then((e: any) => {
+        setSumAccounts(e.data.items);
+        if (e.data.items.length == 1) {
+          setSelectedSumAccount(e.data.items[0]); // default selected
+        }
+      });
+      getAccounts({
+        page: 1,
+        size: 10,
+        search: "",
+        type: "EQUITY",
+        is_profit_loss_closing_account: true,
+      }).then((e: any) => {
+        setProfitLossAccounts(e.data.items);
+        if (e.data.items.length == 1) {
+          setSelectedProfitLossAccount(e.data.items[0]); // default selected
+        }
+      });
+      getAccounts({
+        page: 1,
+        size: 10,
+        search: "",
+        type: "LIABILITY",
+        is_tax: true,
+      }).then((e: any) => {
+        setTaxPayableAccounts(e.data.items);
+        if (e.data.items.length == 1) {
+          setSelectedTaxPayable(e.data.items[0]);
+        }
+      });
+      getAccounts({
+        page: 1,
+        size: 10,
+        search: "",
+        type: "EXPENSE",
+        is_cogs_closing_account: true,
+      }).then((e: any) => {
+        setTaxExpenseAccounts(e.data.items);
+        if (e.data.items.length == 1) {
+          setSelectedTaxExpense(e.data.items[0]); // default selected
+        }
+      });
     }
   }, [mounted, closingBookId]);
 
+  const renderSummary = () => {
+    return (
+      <div className=" h-[calc(100vh-260px)] overflow-y-auto ">
+        <div className="  px-2">
+          <table>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Periode</th>
+              <td className="px-2 py-2">
+                <Moment format="DD MMM YYYY">{closingBook?.start_date}</Moment>{" "}
+                - <Moment format="DD MMM YYYY">{closingBook?.end_date}</Moment>
+              </td>
+            </tr>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Status</th>
+              <td className="px-2 py-2">
+                <div className="w-fit">
+                  <Badge
+                    color={
+                      closingBook?.status === "DRAFT"
+                        ? "gray"
+                        : closingBook?.status === "APPROVED"
+                        ? "success"
+                        : closingBook?.status === "REJECTED"
+                        ? "danger"
+                        : closingBook?.status === "RELEASED"
+                        ? "blue"
+                        : closingBook?.status === "SETTLEMENT"
+                        ? "indigo"
+                        : "gray"
+                    }
+                  >
+                    {closingBook?.status}
+                  </Badge>
+                </div>
+              </td>
+            </tr>
+
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Total Income</th>
+              <td className="px-2 py-2">{money(closingBook?.closing_summary?.total_income)}</td>
+            </tr>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Total Expense</th>
+              <td className="px-2 py-2">{money(closingBook?.closing_summary?.total_expense)}</td>
+            </tr>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Net Profit (Before Tax)</th>
+              <td className="px-2 py-2">{money(closingBook?.closing_summary?.net_income)}</td>
+            </tr>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Tax Total</th>
+              <td className="px-2 py-2">{money(closingBook?.closing_summary?.income_tax)}</td>
+            </tr>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Tax</th>
+              <td className="px-2 py-2">{money(closingBook?.closing_summary?.tax_percentage)}%</td>
+            </tr>
+            <tr className="">
+              <th className="px-2 py-2 w-64 text-left">Notes</th>
+              <td className="px-2 py-2">{closingBook?.notes}</td>
+            </tr>
+            <tr className="">
+              <td className="px-2 py-2 w-64 text-left">
+                {closingBook?.status === "DRAFT" && (
+                  <Button
+                    onClick={() => {
+                      setModalOpen(true);
+                    }}
+                  >
+                    Release
+                  </Button>
+                )}
+              </td>
+            </tr>
+          </table>
+        </div>
+        {closingBook?.status === "RELEASED" && (
+          <div className="px-2">
+            <h2 className="text-lg font-bold">Closing Book Journal</h2>
+            <div className="overflow-x-auto">
+            <Table>
+              <Table.Head>
+                <Table.HeadCell className="w-64">Date</Table.HeadCell>
+                <Table.HeadCell>Description</Table.HeadCell>
+                <Table.HeadCell align="right">Debit</Table.HeadCell>
+                <Table.HeadCell align="right">Credit</Table.HeadCell>
+                <Table.HeadCell></Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="divide-y">
+                {(closingBook?.transactions ?? []).length === 0 && (
+                  <Table.Row>
+                    <Table.Cell colSpan={5} className="text-center">
+                      No transactions found.
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+
+                {(closingBook?.transactions ?? []).map((transaction, i) => (
+                  <Table.Row
+                    key={i}
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <Table.Cell
+                      className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
+                      onClick={() => {}}
+                    >
+                      <Moment format="DD/MM/YYYY">{transaction.date}</Moment>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex flex-col">
+                        <span className="font-semibold">
+                          {transaction.description}
+                        </span>
+                        {transaction.notes && (
+                          <span className="text-xs text-gray-500">
+                            {transaction.notes}
+                          </span>
+                        )}
+                      </div>
+                    </Table.Cell>
+       
+                    <Table.Cell align="right">
+                      {money(transaction.debit)}
+                    </Table.Cell>
+                    <Table.Cell align="right">
+                      {money(transaction.credit)}
+                    </Table.Cell>
+                 
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
   return (
     <AdminLayout>
-      <div className="p-8 h-[calc(100vh-80px)] bg-red-50 overflow-y-auto">
-        <h1 className="text-3xl font-bold">{closingBook?.notes}</h1>
+      <div className="p-8">
+        <div className="mb-2">
+          <h1 className="text-3xl font-bold">Tutup Buku</h1>
+        </div>
+
         <Tabs
           aria-label="Default tabs"
           variant="default"
           onActiveTabChange={(tab) => {
             setActiveTab(tab);
-            // console.log(tab);
           }}
-          className="mt-4"
+          //   className="mt-4"
         >
-          <Tabs.Item title="Tab 1">Tab 1 content</Tabs.Item>
-          <Tabs.Item title="Tab 1">Tab 1 content</Tabs.Item>
-          <Tabs.Item title="Tab 1">Tab 1 content</Tabs.Item>
-          <Tabs.Item title="Tab 1">Tab 1 content</Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex items-center gap-2">
+                <img src="/icon/analysis.png" width={24} />
+                <span>Summary</span>
+              </div>
+            }
+            active={activeTab == 0}
+          >
+            {renderSummary()}
+          </Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex items-center gap-2">
+                <img src="/icon/trial.png" width={24} />
+                <span>Trial Balance</span>
+              </div>
+            }
+            active={activeTab == 1}
+          >
+            <div className=" h-[calc(100vh-260px)] overflow-y-auto ">
+              <div className="  px-2">
+                {closingBook?.trial_balance && (
+                  <TrialBalanceComponent
+                    trialBalance={closingBook?.trial_balance}
+                  />
+                )}
+              </div>
+            </div>
+          </Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex items-center gap-2">
+                <img src="/icon/profit-loss.png" width={24} />
+                <span>Profit Loss</span>
+              </div>
+            }
+            active={activeTab == 2}
+          >
+            <div className=" h-[calc(100vh-260px)] overflow-y-auto ">
+              <div className="  px-2">
+                {closingBook?.profit_loss && (
+                  <ProfitLossComponent profitLoss={closingBook?.profit_loss} />
+                )}
+              </div>
+            </div>
+          </Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex items-center gap-2">
+                <img src="/icon/budget-balance.png" width={24} />
+                <span>Balance Sheet</span>
+              </div>
+            }
+            active={activeTab == 3}
+          >
+            <div className=" h-[calc(100vh-260px)] overflow-y-auto ">
+              <div className="  px-2">
+                {closingBook?.balance_sheet && (
+                  <BalanceSheetComponent
+                    balanceSheet={closingBook?.balance_sheet}
+                  />
+                )}
+              </div>
+            </div>
+          </Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex items-center gap-2">
+                <img src="/icon/cash-flow.png" width={24} />
+                <span>Cash Flow</span>
+              </div>
+            }
+            active={activeTab == 4}
+          >
+            <div className=" h-[calc(100vh-260px)] overflow-y-auto ">
+              <div className="  px-2">
+                {closingBook?.cash_flow && (
+                  <CashFlowComponent cashFlow={closingBook?.cash_flow} />
+                )}
+              </div>
+            </div>
+          </Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex items-center gap-2">
+                <img src="/icon/investment.png" width={24} />
+                <span>Capital Change</span>
+              </div>
+            }
+            active={activeTab == 5}
+          >
+            <div className=" h-[calc(100vh-260px)] overflow-y-auto ">
+              <div className="  px-2">
+                {closingBook?.capital_change && (
+                  <CapitalChangeComponent
+                    capitalChange={closingBook?.capital_change}
+                  />
+                )}
+              </div>
+            </div>
+          </Tabs.Item>
         </Tabs>
       </div>
+      <Modal show={modalOpen} onClose={() => setModalOpen(false)}>
+        <Modal.Header>Release Closing Book</Modal.Header>
+        <Modal.Body>
+          <div className="flex flex-col space-y-4">
+            <div>
+              <p className="">
+                Are you sure you want to release this closing book?
+              </p>
+              <p className="">
+                Make sure you have done stock opname and bank reconcile for this
+                period before releasing this closing book.
+              </p>
+            </div>
+            <div>
+              <Label>Summary Account</Label>
+              <Select
+                options={sumAccounts.map((a) => {
+                  return {
+                    value: a.id,
+                    label: a.name,
+                    type: a.type,
+                  };
+                })}
+                value={{
+                  value: selectedSumAccount?.id,
+                  label: selectedSumAccount?.name,
+                  type: selectedSumAccount?.type,
+                }}
+                onChange={(e) => {
+                  let selected = sumAccounts.find((a) => a.id === e?.value);
+                  setSelectedSumAccount(selected!);
+                }}
+              />
+            </div>
+            <div>
+              <Label>Earning Retain Account</Label>
+              <Select
+                options={profitLossAccounts.map((a) => {
+                  return {
+                    value: a.id,
+                    label: a.name,
+                    type: a.type,
+                  };
+                })}
+                value={{
+                  value: selectedProfitLossAccount?.id,
+                  label: selectedProfitLossAccount?.name,
+                  type: selectedProfitLossAccount?.type,
+                }}
+                onChange={(e) => {
+                  let selected = profitLossAccounts.find(
+                    (a) => a.id === e?.value
+                  );
+                  setSelectedProfitLossAccount(selected!);
+                }}
+              />
+            </div>
+            <div>
+              <Label>Tax Account</Label>
+
+              <Select
+                options={taxPayableAccounts.map((a) => {
+                  return {
+                    value: a.id,
+                    label: a.name,
+                    type: a.type,
+                  };
+                })}
+                value={{
+                  value: selectedTaxPayable?.id,
+                  label: selectedTaxPayable?.name,
+                  type: selectedTaxPayable?.type,
+                }}
+                onChange={(e) => {
+                  let selected = taxPayableAccounts.find(
+                    (a) => a.id === e?.value
+                  );
+                  setSelectedTaxPayable(selected!);
+                }}
+              />
+            </div>
+            <div>
+              <Label>Tax Expense Account</Label>
+
+              <Select
+                options={taxExpenseAccounts.map((a) => {
+                  return {
+                    value: a.id,
+                    label: a.name,
+                    type: a.type,
+                  };
+                })}
+                value={{
+                  value: selectedTaxExpense?.id,
+                  label: selectedTaxExpense?.name,
+                  type: selectedTaxExpense?.type,
+                }}
+                onChange={(e) => {
+                  let selected = taxExpenseAccounts.find(
+                    (a) => a.id === e?.value
+                  );
+                  setSelectedTaxExpense(selected!);
+                }}
+              />
+            </div>
+            <div>
+              <Label>Tax Amount</Label>
+              <div className="w-[100px]">
+                <TextInput
+                  type="number"
+                  max={100}
+                  value={taxPercentage}
+                  onChange={(e) => {
+                    if (Number(e.target.value) <= 100)
+                      setTaxPercentage(Number(e.target.value));
+                  }}
+                  rightIcon={BsPercent}
+                />
+              </div>
+            </div>
+            {/* <div>
+              <Label>Notes</Label>
+              <Textarea
+                rows={7}
+                value={notes}
+                onChange={(e) => {
+                  setNotes(e.target.value);
+                }}
+              />
+            </div> */}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={async () => {
+              setLoading(true);
+              if (!selectedSumAccount) {
+                toast.error("Please select earning return ");
+                return;
+              }
+              if (!selectedProfitLossAccount) {
+                toast.error("Please select reatin earning account");
+                return;
+              }
+              // if (!notes) {
+              //   toast.error("Please add notes");
+              //   return;
+              // }
+
+              try {
+                await generateClosingBook(closingBook?.id!, {
+                  notes,
+                  profit_summary_id: selectedSumAccount?.id,
+                  retain_earning_id: selectedProfitLossAccount?.id,
+                  tax_percentage: taxPercentage,
+                  tax_payable_id: selectedTaxPayable?.id,
+                  tax_expense_id: selectedTaxExpense?.id,
+                });
+                getDetail();
+              } catch (error) {
+                toast.error(`Failed to generate closing book ${error}`);
+              } finally {
+                setModalOpen(false);
+                setLoading(false);
+              }
+            }}
+          >
+            Release
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </AdminLayout>
   );
 };
