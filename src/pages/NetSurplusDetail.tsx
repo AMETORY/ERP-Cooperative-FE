@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { NetSurplusMember, NetSurplusModel } from "../models/net_surplus";
 import {
+  disbusementNetSurplus,
   distributeNetSurplus,
   getNetSurplusDetail,
 } from "../services/api/netSurplusApi";
@@ -13,6 +14,7 @@ import {
   Badge,
   Button,
   Checkbox,
+  Datepicker,
   Label,
   Modal,
   Table,
@@ -21,6 +23,7 @@ import {
   TableHead,
   TableHeadCell,
   TableRow,
+  Textarea,
 } from "flowbite-react";
 import { money } from "../utils/helper";
 import Chart from "react-google-charts";
@@ -41,14 +44,22 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
   const [showModal, setShowModal] = useState(false);
   const [cashAccounts, setCashAccounts] = useState<AccountModel[]>([]);
   const [equityAccounts, setEquityAccounts] = useState<AccountModel[]>([]);
-  const [netSurplusAccounts, setNetSurplusAccounts] = useState<AccountModel[]>([]);
+  const [disbursementModal, setDisbursementModal] = useState(false);
+  const [netSurplusAccounts, setNetSurplusAccounts] = useState<AccountModel[]>(
+    []
+  );
   const [sourceAccount, setSourceAccount] = useState<AccountModel>();
   const [selectedMembers, setSelectedMembers] = useState<NetSurplusMember[]>(
     []
   );
+  const [selectedCashAccount, setSelectedCashAccount] =
+    useState<AccountModel>();
+  const [notes, setNotes] = useState("");
+
   const [destinationAccounts, setDestinationAccounts] = useState<
     AccountModel[]
   >([]);
+  const [date, setDate] = useState<Date>();
 
   useEffect(() => {
     setMounted(true);
@@ -58,7 +69,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
       setNetSurplus(resp.data);
       if (resp.data.closing_book) {
         let closingBook = resp.data.closing_book as ClosingBookReport;
-        console.log(closingBook)
+        console.log(closingBook);
         setSourceAccount(closingBook.closing_summary.earning_retain);
       }
       // setIsEditable(resp.data.status == "DRAFT");
@@ -73,9 +84,12 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
       getAccounts({ page: 1, size: 100, type: "EQUITY" }).then((v: any) =>
         setEquityAccounts(v.data.items)
       );
-      getAccounts({ page: 1, size: 100, type: "EQUITY", is_profit_loss_closing_account: true }).then((v: any) =>
-        setNetSurplusAccounts(v.data.items)
-      );
+      getAccounts({
+        page: 1,
+        size: 100,
+        type: "EQUITY",
+        is_profit_loss_closing_account: true,
+      }).then((v: any) => setNetSurplusAccounts(v.data.items));
       // getAccounts({ page: 1, size: 100, cashflow_sub_group: "cash_bank" }).then(
       //   (v: any) => setCashAccounts(v.data.items)
       // );
@@ -251,7 +265,15 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                           </TableCell>
                           <TableCell>
                             {member.status == "PENDING" && (
-                              <Button size="xs">Disbursement</Button>
+                              <Button
+                                size="xs"
+                                onClick={() => {
+                                  setSelectedMembers([member]);
+                                  setDisbursementModal(true);
+                                }}
+                              >
+                                Disbursement
+                              </Button>
                             )}
                           </TableCell>
                         </TableRow>
@@ -362,7 +384,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
           </div>
         </div>
       </div>
-      <Modal  show={showModal} onClose={() => setShowModal(false)}>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Distribute Net Surplus</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
@@ -508,6 +530,137 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                   setShowModal(false);
                   getDetail();
                   toast.success("Net Surplus distributed successfully");
+                } catch (error) {
+                  toast.error(`${error}`);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={disbursementModal}
+        onClose={() => setDisbursementModal(false)}
+      >
+        <Modal.Header>Disbursement</Modal.Header>
+        <Modal.Body>
+          <div className="flex flex-col space-y-4">
+            <div>
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="text-left px-2 py-1">Name</th>
+                    <th className="text-right px-2 py-1">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedMembers.map((member, index) => (
+                    <tr key={index}>
+                      <td className="px-2 py-1">{member.full_name}</td>
+                      <td className="text-right px-2 py-1">
+                        {money(
+                          member.net_surplus_business_profit_allocation +
+                            member.net_surplus_mandatory_savings_allocation
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className="px-2 py-1 font-bold text-lg">Grand Total</td>
+                    <td className="text-right px-2 py-1 font-semibold text-lg">
+                      {money(
+                        selectedMembers?.reduce(
+                          (prev, curr) =>
+                            prev +
+                            (curr.net_surplus_business_profit_allocation +
+                              curr.net_surplus_mandatory_savings_allocation),
+                          0
+                        )
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="">
+              <Label>Date</Label>
+              <Datepicker
+                minDate={new Date()}
+                value={date}
+                onChange={(val) => setDate(val!)}
+              />
+            </div>
+            <div className="">
+              <Label>Cash/Bank Account</Label>
+              <Select
+                options={cashAccounts.map((v) => ({
+                  label: v.name,
+                  value: v.id,
+                  balance: v.balance,
+                }))}
+                value={{
+                  label: selectedCashAccount?.name,
+                  value: selectedCashAccount?.id,
+                  balance: selectedCashAccount?.balance,
+                }}
+                onChange={(e: any) => {
+                  setSelectedCashAccount(
+                    cashAccounts.find((v) => v.id == e.value)
+                  );
+                }}
+                placeholder="Select Cash/Bank Account"
+                formatOptionLabel={(option: any) => (
+                  <div className="flex items-center justify-between">
+                    <span className="mr-2">{option.label}</span>
+                    <small className="mr-2">{money(option.balance, 0)}</small>
+                  </div>
+                )}
+              />
+            </div>
+            <div className="border-b last:border-b-0 pb-4 pt-2">
+              <Label>Cash/Bank Account</Label>
+              <Textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Enter notes"
+              />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+        <div className="flex w-full justify-end">
+            <Button
+              onClick={async () => {
+                try {
+                  let total = selectedMembers?.reduce(
+                    (prev, curr) =>
+                      prev +
+                      (curr.net_surplus_business_profit_allocation +
+                        curr.net_surplus_mandatory_savings_allocation),
+                    0
+                  ) as number;
+                  if (selectedCashAccount!.balance! < total) {
+                    throw new Error("Insufficient balance");
+                  }
+                  setLoading(true);
+                  let data = {
+                    date,
+                    destination_id: selectedCashAccount?.id,
+                    members: selectedMembers,
+                    notes,
+                  };
+                  console.log(data);
+                  await disbusementNetSurplus(netSurplusId!, data);
+                  toast.success("Net Surplus disbursed successfully");
+                  setDisbursementModal(false);
+                  getDetail();
+                  setDate(new Date());
+                  setNotes("");
+                  setSelectedCashAccount(undefined);
                 } catch (error) {
                   toast.error(`${error}`);
                 } finally {

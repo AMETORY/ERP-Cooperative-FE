@@ -10,7 +10,7 @@ import {
   ToggleSwitch,
 } from "flowbite-react";
 import { useContext, useEffect, useRef, useState, type FC } from "react";
-import { LoadingContext } from "../contexts/LoadingContext";
+import { DateRangeContext, LoadingContext } from "../contexts/LoadingContext";
 import toast from "react-hot-toast";
 import {
   createTransaction,
@@ -34,9 +34,15 @@ import { TbFileInvoice } from "react-icons/tb";
 
 interface TransactionTableProps {
   transactionType: string;
+  disableCreate?: boolean;
 }
 
-const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
+const TransactionTable: FC<TransactionTableProps> = ({
+  transactionType,
+  disableCreate = false,
+}) => {
+  const { dateRange, setDateRange } = useContext(DateRangeContext);
+
   const { loading, setLoading } = useContext(LoadingContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -68,9 +74,11 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold ">{label}</h1>
         <div className="flex items-center gap-2">
-          <Button gradientDuoTone="purpleToBlue" pill onClick={onAdd}>
-            + {label}
-          </Button>
+          {!disableCreate && (
+            <Button gradientDuoTone="purpleToBlue" pill onClick={onAdd}>
+              + {label}
+            </Button>
+          )}
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"
             onClick={() => {}}
@@ -88,7 +96,7 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
     if (mounted) {
       getAllTransactions();
     }
-  }, [mounted, page, size, search]);
+  }, [mounted, page, size, search, dateRange]);
 
   const getAllTransactions = async () => {
     try {
@@ -98,6 +106,8 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
         size,
         search,
         type: transactionType,
+        start_date: dateRange ? dateRange?.[0].toISOString() : null,
+        end_date: dateRange ? dateRange?.[1].toISOString() : null,
       });
       setTransactions(resp.data.items);
       setPagination(resp.data.pagination);
@@ -315,7 +325,6 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 setSelectedSource(null);
                 setSelectedDestination(null);
                 setIsPrive(false);
-
               } catch (error) {
                 toast.error(`${error}`);
               } finally {
@@ -371,7 +380,7 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                     setIsOpeningBalance(e);
                   }}
                   label="Is Opening Balance?"
-                  />
+                />
               )}
               {transactionType === "EQUITY" && (
                 <ToggleSwitch
@@ -380,7 +389,7 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                     setIsPrive(e);
                   }}
                   label="Is Prive / Dividend?"
-                  />
+                />
               )}
               <div>
                 <Label>
@@ -461,7 +470,6 @@ const TransactionTable: FC<TransactionTableProps> = ({ transactionType }) => {
                 toast.success("Transaction updated successfully");
                 setSelectedTransaction(undefined);
                 getAllTransactions();
-
               } catch (error) {
                 toast.error(`${error}`);
               } finally {

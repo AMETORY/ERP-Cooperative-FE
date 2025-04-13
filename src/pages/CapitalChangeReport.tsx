@@ -30,6 +30,7 @@ const CapitalChange: FC<CapitalChangeProps> = ({}) => {
   useEffect(() => {
     if (mounted && dateRange) {
       setLoading(true);
+      console.log(dateRange)
       capitalChangeReport(dateRange[0], dateRange[1])
         .catch((err) => toast.error(`${err}`))
         .then((resp: any) => {

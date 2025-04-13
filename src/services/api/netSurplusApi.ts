@@ -42,6 +42,12 @@ export const distributeNetSurplus = async (netSurplusId: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
+export const disbusementNetSurplus = async (netSurplusId: string, data: any) => {
+  return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/disbursement`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
 // export const createNetSurplusPayment = async (netSurplusId: string, data: any) => {
 //   return await customFetch(`api/v1/cooperative/net-surplus/${netSurplusId}/payment`, {
 //     method: "PUT",

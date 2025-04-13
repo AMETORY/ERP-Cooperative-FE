@@ -11,8 +11,8 @@ export interface PaginationRequest {
     account_id?: string;
     team_id?: string;
     doc_type?: string;
-    start_date?: string;
-    end_date?: string;
+    start_date?: string | null;
+    end_date?: string | null;
     warehouse_id?: string;
     product_id?: string;
     merchant_id?: string;

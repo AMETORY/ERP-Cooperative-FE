@@ -8,6 +8,8 @@ export const getTransactions = async (req: PaginationRequest) => {
   if (req.search) queryParams.set("search", req.search);
   if (req.type) queryParams.set("type", req.type);
   if (req.account_id) queryParams.set("account_id", req.account_id);
+  if (req.start_date) queryParams.set("start_date", req.start_date);
+  if (req.end_date) queryParams.set("end_date", req.end_date);
   return await customFetch(`api/v1/transaction/list?${queryParams}`);
 };
 

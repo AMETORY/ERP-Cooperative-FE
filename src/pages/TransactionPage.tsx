@@ -96,10 +96,10 @@ const TransactionPage: FC<TransactionPageProps> = ({}) => {
             <TransactionTable transactionType="TRANSFER" />
           </Tabs.Item>
           <Tabs.Item active={activeTab === 4} title="Payable" icon={MdPayment}>
-            <TransactionTable transactionType="PAYABLE" />
+            <TransactionTable disableCreate transactionType="PAYABLE" />
           </Tabs.Item>
           <Tabs.Item active={activeTab === 4} title="Receivable" icon={BsReceipt}>
-            <TransactionTable transactionType="RECEIVABLE" />
+            <TransactionTable disableCreate transactionType="RECEIVABLE" />
           </Tabs.Item>
         </Tabs>
       </div>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { CollapsedContext } from "../contexts/CollapsedContext";
 import Logo from "./logo";
 import { CompaniesContext, CompanyIDContext } from "../contexts/CompanyContext";
-import { Avatar, Dropdown } from "flowbite-react";
+import { Avatar, Datepicker, Dropdown, Modal } from "flowbite-react";
 import { ProfileContext } from "../contexts/ProfileContext";
 import { initial } from "../utils/helper";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ const Topnav: React.FC<TopnavProps> = () => {
   const { companies, setCompanies } = useContext(CompaniesContext);
   const { companyID, setCompanyID } = useContext(CompanyIDContext);
   const { collapsed, setCollapsed } = useContext(CollapsedContext);
+  const [showModal, setShowModal] = useState(false);
   const { profile, setProfile } = useContext(ProfileContext);
   const [now, setNow] = useState<Date>(new Date());
   const nav = useNavigate();
@@ -32,18 +33,20 @@ const Topnav: React.FC<TopnavProps> = () => {
     return () => clearInterval(id);
   }, []);
 
-  const searchBox = (<div className="relative w-full max-w-[300px] mr-6 focus-within:text-purple-500">
-    <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-      <HiMagnifyingGlass />
+  const searchBox = (
+    <div className="relative w-full max-w-[300px] mr-6 focus-within:text-purple-500">
+      <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+        <HiMagnifyingGlass />
+      </div>
+      <input
+        type="text"
+        className="w-full py-2 pl-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+        placeholder="Search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
     </div>
-    <input
-      type="text"
-      className="w-full py-2 pl-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
-      placeholder="Search"
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
-  </div>)
+  );
   return (
     <nav className="fixed top-0 z-20 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -72,18 +75,28 @@ const Topnav: React.FC<TopnavProps> = () => {
                 />
               </svg>
             </button>
-            <div className="flex justify-between w-full items-center min-w-[500px]">
-              {dateRange &&
-              <div className="text-sm  px-4 py-2 hover:bg-gray-50 rounded-lg border cursor-pointer"><Moment format="DD/MM/YYYY">{dateRange[0]}</Moment> - <Moment format="DD/MM/YYYY">{dateRange[1]}</Moment></div>
-              }
-            {searchBox}
-            <div></div>
+            <div className="flex  gap-4 w-full items-center min-w-[500px]">
+         
+              {dateRange && (
+                <div
+                  className="text-sm  px-4 py-2 hover:bg-gray-50 rounded-lg border cursor-pointer"
+                  onClick={() => setShowModal(true)}
+                >
+                  <Moment format="DD/MM/YYYY">{dateRange[0]}</Moment> -{" "}
+                  <Moment format="DD/MM/YYYY">{dateRange[1]}</Moment>
+                </div>
+              )}
+                 <div>
+              <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">
+                {now}
+              </Moment>
+            </div>
+              <div></div>
             </div>
           </div>
-          <div className="flex items-center min-w-[500px] justify-end">
-            <div>
-              <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">{now}</Moment>
-            </div>
+          <div className="flex items-center min-w-[800px] justify-end">
+          {searchBox}
+           
             <div className="flex items-center ms-3 gap-4">
               <Dropdown
                 label={
@@ -118,6 +131,50 @@ const Topnav: React.FC<TopnavProps> = () => {
           </div>
         </div>
       </div>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Accounting Period</Modal.Header>
+        <Modal.Body>
+          <div className="grid grid-cols-2 gap-4">
+            <Datepicker
+              value={dateRange ? dateRange[0] : new Date()}
+              onChange={(value) =>
+                setDateRange([value!, dateRange ? dateRange?.[1] : new Date()])
+              }
+              style={{ backgroundColor: "white" }}
+            />
+            <Datepicker
+              value={dateRange ? dateRange[1] : new Date()}
+              onChange={(value) =>
+                setDateRange([dateRange ? dateRange?.[0] : new Date(), value!])
+              }
+              style={{ backgroundColor: "white" }}
+            />
+          </div>
+          <div className="min-h-64 mt-4">
+            <ul className="grid grid-cols-2 gap-4">
+              {[...Array(4)].map((_, i) => {
+                const year = new Date().getFullYear() - (i === 0 ? 0 : i);
+                return (
+                  <li>
+                    <button
+                      key={i}
+                      className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"
+                      onClick={() =>
+                        setDateRange([
+                          new Date(year, 0, 1),
+                          new Date(year, 11, 31),
+                        ])
+                      }
+                    >
+                      {year == new Date().getFullYear() ? "This Year" : year}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </Modal.Body>
+      </Modal>
     </nav>
   );
 };

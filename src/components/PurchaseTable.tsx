@@ -1,9 +1,10 @@
 import {
-    Badge,
+  Badge,
   Button,
   Datepicker,
   Label,
   Modal,
+  Pagination,
   Table,
   Textarea,
   TextInput,
@@ -220,6 +221,15 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
           ))}
         </Table.Body>
       </Table>
+      <Pagination
+        className="mt-4"
+        currentPage={page}
+        totalPages={pagination?.total_pages ?? 0}
+        onPageChange={(val) => {
+          setPage(val);
+        }}
+        showIcons
+      />
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Create {title}</Modal.Header>
         <Modal.Body>
