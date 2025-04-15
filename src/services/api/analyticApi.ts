@@ -21,3 +21,9 @@ export const getSalesTimeRange = async (timeRange: string) => {
 export const getPurchaseTimeRange = async (timeRange: string) => {
   return await customFetch(`api/v1/analytic/purchase-time-range?time_range=${timeRange}`);
 };
+export const getNetWorth = async () => {
+  return await customFetch(`api/v1/analytic/net-worth`);
+};
+export const getCashBankSum = async () => {
+  return await customFetch(`api/v1/analytic/cash-bank`);
+};

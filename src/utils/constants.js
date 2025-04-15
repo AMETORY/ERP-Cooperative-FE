@@ -18,13 +18,14 @@ export const MONTHLY = "MONTHLY"
 export const WEEKLY = "WEEKLY"
 export const ANNUALY = "ANNUALY"
 
-export const QUARTER_OPTIONS = [
+export const TIMERANGE_OPTIONS = [
+
+    { value: THIS_WEEK, label: "This Week" },
+    { value: THIS_MONTH, label: "This Month" },
     { value: Q1, label: "Q1" },
     { value: Q2, label: "Q2" },
     { value: Q3, label: "Q3" },
     { value: Q4, label: "Q4" },
-    { value: THIS_MONTH, label: "This Month" },
-    { value: THIS_WEEK, label: "This Week" },
     { value: THIS_YEAR, label: "This Year" },
 ];
 
