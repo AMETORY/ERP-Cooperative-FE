@@ -7,7 +7,26 @@ export const LOCAL_STORAGE_COLLAPSED = "collapsed";
 export const LOCAL_STORAGE_DATERANGE = "daterange";
 export const LOCAL_STORAGE_DEFAULT_CHANNEL = "defaultChannel";
 export const LOCAL_STORAGE_DEFAULT_WHATSAPP_SESSION = "defaultWhatsappSession";
+export const Q1 = "Q1"
+export const Q2 = "Q2"
+export const Q3 = "Q3"
+export const Q4 = "Q4"
+export const THIS_MONTH = "THIS_MONTH"
+export const THIS_WEEK = "THIS_WEEK"
+export const THIS_YEAR = "THIS_YEAR"
+export const MONTHLY = "MONTHLY"
+export const WEEKLY = "WEEKLY"
+export const ANNUALY = "ANNUALY"
 
+export const QUARTER_OPTIONS = [
+    { value: Q1, label: "Q1" },
+    { value: Q2, label: "Q2" },
+    { value: Q3, label: "Q3" },
+    { value: Q4, label: "Q4" },
+    { value: THIS_MONTH, label: "This Month" },
+    { value: THIS_WEEK, label: "This Week" },
+    { value: THIS_YEAR, label: "This Year" },
+];
 
 export const severityOptions = [
     { value: "LOW", label: "Low", color: "#8BC34A" },

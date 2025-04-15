@@ -152,11 +152,11 @@ export const deletePopularProduct = async (id: string) => {
   });
 };
 
-export const getPopularProducts = async () => {
-  return await customFetch("api/v1/product/popular", {
-    method: "GET",
-  });
-};
+// export const getPopularProducts = async () => {
+//   return await customFetch("api/v1/product/popular", {
+//     method: "GET",
+//   });
+// };
 
 export const updatePopularProduct = async (id: string, data: any) => {
   return await customFetch(`api/v1/product/popular/${id}`, {
