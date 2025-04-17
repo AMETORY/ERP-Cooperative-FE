@@ -27,3 +27,6 @@ export const getNetWorth = async () => {
 export const getCashBankSum = async () => {
   return await customFetch(`api/v1/analytic/cash-bank`);
 };
+export const getSalesPurchaseList = async () => {
+  return await customFetch(`api/v1/analytic/sales-purchase-list`);
+};

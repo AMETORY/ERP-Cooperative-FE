@@ -17,7 +17,7 @@ import {
 } from "react-icons/hi2";
 import { LuContact2, LuPowerOff, LuWarehouse } from "react-icons/lu";
 import { RiShoppingBagLine } from "react-icons/ri";
-import { TbFileInvoice, TbReportAnalytics } from "react-icons/tb";
+import { TbAsset, TbFileInvoice, TbReportAnalytics } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { CollapsedContext } from "../contexts/CollapsedContext";
 import { ActiveCompanyContext } from "../contexts/CompanyContext";
@@ -76,7 +76,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
     return false;
   };
   return (
-    <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 flex flex-col">
+    <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 flex flex-col border-r">
       <Logo collapsed={collapsed} />
       <div className="mb-4"></div>
       <ul className="space-y-2 font-medium flex-1 h-[calc(100vh-100px)] overflow-y-auto">
@@ -134,6 +134,21 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 <span className="flex-1 ms-3 whitespace-nowrap">
                   Transaction
                 </span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("finance:asset:read") && (
+          <li className=" cursor-pointer" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/asset")}
+            >
+              <Tooltip content="Asset">
+                <TbAsset />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">Asset</span>
               )}
             </span>
           </li>

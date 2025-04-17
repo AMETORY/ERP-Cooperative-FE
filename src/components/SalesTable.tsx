@@ -150,6 +150,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
       <Table>
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
+          <Table.HeadCell>Due Date</Table.HeadCell>
           <Table.HeadCell>Sales Number</Table.HeadCell>
           <Table.HeadCell>Contact</Table.HeadCell>
           <Table.HeadCell>Status</Table.HeadCell>
@@ -169,6 +170,9 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
             <Table.Row key={sale.id}>
               <Table.Cell>
                 <Moment format="DD/MM/YYYY">{sale.sales_date}</Moment>
+              </Table.Cell>
+              <Table.Cell>
+                {sale.due_date && <Moment format="DD/MM/YYYY">{sale.due_date}</Moment>}
               </Table.Cell>
               <Table.Cell>{sale.sales_number}</Table.Cell>
               <Table.Cell>{sale.contact_data_parsed?.name}</Table.Cell>

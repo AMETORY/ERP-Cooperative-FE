@@ -36,6 +36,7 @@ const ProductPopularChart: FC<ProductPopularChartProps> = ({}) => {
           is3D: true,
           // pieSliceText: "value",
           height: 400,
+          
         }}
       />
     </div>

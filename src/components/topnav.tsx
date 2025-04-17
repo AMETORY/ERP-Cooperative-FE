@@ -153,9 +153,26 @@ const Topnav: React.FC<TopnavProps> = () => {
           <div className="min-h-64 mt-4">
             <ul className="grid grid-cols-2 gap-4">
               {[...Array(4)].map((_, i) => {
+                const quarter = i + 1;
+                const start = new Date(new Date().getFullYear(), (quarter - 1) * 3, 1);
+                const end = new Date(new Date().getFullYear(), quarter * 3, 0);
+                return (
+                  <li key={i}>
+                    <button
+                      key={i}
+                      className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"
+                      onClick={() => setDateRange([start, end])}
+                    >
+                      Q{quarter}
+                    </button>
+                  </li>
+                );
+              })}
+             
+              {[...Array(4)].map((_, i) => {
                 const year = new Date().getFullYear() - (i === 0 ? 0 : i);
                 return (
-                  <li>
+                  <li key={i}>
                     <button
                       key={i}
                       className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"

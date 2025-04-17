@@ -55,7 +55,7 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
     }
   }, [mounted, mode]);
   return (
-    <div className="bg-white rounded-xl p-2 hover:shadow-lg shadow-sm  min-h-[400px]">
+    <div className="bg-white rounded-xl p-2 hover:shadow-lg shadow-sm  min-h-[400px] col-span-2">
       <div className="flex justify-between pt-2 px-2">
         <h3 className="font-bold text-lg">Sales & Purchase</h3>
         <Dropdown inline label={mode}>

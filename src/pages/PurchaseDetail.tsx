@@ -384,6 +384,27 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               )}
             </div>
             <div>
+              <Label>Due Date</Label>
+              {isEditable ? (
+                <Datepicker
+                  value={purchase?.due_date}
+                  onChange={(date) => {
+                    setPurchase({
+                      ...purchase!,
+                      due_date: date!,
+                    });
+                  }}
+                  className="input-white"
+                />
+              ) : (
+                <div className="text-data">
+                  <Moment format="DD MMM YYYY">
+                    {purchase?.due_date}
+                  </Moment>
+                </div>
+              )}
+            </div>
+            <div>
               <Label>Notes</Label>
               {isEditable ? (
                 <Textarea

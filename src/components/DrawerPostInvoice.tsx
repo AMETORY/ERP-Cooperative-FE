@@ -45,7 +45,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
   const [warehouses, setWarehouses] = useState<WarehouseModel[]>([]);
   const [transactionDate, setTransactionDate] = useState<Date>();
   const [paymentTerm, setPaymentTerm] = useState<PaymentTermModel>();
-  const [dueDate, setDueDate] = useState<Date>();
+  const [dueDate, setDueDate] = useState<Date>(moment().add(30, "days").toDate());
 
   useEffect(() => {
     if (sales) {

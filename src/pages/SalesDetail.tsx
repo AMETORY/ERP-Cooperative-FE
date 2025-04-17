@@ -410,6 +410,25 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               )}
             </div>
             <div>
+              <Label>Due Date</Label>
+              {isEditable ? (
+                <Datepicker
+                  value={moment(sales?.due_date).toDate()}
+                  onChange={(date) => {
+                    setSales({
+                      ...sales!,
+                      due_date: moment(date!).toISOString(),
+                    });
+                  }}
+                  className="input-white"
+                />
+              ) : (
+                <div className="text-data">
+                  {sales?.due_date && <Moment format="DD MMM YYYY">{sales?.due_date}</Moment>}
+                </div>
+              )}
+            </div>
+            <div>
               <Label>Notes</Label>
               {isEditable ? (
                 <Textarea
@@ -614,8 +633,14 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                     ) : (
                       <div className="flex flex-col">
                         <div className="text-data font-semibold">
-                          <Link to={item.product_id ? `/product/${item.product_id}` : "#"}>
-                          {item.description}
+                          <Link
+                            to={
+                              item.product_id
+                                ? `/product/${item.product_id}`
+                                : "#"
+                            }
+                          >
+                            {item.description}
                           </Link>
                         </div>
                         <small className="text-data">{item.notes}</small>
