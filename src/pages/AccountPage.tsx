@@ -29,6 +29,7 @@ import { LuFilter } from "react-icons/lu";
 import Select, { InputActionMeta } from "react-select";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { OPTION_ACCOUNT_TYPES } from "../utils/constants";
 
 interface AccountPageProps {}
 
@@ -50,6 +51,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
 
   const types = [
     "ASSET",
+    "CONTRA_ASSET",
     "RECEIVABLE",
     "LIABILITY",
     "EQUITY",
@@ -60,6 +62,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   ];
   const [selectedTypes, setSelectedTypes] = useState([
     "ASSET",
+    "CONTRA_ASSET",
     "RECEIVABLE",
     "LIABILITY",
     "EQUITY",
@@ -187,7 +190,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                       </span>
                     )}
                   </Table.Cell>
-                  <Table.Cell>{account.type}</Table.Cell>
+                  <Table.Cell>{OPTION_ACCOUNT_TYPES.find((t) => t.value === account.type)?.label ?? account.type}</Table.Cell>
                   <Table.Cell>{account.category}</Table.Cell>
                   <Table.Cell align="right">
                     {money(account.balance)}
@@ -255,7 +258,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 <Select
                   isMulti
                   value={selectedTypes.map((t) => ({ label: t, value: t }))}
-                  options={types.map((t) => ({ label: t, value: t }))}
+                  options={OPTION_ACCOUNT_TYPES}
                   onChange={(val) => {
                     setSelectedTypes(val.map((v) => v.value));
                   }}
@@ -342,10 +345,10 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 <Select
                   isDisabled={selectedAccount?.id ? true : false}
                   name="type"
-                  options={types.map((t) => ({ label: t, value: t }))}
+                  options={OPTION_ACCOUNT_TYPES}
                   required
                   value={{
-                    label: selectedAccount?.type,
+                    label: OPTION_ACCOUNT_TYPES.find((t) => t.value === selectedAccount?.type)?.label ?? selectedAccount?.type,
                     value: selectedAccount?.type,
                   }}
                   onChange={(e) => {
@@ -357,10 +360,15 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                       }));
                     });
                   }}
+                  formatOptionLabel={(e: any) => (
+                    <div>
+                      <span>{e.label}</span>
+                    </div>
+                  )}
                 />
               </div>
               {(selectedAccount?.type == "RECEIVABLE" ||
-                selectedAccount?.type == "LIABILITY") && (
+                selectedAccount?.type == "LIABILITY" || selectedAccount?.type == "EXPENSE") && (
                 <div>
                   <ToggleSwitch
                     label="Is Tax Account"

@@ -18,6 +18,16 @@ export const getAssetDetail = async (id: string) => {
     method: "GET",
   });
 };
+export const getAssetPreview = async (id: string, mode: string, is_monthly: boolean) => {
+  if (mode === "") {
+    return {
+      data: []
+    }
+  }
+  return await customFetch(`api/v1/asset/${id}/preview?mode=${mode}&is_monthly=${is_monthly ? "true" : "false"}`, {
+    method: "GET",
+  });
+};
 export const createAsset = async (data: any) => {
   return await customFetch("api/v1/asset/create", {
     method: "POST",
@@ -29,6 +39,17 @@ export const updateAsset = async (id: string, data: any) => {
   return await customFetch(`api/v1/asset/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
+  });
+};
+export const activateAsset = async (id: string, data: any) => {
+  return await customFetch(`api/v1/asset/${id}/activate`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const depreciationApplyAsset = async (id: string, itemId: any) => {
+  return await customFetch(`api/v1/asset/${id}/apply/${itemId}`, {
+    method: "PUT",
   });
 };
 

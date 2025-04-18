@@ -71,6 +71,7 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
         date: date.toISOString(),
         description: description,
         name: name,
+        depreciation_method: "SLN",
         acquisition_cost: acquisition_cost,
         is_depreciation_asset: is_depreciated,
         asset_number: asset_number,
@@ -138,6 +139,7 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
             <Table.Head>
               <Table.HeadCell>Date</Table.HeadCell>
               <Table.HeadCell>Asset Number</Table.HeadCell>
+              <Table.HeadCell>Name</Table.HeadCell>
               <Table.HeadCell>Acquisition Cost</Table.HeadCell>
               <Table.HeadCell>Book Value</Table.HeadCell>
               <Table.HeadCell>Status</Table.HeadCell>
@@ -159,7 +161,8 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                   <Table.Cell>
                     <Moment format="DD MMM YYYY">{asset.date}</Moment>
                   </Table.Cell>
-                  <Table.Cell>{asset.description}</Table.Cell>
+                  <Table.Cell>{asset.asset_number}</Table.Cell>
+                  <Table.Cell>{asset.name}</Table.Cell>
                   <Table.Cell>{money(asset.acquisition_cost)}</Table.Cell>
                   <Table.Cell>{money(asset.book_value)}</Table.Cell>
 

@@ -38,7 +38,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
                     to={
                       item.link != ""
                         ? item.link
-                        : `/account/${item.id}/profitLoss`
+                        : `/account/${item.id}/report`
                     }
                     className="hover:font-semibold"
                   >
@@ -86,7 +86,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
                     to={
                       item.link != ""
                         ? item.link
-                        : `/account/${item.id}/profitLoss`
+                        : `/account/${item.id}/report`
                     }
                     className="hover:font-semibold"
                   >

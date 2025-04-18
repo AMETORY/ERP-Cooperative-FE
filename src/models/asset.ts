@@ -26,7 +26,7 @@ export interface AssetModel  {
 	account_accumulated_depreciation?: AccountModel;
 	salvage_value: number;
 	book_value: number;
-	status: "DRAFT" | "PENDING" | "ACTIVE" | "DISPOSED";
+	status: string;
 	is_monthly: boolean;
 	depreciations?: DepreciationCostModel[];
 	depreciation_method_label?: string;
@@ -47,4 +47,7 @@ export interface DepreciationCostModel {
 	executed_at?: Date;
 	transaction_id?: string;
 	status: "PENDING" | "ACTIVE" | "DONE";
+	is_checked: boolean;
+	seq_number: number;
+
 }

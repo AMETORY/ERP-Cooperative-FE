@@ -36,6 +36,13 @@ export const severityOptions = [
     { value: "CRITICAL", label: "Critical", color: "#F44336" },
 ];
 
+export const depreciationOptions = [
+    { value: "SLN", label: "Straight Line" },
+    { value: "DB", label: "Declining Balance" },
+    { value: "SYD", label: "Sum of Years" },
+];
+
+
 export const priorityOptions = [
     { value: "LOW", label: "Low", color: "#8BC34A" },
     { value: "MEDIUM", label: "Medium", color: "#F7DC6F" },
@@ -92,3 +99,16 @@ export let AUTO_NUMERIC_FORMAL = [
     "{static-character}",
 ]
 
+
+
+export const OPTION_ACCOUNT_TYPES = [
+    { value: "ASSET", label: "Asset" },
+    { value: "CONTRA_ASSET", label: "Contra Asset" },
+    { value: "RECEIVABLE", label: "Receivable" },
+    { value: "LIABILITY", label: "Liability" },
+    { value: "EQUITY", label: "Equity" },
+    { value: "REVENUE", label: "Revenue" },
+    { value: "CONTRA_REVENUE", label: "Contra Revenue" },
+    { value: "EXPENSE", label: "Expense" },
+    { value: "COST", label: "Cost" },
+];
