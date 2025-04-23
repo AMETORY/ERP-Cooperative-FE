@@ -31,6 +31,8 @@ export const getAccounts = async (req: PaginationRequest) => {
   if (req.is_profit_loss_account) queryParams.set("is_profit_loss_account", "1");
   if (req.is_profit_loss_closing_account) queryParams.set("is_profit_loss_closing_account", "1");
   if (req.is_cogs_closing_account) queryParams.set("is_cogs_closing_account", "1");
+  if (req.is_cogs_account) queryParams.set("is_cogs_account", "1");
+  if (req.is_inventory_account) queryParams.set("is_inventory_account", "1");
   if (req.is_net_surplus) queryParams.set("is_net_surplus", "1");
   return await customFetch(`api/v1/account/list?${queryParams}`);
 };

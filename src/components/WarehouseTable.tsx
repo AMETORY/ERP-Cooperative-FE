@@ -63,6 +63,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({}) => {
           />
         </div>
       </div>
+      <div className="overflow-x-auto">
       <Table hoverable>
         <Table.Head>
           <Table.HeadCell>Name</Table.HeadCell>
@@ -113,6 +114,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({}) => {
           ))}
         </Table.Body>
       </Table>
+      </div>
       <Pagination
         className="mt-4"
         currentPage={page}

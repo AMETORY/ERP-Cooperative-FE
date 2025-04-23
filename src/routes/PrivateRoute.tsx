@@ -39,6 +39,7 @@ import ClosingBook from "../pages/ClosingBook";
 import ClosingBookDetail from "../pages/ClosingBookDetail";
 import AssetPage from "../pages/AssetPage";
 import AssetDetail from "../pages/AssetDetail";
+import StockOpnameDetail from "../pages/StockOpnameDetail";
 
 interface PrivateRouteProps {}
 
@@ -87,6 +88,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/cooperative/saving" element={<SavingPage />} />
       <Route path="/cooperative/net-surplus" element={<NetSurplusPage />} />
       <Route path="/cooperative/net-surplus/:netSurplusId" element={<NetSurplusDetail />} />
+      <Route path="/stock-opname/:stockOpnameId" element={<StockOpnameDetail />} />
       {/* <Route path="/public/form/:formCode" element={<FormPublicPage />} /> */}
       {/* <Route path="/project" element={<ProjectPage />} />
       <Route path="/task" element={<TaskPage />} />

@@ -3,6 +3,7 @@ import {  ProductModel } from "./product";
 import { PurchaseModel } from "./purchase";
 import { ReturnModel } from "./return";
 import { SalesModel } from "./sales";
+import { StockOpnameModel } from "./stock_opname";
 import { UnitModel } from "./unit";
 import { WarehouseModel } from "./warehouse";
 
@@ -34,4 +35,5 @@ export interface StockMovementModel {
   sales_ref?: SalesModel;
   purchase_ref?: PurchaseModel;
   return_ref?: ReturnModel;
+  stock_opname_ref?: StockOpnameModel;
 }

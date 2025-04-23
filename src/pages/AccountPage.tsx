@@ -103,8 +103,12 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
         accounts = [...accounts, ...resp.data.items];
         const targetCoa = coaList.find((coa: any) => coa.types.includes(type));
         if (targetCoa) {
-          const existingAccounts = new Set(targetCoa.accounts.map((account: any) => account.id));
-          const newAccounts = resp.data.items.filter((item: any) => !existingAccounts.has(item.id));
+          const existingAccounts = new Set(
+            targetCoa.accounts.map((account: any) => account.id)
+          );
+          const newAccounts = resp.data.items.filter(
+            (item: any) => !existingAccounts.has(item.id)
+          );
           (targetCoa.accounts as any[]).push(...newAccounts);
         }
       }
@@ -171,78 +175,88 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
               </h1>
               <table className="w-full text-sm">
                 <tbody>
-                  {(coa.accounts as AccountModel[]).filter((account: AccountModel) => selectedTypes.includes(account!.type!)).map((account: AccountModel, j: number) => (
-                    <tr
-                      key={j}
-                      className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        
-                      }}
-                    >
-                      <td className="px-4 py-2 w-[100px]">{account.code}</td>
-                      <td className="px-4 py-2 w-[500px] hover:font-semibold hover:underline" onClick={() => nav(`/account/${account.id}/report`)}>
-                        {account.name}
-                        {account.is_tax && (
-                          <span className="text-xs text-green-400 flex items-center space-x-1">
-                            <BsCheckCircle className="text-green-400" />
-                            <span>Tax Account</span>
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2 w-32">
-                        {OPTION_ACCOUNT_TYPES.find(
-                          (t) => t.value === account.type
-                        )?.label ?? account.type}
-                        {/* {getGroupLabel(account.type, account.group)} */}
-                      </td>
-                      <td className="px-4 py-2 w-32">
-                        {/* {getSubGroupLabel(
+                  {(coa.accounts as AccountModel[])
+                    .filter((account: AccountModel) =>
+                      account?.name
+                        ?.toLowerCase()
+                        .includes(search.toLowerCase())
+                    )
+                    .filter((account: AccountModel) =>
+                      selectedTypes.includes(account!.type!)
+                    )
+                    .map((account: AccountModel, j: number) => (
+                      <tr
+                        key={j}
+                        className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {}}
+                      >
+                        <td className="px-4 py-2 w-[100px]">{account.code}</td>
+                        <td
+                          className="px-4 py-2 w-[500px] hover:font-semibold hover:underline"
+                          onClick={() => nav(`/account/${account.id}/report`)}
+                        >
+                          {account.name}
+                          {account.is_tax && (
+                            <span className="text-xs text-green-400 flex items-center space-x-1">
+                              <BsCheckCircle className="text-green-400" />
+                              <span>Tax Account</span>
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-2 w-32">
+                          {OPTION_ACCOUNT_TYPES.find(
+                            (t) => t.value === account.type
+                          )?.label ?? account.type}
+                          {/* {getGroupLabel(account.type, account.group)} */}
+                        </td>
+                        <td className="px-4 py-2 w-32">
+                          {/* {getSubGroupLabel(
                             account.type,
                             account.group,
                             account.cashflow_subgroup
                           )} */}
-                      </td>
-                      <td className="px-4 py-2 w-[150px]">
-                        {(account.balance ?? 0) > 0 &&
-                          money(account.balance, 0)}
-                      </td>
-                      <td className="px-4 py-2 w-[150px]">
-                        <a
-                          className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
-                          onClick={() => {
-                            getAccountTypes().then((res: any) => {
-                              setAccountTypes(res.data);
-                            });
-                            setSelectedAccount(account);
-                            setShowModal(true);
-                          }}
-                        >
-                          View
-                        </a>
-                        {account.is_deletable &&
-                          (account.balance ?? 0) == 0 && (
-                            <a
-                              href="#"
-                              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (
-                                  window.confirm(
-                                    `Are you sure you want to delete project ${account.name}?`
-                                  )
-                                ) {
-                                  deleteAccount(account?.id!).then(() => {
-                                    getAllAccounts();
-                                  });
-                                }
-                              }}
-                            >
-                              Delete
-                            </a>
-                          )}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-4 py-2 w-[150px]">
+                          {(account.balance ?? 0) > 0 &&
+                            money(account.balance, 0)}
+                        </td>
+                        <td className="px-4 py-2 w-[150px]">
+                          <a
+                            className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                            onClick={() => {
+                              getAccountTypes().then((res: any) => {
+                                setAccountTypes(res.data);
+                              });
+                              setSelectedAccount(account);
+                              setShowModal(true);
+                            }}
+                          >
+                            View
+                          </a>
+                          {account.is_deletable &&
+                            (account.balance ?? 0) == 0 && (
+                              <a
+                                href="#"
+                                className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (
+                                    window.confirm(
+                                      `Are you sure you want to delete project ${account.name}?`
+                                    )
+                                  ) {
+                                    deleteAccount(account?.id!).then(() => {
+                                      getAllAccounts();
+                                    });
+                                  }
+                                }}
+                              >
+                                Delete
+                              </a>
+                            )}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

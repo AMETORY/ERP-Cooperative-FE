@@ -25,6 +25,8 @@ export interface PaginationRequest {
     is_profit_loss_closing_account?: boolean;
     is_net_surplus?: boolean;
     is_cogs_closing_account?: boolean;
+    is_cogs_account?: boolean;
+    is_inventory_account?: boolean;
   }
   
   

@@ -72,71 +72,86 @@ const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
         </div>
       </div>
       <div className="h-[calc(100vh-300px)] overflow-y-auto">
-        <Table hoverable className=" ">
-          <Table.Head>
-            <Table.HeadCell>Date</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Product</Table.HeadCell>
-            <Table.HeadCell>Movement</Table.HeadCell>
-            <Table.HeadCell>Warehouse</Table.HeadCell>
-            <Table.HeadCell>Type</Table.HeadCell>
-            <Table.HeadCell>Ref</Table.HeadCell>
-            {/* <Table.HeadCell></Table.HeadCell> */}
-          </Table.Head>
-          <Table.Body>
-            {stockMovements.length === 0 && (
-              <Table.Row>
-                <Table.Cell colSpan={5} className="text-center">
-                  No data found.
-                </Table.Cell>
-              </Table.Row>
-            )}
-            {stockMovements.map((stockMovement) => (
-              <Table.Row key={stockMovement.id}>
-                <Table.Cell>
-                  <Moment format="DD MMM YYYY">{stockMovement.date}</Moment>
-                </Table.Cell>
-                <Table.Cell>{stockMovement.description}</Table.Cell>
-                <Table.Cell>
-                  <Link 
-                  to={`/product/${stockMovement.product_id}`}
-                  >
-                  {stockMovement.product?.display_name}
-                  </Link>
+        <div className="overflow-x-auto">
+          <Table hoverable className=" ">
+            <Table.Head>
+              <Table.HeadCell>Date</Table.HeadCell>
+              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>Product</Table.HeadCell>
+              <Table.HeadCell>Movement</Table.HeadCell>
+              <Table.HeadCell>Warehouse</Table.HeadCell>
+              <Table.HeadCell>Type</Table.HeadCell>
+              <Table.HeadCell>Ref</Table.HeadCell>
+              {/* <Table.HeadCell></Table.HeadCell> */}
+            </Table.Head>
+            <Table.Body>
+              {stockMovements.length === 0 && (
+                <Table.Row>
+                  <Table.Cell colSpan={5} className="text-center">
+                    No data found.
                   </Table.Cell>
-                <Table.Cell>
-                  {money(stockMovement.quantity)} {stockMovement.unit?.name}
-                </Table.Cell>
-                <Table.Cell>{stockMovement.warehouse?.name}</Table.Cell>
-                <Table.Cell>{stockMovement.type}</Table.Cell>
-                <Table.Cell>
-                  {stockMovement.sales_ref && (
-                    <Link
-                      to={`/sales/${stockMovement.sales_ref?.id}`}
-                      className="flex gap-1 items-center"
-                    >
-                      <TbFileInvoice /> {stockMovement.sales_ref?.sales_number}
+                </Table.Row>
+              )}
+              {stockMovements.map((stockMovement) => (
+                <Table.Row key={stockMovement.id}>
+                  <Table.Cell>
+                    <Moment format="DD MMM YYYY">{stockMovement.date}</Moment>
+                  </Table.Cell>
+                  <Table.Cell>{stockMovement.description}</Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/product/${stockMovement.product_id}`}>
+                      {stockMovement.product?.display_name}
                     </Link>
-                  )}
-                  {stockMovement.purchase_ref && (
-                    <Link
-                      to={`/purchase/${stockMovement.purchase_ref?.id}`}
-                      className="flex gap-1 items-center"
-                    >
-                      <BsCartCheck /> {stockMovement.purchase_ref?.purchase_number}
-                    </Link>
-                  )}
-                  {stockMovement.return_ref && (
-                    <Link
-                      to={`/purchase-return/${stockMovement.return_ref?.id}`}
-                      className="flex gap-1 items-center"
-                    >
-                      <TbTruckReturn /> {stockMovement.return_ref?.return_number}
-                    </Link>
-                  )}
-                </Table.Cell>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {money(stockMovement.quantity)} {stockMovement.unit?.name}
+                  </Table.Cell>
+                  <Table.Cell>{stockMovement.warehouse?.name}</Table.Cell>
+                  <Table.Cell>{stockMovement.type}</Table.Cell>
+                  <Table.Cell>
+                    {stockMovement.sales_ref && (
+                      <Link
+                        to={`/sales/${stockMovement.sales_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <TbFileInvoice />{" "}
+                        {stockMovement.sales_ref?.sales_number}
+                      </Link>
+                    )}
+                    {stockMovement.purchase_ref && (
+                      <Link
+                        to={`/purchase/${stockMovement.purchase_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <BsCartCheck />{" "}
+                        {stockMovement.purchase_ref?.purchase_number}
+                      </Link>
+                    )}
+                    {stockMovement.return_ref && (
+                      <Link
+                        to={`/purchase-return/${stockMovement.return_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <TbTruckReturn />{" "}
+                        {stockMovement.return_ref?.return_number}
+                      </Link>
+                    )}
+                    {stockMovement.stock_opname_ref && (
+                      <Link
+                        to={`/stock-opname/${stockMovement.stock_opname_ref?.id}`}
+                        className="flex gap-1 items-center"
+                      >
+                        <img
+                          src="/icon/stock_opname.png"
+                          alt=""
+                          className="w-3"
+                        />{" "}
+                        {stockMovement.stock_opname_ref?.stock_opname_number}
+                      </Link>
+                    )}
+                  </Table.Cell>
 
-                {/* <Table.Cell>
+                  {/* <Table.Cell>
                   {stockMovement.company_id && (
                     <a
                       className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
@@ -168,10 +183,11 @@ const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
                     </a>
                   )}
                 </Table.Cell> */}
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
       <Pagination
         className="mt-4"

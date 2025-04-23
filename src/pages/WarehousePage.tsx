@@ -5,6 +5,7 @@ import { LuWarehouse } from "react-icons/lu";
 import { RxReload } from "react-icons/rx";
 import WarehouseTable from "../components/WarehouseTable";
 import StockMovementTable from "../components/StockMovementTable";
+import StockOpnameTable from "../components/StockOpnameTable";
 
 interface WarehousePageProps {}
 
@@ -35,6 +36,18 @@ const WarehousePage: FC<WarehousePageProps> = ({}) => {
             icon={RxReload}
           >
             <StockMovementTable />
+          </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 1}
+            title={
+              <div className="flex gap-2 items-center">
+                <img src="/icon/stock_opname.png" alt="" className="w-4" />
+                <span>Stock Opname</span>
+              </div>
+            }
+
+          >
+            <StockOpnameTable />
           </Tabs.Item>
          
         </Tabs>
