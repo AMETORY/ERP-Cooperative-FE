@@ -31,6 +31,7 @@ import { TbFileInvoice } from "react-icons/tb";
 import { BsCartCheck } from "react-icons/bs";
 import { SalesPurchase } from "../models/misc";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 interface HomeProps {}
 
@@ -55,20 +56,20 @@ const Home: FC<HomeProps> = ({}) => {
     if (mounted) {
       getSalesTimeRange(timeRange).then((resp: any) => {
         setSalesAmount(resp.data);
-      });
+      }).catch((err) => toast.error(`${err}`));
       getPurchaseTimeRange(timeRange).then((resp: any) => {
         setPurchaseAmount(resp.data);
-      });
+      }).catch((err) => toast.error(`${err}`));
       getNetWorth().then((resp: any) => {
         setNetWorth(resp.data);
-      });
+      }).catch((err) => toast.error(`${err}`));
       getCashBankSum().then((resp: any) => {
         setCashBank(resp.data);
-      });
+      }).catch((err) => toast.error(`${err}`));
       getSalesPurchaseList().then((resp: any) => {
         setSales(resp.data.sales);
         setPurchases(resp.data.purchase);
-      });
+      }).catch((err) => toast.error(`${err}`));
     }
   }, [mounted, timeRange]);
   return (

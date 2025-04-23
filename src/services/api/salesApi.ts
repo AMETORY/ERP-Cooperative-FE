@@ -18,6 +18,11 @@ export const getSales = async (req: PaginationRequest) => {
 export const getSalesDetail = async (id: string) => {
   return await customFetch(`api/v1/sales/${id}`);
 };
+export const downloadSalesPdf = async (id: string) => {
+  return await customFetch(`api/v1/sales/${id}/pdf`, {
+    isBlob: true
+  });
+};
 export const getSalesItems= async (id: string) => {
   return await customFetch(`api/v1/sales/${id}/items`);
 };

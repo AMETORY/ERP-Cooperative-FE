@@ -51,6 +51,10 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
         path="/create/company/:companyType"
         element={<CreateCompanyPage />}
       />
+      <Route
+        path="/create/company"
+        element={<CreateCompanyPage />}
+      />
       <Route path="/company/:companyId" element={<ConnectionDetail />} />
       <Route path="/account" element={<AccountPage />} />
       <Route path="/account/:accountId/report" element={<AccountReport />} />

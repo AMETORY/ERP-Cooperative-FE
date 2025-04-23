@@ -7,6 +7,7 @@ import {
 import moment from "moment";
 import { MONTHLY, WEEKLY } from "../../utils/constants";
 import { Dropdown } from "flowbite-react";
+import toast from "react-hot-toast";
 
 interface SalesPurchaseChartProps {}
 
@@ -37,7 +38,7 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
               item.purchase,
             ]),
           ]);
-        });
+        }).catch((err) => toast.error(`${err}`));;
       }
       if (mode === WEEKLY) {
         getWeeklySalesPurchase(month + 1, year).then((resp: any) => {
@@ -50,7 +51,7 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
               item.purchase,
             ]),
           ]);
-        });
+        }).catch((err) => toast.error(`${err}`));;
       }
     }
   }, [mounted, mode]);

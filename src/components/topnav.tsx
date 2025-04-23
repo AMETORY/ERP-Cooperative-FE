@@ -117,6 +117,7 @@ const Topnav: React.FC<TopnavProps> = () => {
                     {c.name}
                   </Dropdown.Item>
                 ))}
+                <Dropdown.Item as={"button"} onClick={() => nav("/create/company")}>+ New Company</Dropdown.Item>
               </Dropdown>
               <Avatar
                 size="xs"

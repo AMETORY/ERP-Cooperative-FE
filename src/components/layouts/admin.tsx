@@ -200,7 +200,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({
       {loading && <Loading />}
       <Toaster position="bottom-left" reverseOrder={false} />
       <Topnav />
-      {pathname.includes("/create/company/") ? (
+      {pathname.includes("/create/company") ? (
         <div
           style={{
             height: "calc(100% - 65px)",

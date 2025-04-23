@@ -28,3 +28,4 @@ yarn-error.log*
 build
 config.yaml
 frontend/.env.staging
+.env.production

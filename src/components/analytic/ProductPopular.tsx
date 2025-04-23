@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from "react";
 import Chart from "react-google-charts";
 import { getPopularProducts } from "../../services/api/analyticApi";
+import toast from "react-hot-toast";
 
 interface ProductPopularChartProps {}
 
@@ -21,7 +22,7 @@ const ProductPopularChart: FC<ProductPopularChartProps> = ({}) => {
           ["Product", "Quantity"],
           ...resp.data.map((item: any) => [item.display_name, item.total_sale]),
         ]);
-      });
+      }).catch((err) => toast.error(`${err}`));;
     }
   }, [mounted]);
 

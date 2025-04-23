@@ -387,7 +387,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               <Label>Due Date</Label>
               {isEditable ? (
                 <Datepicker
-                  value={purchase?.due_date}
+                  value={moment(purchase?.due_date ?? moment().add(30, "days")).toDate()}
                   onChange={(date) => {
                     setPurchase({
                       ...purchase!,

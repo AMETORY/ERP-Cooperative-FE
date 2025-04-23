@@ -17,7 +17,7 @@ import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
-import { BsAirplane, BsCart2, BsPlusCircle, BsTrash } from "react-icons/bs";
+import { BsAirplane, BsCart2, BsDownload, BsPlusCircle, BsTrash } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -35,6 +35,7 @@ import { getPaymentTermGroups } from "../services/api/paymentTermApi";
 import { getProducts } from "../services/api/productApi";
 import {
   createSales,
+  downloadSalesPdf,
   getSalesDetail,
   getSalesItems,
   paymentInvoice,
@@ -303,6 +304,25 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   POST INVOICE
                 </Dropdown.Item>
               )}
+              {!sales?.published_at && sales?.document_type == "INVOICE" && (
+                <Dropdown.Item
+                  icon={BsDownload}
+                  onClick={() => {
+                    setLoading(true);
+                    downloadSalesPdf(sales?.id!).then((res: any) => {
+                      const url = window.URL.createObjectURL(res);
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = `${sales?.sales_number}.pdf`;
+                      link.click();
+                    }).finally(() => {
+                      setLoading(false);
+                    })
+                  }}
+                >
+                  DOWNLOAD INVOICE
+                </Dropdown.Item>
+              )}
               {sales?.published_at && sales?.document_type == "INVOICE" && (
                 <Dropdown.Item
                   icon={TbTruckReturn}
@@ -413,7 +433,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               <Label>Due Date</Label>
               {isEditable ? (
                 <Datepicker
-                  value={moment(sales?.due_date).toDate()}
+                  value={moment(sales?.due_date ?? moment().add(30, "days")).toDate()}
                   onChange={(date) => {
                     setSales({
                       ...sales!,

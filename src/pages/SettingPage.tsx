@@ -505,19 +505,21 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           >
             {renderPlugin()}
           </Tabs.Item> */}
-          <Tabs.Item
-            active={activeTab === 3}
-            title={
-              <div className="flex justify-center items-center">
-                <img src={"/logo-koperasi.jpg"} className="w-6 mr-2" alt="" />
-                Pengaturan Koperasi
-              </div>
-            }
-            // icon={LogoKoperasi}
-            className=""
-          >
-            <CooperativeSetting />
-          </Tabs.Item>
+          {company?.is_cooperation && (
+            <Tabs.Item
+              active={activeTab === 3}
+              title={
+                <div className="flex justify-center items-center">
+                  <img src={"/logo-koperasi.jpg"} className="w-6 mr-2" alt="" />
+                  Pengaturan Koperasi
+                </div>
+              }
+              // icon={LogoKoperasi}
+              className=""
+            >
+              <CooperativeSetting />
+            </Tabs.Item>
+          )}
           <Tabs.Item
             active={activeTab === 4}
             title="Report Setting"

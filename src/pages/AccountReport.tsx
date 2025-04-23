@@ -32,12 +32,16 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
   const { accountId } = useParams();
   const [showFilter, setShowFilter] = useState(false);
   const [report, setReport] = useState<AccountReportModel>();
+  const [startDate, setStartDate] = useState(
+    moment().subtract(7, "days").toDate()
+  );
+  const [endDate, setEndDate] = useState(moment().add(1, "days").toDate());
 
   useEffect(() => {
     setMounted(true);
   }, []);
   useEffect(() => {
-    if (mounted && accountId && dateRange) {
+    if (mounted && accountId) {
       //   getTransactions({ page, size, search, account_id: accountId }).then(
       //     (resp: any) => {
       //       setTransactions(resp.data.items);
@@ -49,15 +53,15 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
         page,
         size,
         search,
-        start_date: moment(dateRange[0]!).format("YYYY-MM-DD"),
-        end_date: moment(dateRange[1]!).format("YYYY-MM-DD"),
+        start_date: moment(startDate ?? dateRange![0]).format("YYYY-MM-DD"),
+        end_date: moment(endDate ?? dateRange![1]).format("YYYY-MM-DD"),
       }).then((resp: any) => {
         setReport(resp.data);
       });
     }
 
     return () => {};
-  }, [mounted, page, size, search, accountId, dateRange]);
+  }, [mounted, page, size, search, accountId, startDate, endDate]);
   return (
     <AdminLayout>
       <div className="p-8">
@@ -254,14 +258,9 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                 <Label>Start Date</Label>
                 <Datepicker
                   className="mt-2" // Add this class
-                  value={dateRange?.[0]}
+                  value={startDate}
                   onChange={(val) => {
-                    setDateRange([
-                      val!,
-                      dateRange?.[1]
-                        ? dateRange?.[1]
-                        : moment().add(1, "d").toDate(),
-                    ]);
+                    setStartDate(val!);
                   }}
                 />
               </div>
@@ -269,15 +268,106 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
                 <Label>End Date</Label>
                 <Datepicker
                   className="mt-2" // Add this class
-                  value={dateRange?.[1]}
+                  value={endDate}
                   onChange={(val) => {
-                    setDateRange([
-                      dateRange?.[0] ? dateRange?.[0] : moment().toDate(),
-                      val!,
-                    ]);
+                    setEndDate(val!);
                   }}
                 />
               </div>
+            </div>
+            <div className="min-h-64 mt-4">
+              <Label>Time Range</Label>
+              <ul className="grid grid-cols-2 gap-4 mt-4">
+                <li>
+                  <button
+                    className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"
+                    onClick={() => {
+                      const start = new Date(
+                        new Date().getFullYear(),
+                        new Date().getMonth(),
+                        1
+                      );
+                      const end = new Date(
+                        new Date().getFullYear(),
+                        new Date().getMonth() + 1,
+                        0
+                      );
+                      setStartDate(start);
+                      setEndDate(end);
+                    }}
+                  >
+                    This Month
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"
+                    onClick={() => {
+                      const start = new Date(
+                        new Date().getFullYear(),
+                        new Date().getMonth(),
+                        new Date().getDate() - new Date().getDay() + 1
+                      );
+                      const end = new Date(
+                        new Date().getFullYear(),
+                        new Date().getMonth(),
+                        new Date().getDate() -
+                          new Date().getDay() +
+                          7
+                      );
+                      setStartDate(start);
+                      setEndDate(end);
+                    }}
+                  >
+                    This Week
+                  </button>
+                </li>
+                {[...Array(4)].map((_, i) => {
+                  const quarter = i + 1;
+                  const start = new Date(
+                    new Date().getFullYear(),
+                    (quarter - 1) * 3,
+                    1
+                  );
+                  const end = new Date(
+                    new Date().getFullYear(),
+                    quarter * 3,
+                    0
+                  );
+                  return (
+                    <li key={i}>
+                      <button
+                        key={i}
+                        className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"
+                        onClick={() => {
+                          setStartDate(start);
+                          setEndDate(end);
+                        }}
+                      >
+                        Q{quarter}
+                      </button>
+                    </li>
+                  );
+                })}
+
+                {[...Array(4)].map((_, i) => {
+                  const year = new Date().getFullYear() - (i === 0 ? 0 : i);
+                  return (
+                    <li key={i}>
+                      <button
+                        key={i}
+                        className="rs-input clear-start text-center hover:font-semibold hover:bg-gray-50"
+                        onClick={() => {
+                          setStartDate(new Date(year, 0, 1));
+                          setEndDate(new Date(year, 11, 31));
+                        }}
+                      >
+                        {year == new Date().getFullYear() ? "This Year" : year}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </Drawer.Items>
         </div>

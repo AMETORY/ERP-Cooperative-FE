@@ -80,20 +80,28 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
       setLoading(false);
       setSales(res.data.items);
       setPagination(getPagination(res.data));
-    });
+    }).catch((error) => {
+      toast.error(`${error}`);
+    }).finally(() => {
+      setLoading(false);
+    })
   };
 
   useEffect(() => {
     getAllContacts("");
   }, []);
   const getAllContacts = async (s: string) => {
-    const res: any = await getContacts({
-      page: 1,
-      size: 10,
-      search: s,
-      is_customer: true,
-    });
-    setContacts(res.data.items);
+    try {
+      const res: any = await getContacts({
+        page: 1,
+        size: 10,
+        search: s,
+        is_customer: true,
+      });
+      setContacts(res.data.items);
+    } catch (error) {
+      toast.error(`${error}`);
+    }
   };
 
   const saveInvoice = async () => {
