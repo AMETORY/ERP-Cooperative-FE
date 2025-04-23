@@ -112,3 +112,12 @@ export const OPTION_ACCOUNT_TYPES = [
     { value: "EXPENSE", label: "Expense" },
     { value: "COST", label: "Cost" },
 ];
+
+
+export const chartOfAccounts = [
+    { value: "ASSETS", label: "Assets", types: ["ASSET", "CONTRA_ASSET", "RECEIVABLE"], accounts: [] },
+    { value: "LIABILITIES", label: "Liabilities", types: ["LIABILITY"], accounts: [] },
+    { value: "EQUITY", label: "Equity", types: ["EQUITY"], accounts: [] },
+    { value: "INCOME", label: "Income", types: ["REVENUE", "CONTRA_REVENUE", "INCOME"], accounts: [] },
+    { value: "EXPENSE", label: "Expense", types: ["EXPENSE", "COST"], accounts: [] },
+];

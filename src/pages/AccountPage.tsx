@@ -29,7 +29,7 @@ import { LuFilter } from "react-icons/lu";
 import Select, { InputActionMeta } from "react-select";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { OPTION_ACCOUNT_TYPES } from "../utils/constants";
+import { chartOfAccounts, OPTION_ACCOUNT_TYPES } from "../utils/constants";
 
 interface AccountPageProps {}
 
@@ -48,6 +48,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   const [selectedAccount, setSelectedAccount] = useState<AccountModel>();
   const nav = useNavigate();
   const timeout = useRef<number | null>(null);
+  const [chartOfAccountList, setChartOfAccountList] = useState<any[]>([]);
 
   const types = [
     "ASSET",
@@ -95,12 +96,21 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
   const getAllAccounts = async () => {
     try {
       let accounts: AccountModel[] = [];
-      setLoading(true);
+      // setLoading(true);
+      let coaList = chartOfAccounts;
       for (const type of selectedTypes) {
         let resp: any = await getAccounts({ page, size, search, type });
         accounts = [...accounts, ...resp.data.items];
+        const targetCoa = coaList.find((coa: any) => coa.types.includes(type));
+        if (targetCoa) {
+          const existingAccounts = new Set(targetCoa.accounts.map((account: any) => account.id));
+          const newAccounts = resp.data.items.filter((item: any) => !existingAccounts.has(item.id));
+          (targetCoa.accounts as any[]).push(...newAccounts);
+        }
       }
       setAccounts(accounts);
+
+      setChartOfAccountList(coaList);
     } catch (error) {
       toast.error(`${error}`);
     } finally {
@@ -154,7 +164,90 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
           </div>
         </div>
         <div className="h-[calc(100vh-200px)] overflow-y-auto p-1">
-          <Table className=" rounded-lg shadow-sm ">
+          {chartOfAccountList.map((coa: any, i: number) => (
+            <div key={i} className="mb-8">
+              <h1 className="text-2xl font-semibold text-gray-600">
+                {coa.label}
+              </h1>
+              <table className="w-full text-sm">
+                <tbody>
+                  {(coa.accounts as AccountModel[]).filter((account: AccountModel) => selectedTypes.includes(account!.type!)).map((account: AccountModel, j: number) => (
+                    <tr
+                      key={j}
+                      className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        
+                      }}
+                    >
+                      <td className="px-4 py-2 w-[100px]">{account.code}</td>
+                      <td className="px-4 py-2 w-[500px] hover:font-semibold hover:underline" onClick={() => nav(`/account/${account.id}/report`)}>
+                        {account.name}
+                        {account.is_tax && (
+                          <span className="text-xs text-green-400 flex items-center space-x-1">
+                            <BsCheckCircle className="text-green-400" />
+                            <span>Tax Account</span>
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 w-32">
+                        {OPTION_ACCOUNT_TYPES.find(
+                          (t) => t.value === account.type
+                        )?.label ?? account.type}
+                        {/* {getGroupLabel(account.type, account.group)} */}
+                      </td>
+                      <td className="px-4 py-2 w-32">
+                        {/* {getSubGroupLabel(
+                            account.type,
+                            account.group,
+                            account.cashflow_subgroup
+                          )} */}
+                      </td>
+                      <td className="px-4 py-2 w-[150px]">
+                        {(account.balance ?? 0) > 0 &&
+                          money(account.balance, 0)}
+                      </td>
+                      <td className="px-4 py-2 w-[150px]">
+                        <a
+                          className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                          onClick={() => {
+                            getAccountTypes().then((res: any) => {
+                              setAccountTypes(res.data);
+                            });
+                            setSelectedAccount(account);
+                            setShowModal(true);
+                          }}
+                        >
+                          View
+                        </a>
+                        {account.is_deletable &&
+                          (account.balance ?? 0) == 0 && (
+                            <a
+                              href="#"
+                              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (
+                                  window.confirm(
+                                    `Are you sure you want to delete project ${account.name}?`
+                                  )
+                                ) {
+                                  deleteAccount(account?.id!).then(() => {
+                                    getAllAccounts();
+                                  });
+                                }
+                              }}
+                            >
+                              Delete
+                            </a>
+                          )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+          {/* <Table className=" rounded-lg shadow-sm ">
             <Table.Head>
               <Table.HeadCell>Account</Table.HeadCell>
               <Table.HeadCell>Type</Table.HeadCell>
@@ -190,7 +283,10 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                       </span>
                     )}
                   </Table.Cell>
-                  <Table.Cell>{OPTION_ACCOUNT_TYPES.find((t) => t.value === account.type)?.label ?? account.type}</Table.Cell>
+                  <Table.Cell>
+                    {OPTION_ACCOUNT_TYPES.find((t) => t.value === account.type)
+                      ?.label ?? account.type}
+                  </Table.Cell>
                   <Table.Cell>{account.category}</Table.Cell>
                   <Table.Cell align="right">
                     {money(account.balance)}
@@ -232,7 +328,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 </Table.Row>
               ))}
             </Table.Body>
-          </Table>
+          </Table> */}
         </div>
         {/* <Pagination
           className="mt-4"
@@ -348,7 +444,10 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                   options={OPTION_ACCOUNT_TYPES}
                   required
                   value={{
-                    label: OPTION_ACCOUNT_TYPES.find((t) => t.value === selectedAccount?.type)?.label ?? selectedAccount?.type,
+                    label:
+                      OPTION_ACCOUNT_TYPES.find(
+                        (t) => t.value === selectedAccount?.type
+                      )?.label ?? selectedAccount?.type,
                     value: selectedAccount?.type,
                   }}
                   onChange={(e) => {
@@ -368,7 +467,8 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 />
               </div>
               {(selectedAccount?.type == "RECEIVABLE" ||
-                selectedAccount?.type == "LIABILITY" || selectedAccount?.type == "EXPENSE") && (
+                selectedAccount?.type == "LIABILITY" ||
+                selectedAccount?.type == "EXPENSE") && (
                 <div>
                   <ToggleSwitch
                     label="Is Tax Account"
