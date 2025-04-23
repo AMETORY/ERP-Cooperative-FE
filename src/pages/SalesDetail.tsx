@@ -304,7 +304,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   POST INVOICE
                 </Dropdown.Item>
               )}
-              {!sales?.published_at && sales?.document_type == "INVOICE" && (
+              { sales?.document_type == "INVOICE" && (
                 <Dropdown.Item
                   icon={BsDownload}
                   onClick={() => {
