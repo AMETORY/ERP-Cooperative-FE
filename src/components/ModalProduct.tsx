@@ -123,6 +123,7 @@ const ModalProduct: FC<ModalProductProps> = ({
                 })
               }
               options={categories.map((c) => ({ label: c.name, value: c.id }))}
+              onInputChange={(e) => searchCategory(e)}
             />
           </div>
           <div className="mb-4">

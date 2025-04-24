@@ -122,15 +122,13 @@ const PriceCategoryTable: FC<PriceCategoryTableProps> = ({}) => {
         }}
         showIcons
       />
-      {category && (
         <ModalPriceCategory
-          category={category}
+          category={category ?? null}
           setCategory={setCategory}
           show={showModal}
           setShow={setShowModal}
           onCreate={getAllCategories}
         />
-      )}
     </div>
   );
 };

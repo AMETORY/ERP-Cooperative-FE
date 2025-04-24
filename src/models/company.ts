@@ -21,6 +21,25 @@ export interface CompanyModel {
   is_cooperation?: boolean;
   cooperative_setting?: CooperationSetting;
   cashflow_group_setting: CashFlowSetting;
+  sales_static_character?: string;
+  sales_order_static_character?: string;
+  sales_quote_static_character?: string;
+  sales_return_static_character?: string;
+  delivery_static_character?: string;
+  purchase_static_character?: string;
+  purchase_order_static_character?: string;
+  purchase_return_static_character?: string;
+  sales_format?: string;
+  sales_order_format?: string;
+  sales_quote_format?: string;
+  sales_return_format?: string;
+  delivery_format?: string;
+  purchase_format?: string;
+  purchase_order_format?: string;
+  purchase_return_format?: string;
+  auto_numeric_length?: number;
+  random_numeric_length?: number;
+  random_character_length?: number;
 }
 
 export interface CompanySetting {

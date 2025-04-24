@@ -42,6 +42,8 @@ import {
   getCashflowsubgroups,
 } from "../services/api/accountApi";
 import { CashFlowCategory } from "../models/setting";
+import { MdBikeScooter } from "react-icons/md";
+import MiscSetting from "../components/MiscSetting";
 interface SettingPageProps {}
 
 const SettingPage: FC<SettingPageProps> = ({}) => {
@@ -151,16 +153,16 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             Add Sub Group
           </a>
         </div>
-        {company?.cashflow_group_setting.operating.map((item, index) => (
+        {(company?.cashflow_group_setting?.operating??[]).map((item, index) => (
           <div className="flex justify-between mb-4" key={index}>
             <h5 className="text-md ">{item.description}</h5>
             <a
               className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
-                company?.cashflow_group_setting.operating.splice(index, 1);
+                (company?.cashflow_group_setting?.operating??[]).splice(index, 1);
                 setCompany({
-                  ...company,
+                  ...company!,
                 });
               }}
             >
@@ -181,16 +183,16 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             Add Sub Group
           </a>
         </div>
-        {company?.cashflow_group_setting.investing.map((item, index) => (
+        {(company?.cashflow_group_setting?.investing ?? []).map((item, index) => (
           <div className="flex justify-between mb-4" key={index}>
             <h5 className="text-md ">{item.description}</h5>
             <a
               className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
-                company?.cashflow_group_setting.investing.splice(index, 1);
+                (company?.cashflow_group_setting?.investing ?? []).splice(index, 1);
                 setCompany({
-                  ...company,
+                  ...company!,
                 });
               }}
             >
@@ -211,16 +213,16 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             Add Sub Group
           </a>
         </div>
-        {company?.cashflow_group_setting.financing.map((item, index) => (
+        {(company?.cashflow_group_setting?.financing ?? []).map((item, index) => (
           <div className="flex justify-between mb-4" key={index}>
             <h5 className="text-md ">{item.description}</h5>
             <a
               className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
-                company?.cashflow_group_setting.financing.splice(index, 1);
+                (company?.cashflow_group_setting?.financing ?? []).splice(index, 1);
                 setCompany({
-                  ...company,
+                  ...company!,
                 });
               }}
             >
@@ -527,6 +529,21 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             className=""
           >
             {renderReport()}
+          </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 5}
+            title="Misc"
+            icon={MdBikeScooter}
+            className=""
+          >
+              <MiscSetting
+                setting={company}
+                setSetting={(val) => {
+                  setCompany(val);
+                }}
+                onSave={updateCompanySetting}
+              />
+            
           </Tabs.Item>
         </Tabs>
       </div>

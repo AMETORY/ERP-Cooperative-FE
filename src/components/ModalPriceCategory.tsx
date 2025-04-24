@@ -11,7 +11,7 @@ interface ModalPriceCategoryProps {
   show: boolean;
   setShow: (show: boolean) => void;
   onCreate: () => void;
-  category: PriceCategoryModel;
+  category: PriceCategoryModel | null;
   setCategory: (category: PriceCategoryModel) => void;
 }
 
@@ -25,7 +25,7 @@ const ModalPriceCategory: FC<ModalPriceCategoryProps> = ({
   const [name, setName] = useState("");
   return (
     <Modal show={show} onClose={() => setShow(false)}>
-      <Modal.Header> Product Category</Modal.Header>
+      <Modal.Header> Price Category</Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
           <div className="mb-2 block">
@@ -69,7 +69,7 @@ const ModalPriceCategory: FC<ModalPriceCategoryProps> = ({
           <Button
             onClick={async () => {
               try {
-                if (category.id) {
+                if (category?.id) {
                   await updatePriceCategory(category.id, category);
                 } else {
                   await createPriceCategory(category);

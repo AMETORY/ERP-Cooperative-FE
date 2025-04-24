@@ -110,10 +110,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
         toast.error("Contact is required");
         return;
       }
-      if (!salesNumber) {
-        toast.error("Sales number is required");
-        return;
-      }
+  
       setLoading(true);
       let resp: any = await createSales({
         sales_number: salesNumber,

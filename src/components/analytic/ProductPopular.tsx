@@ -20,7 +20,7 @@ const ProductPopularChart: FC<ProductPopularChartProps> = ({}) => {
       getPopularProducts().then((resp: any) => {
         setProductCharts([
           ["Product", "Quantity"],
-          ...resp.data.map((item: any) => [item.display_name, item.total_sale]),
+          ...(resp.data??[]).map((item: any) => [item.display_name, item.total_sale]),
         ]);
       }).catch((err) => toast.error(`${err}`));;
     }

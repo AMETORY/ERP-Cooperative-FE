@@ -443,15 +443,13 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                       `Sales account for ${item.description} is required`
                     );
                     return;
-                    break;
                   }
 
-                  if (!item.warehouse_id) {
+                  if (!item.warehouse_id && item.product_id) {
                     toast.error(
                       `Warehouse for ${item.description} is required`
                     );
                     return;
-                    break;
                   }
                 }
 

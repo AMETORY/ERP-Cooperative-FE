@@ -29,11 +29,11 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
   }, []);
   useEffect(() => {
     if (mounted) {
-      getAllCategories();
+      getAllProducts();
     }
   }, [mounted, page, size, search]);
 
-  const getAllCategories = () => {
+  const getAllProducts = () => {
     getProducts({ page, size, search }).then((res: any) => {
       setProducts(res.data.items);
       setPagination(getPagination(res.data));
@@ -99,7 +99,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
                       )
                     ) {
                       deleteProduct(product?.id!).then(() => {
-                        getAllCategories();
+                        getAllProducts();
                       });
                     }
                   }}
@@ -123,7 +123,9 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
       <ModalProduct
         product={product}
         setProduct={setProduct}
-        onCreateProduct={(val) => {}}
+        onCreateProduct={(val) => {
+          getAllProducts()
+        }}
         show={showModal}
         setShow={setShowModal}
       />
