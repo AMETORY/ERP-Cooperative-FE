@@ -76,7 +76,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
     return false;
   };
   return (
-    <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 flex flex-col border-r">
+    <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 flex flex-col border-r z-50">
       <Logo collapsed={collapsed} />
       <div className="mb-4"></div>
       <ul className="space-y-2 font-medium flex-1 h-[calc(100vh-100px)] overflow-y-auto">

@@ -220,7 +220,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({
                 top: 65,
                 height: "calc(100% - 65px)",
               }}
-              className=" bg-red-50 h-full fixed left-0 "
+              className=" bg-red-50 h-full fixed left-0 z-50"
             >
               <Sidebar />
             </aside>
