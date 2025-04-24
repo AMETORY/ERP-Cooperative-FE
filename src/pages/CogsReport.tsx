@@ -152,6 +152,16 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
+                  Penyesuaian Persediaan
+                </Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell align="right" className=" font-semibold ">
+                  {money(report?.stock_opname)}
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
+                <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
                   Harga Pokok Penjualan
                 </Table.Cell>
                 <Table.Cell></Table.Cell>

@@ -104,10 +104,10 @@ import ReturnPurchaseTable from "../components/ReturnPurchaseTable";
           >
             <Tabs.Item
               active={activeTab === 0}
-              title="Invoice"
+              title="Purchase"
               icon={TbFileInvoice}
             >
-              <PurchaseTable title="Invoice" docType="BILL" />
+              <PurchaseTable title="Purchase" docType="BILL" />
             </Tabs.Item>
             <Tabs.Item
               active={activeTab === 1}

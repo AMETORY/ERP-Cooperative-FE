@@ -29,6 +29,7 @@ export interface CogsReportModel {
   goods_available: number;
   ending_inventory: number;
   cogs: number;
+  stock_opname: number;
   inventory_account: AccountModel;
 }
 

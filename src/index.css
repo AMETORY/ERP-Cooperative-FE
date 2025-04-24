@@ -164,3 +164,7 @@ label {
 .text-data {
   @apply text-gray-800 py-1
 }
+
+[data-testid="table-element"] div {
+  @apply  !drop-shadow-none 
+}

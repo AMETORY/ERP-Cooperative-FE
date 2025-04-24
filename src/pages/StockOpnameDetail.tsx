@@ -488,7 +488,7 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                 </TableRow>
               ))}
               <TableRow>
-                <TableCell colSpan={8} className="text-center">
+                <TableCell colSpan={9} className="text-center">
                   <div className="flex items-center justify-center gap-2">
                     <Button
                       color="gray"
@@ -592,7 +592,7 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                 placeholder="Select Inventory"
               />
             </div>
-            <div>
+            {/* <div>
               <Label>Expense Account</Label>
               <Select
                 isClearable
@@ -663,7 +663,7 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                 }}
                 placeholder="Select Expense"
               />
-            </div>
+            </div> */}
             <div className="">
               <Label>Notes</Label>
               <Textarea
@@ -680,7 +680,7 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
             <Button
               onClick={async () => {
                 try {
-                if (!selectedInventoryAccount || !selectedExpenseAccount || !selectedRevenueAccount) {
+                if (!selectedInventoryAccount) {
                   toast.error('Account must be selected first');
                   return;
                 }
@@ -690,8 +690,8 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                     date,
                     notes,
                     inventory_id: selectedInventoryAccount?.id,
-                    expense_id: selectedExpenseAccount?.id,
-                    revenue_id: selectedRevenueAccount?.id,
+                    // expense_id: selectedExpenseAccount?.id,
+                    // revenue_id: selectedRevenueAccount?.id,
                   });
                   setShowProcessModal(false);
                   getDetail();

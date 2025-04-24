@@ -152,6 +152,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           />
         </div>
       </div>
+      <div className="overflow-x-auto">
       <Table>
         <Table.Head>
           <Table.HeadCell>Date</Table.HeadCell>
@@ -223,6 +224,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           ))}
         </Table.Body>
       </Table>
+      </div>
       <Pagination
         className="mt-4"
         currentPage={page}

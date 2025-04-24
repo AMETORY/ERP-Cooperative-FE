@@ -109,10 +109,7 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
         toast.error("Contact is required");
         return;
       }
-      if (!purchasesNumber) {
-        toast.error("Purchase number is required");
-        return;
-      }
+      
       setLoading(true);
       let resp: any = await createPurchase({
         purchase_number: purchasesNumber,
@@ -154,82 +151,86 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
           />
         </div>
       </div>
-      <Table>
-        <Table.Head>
-          <Table.HeadCell>Date</Table.HeadCell>
-          <Table.HeadCell>Purchase Number</Table.HeadCell>
-          <Table.HeadCell>Contact</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
-          <Table.HeadCell>Total</Table.HeadCell>
-          <Table.HeadCell>Balance</Table.HeadCell>
-          <Table.HeadCell></Table.HeadCell>
-        </Table.Head>
-        <Table.Body>
-          {purchases.length === 0 && (
-            <Table.Row>
-              <Table.Cell colSpan={6}>
-                <p className="text-gray-400 text-center">No purchases found</p>
-              </Table.Cell>
-            </Table.Row>
-          )}
-          {purchases.map((purchase) => (
-            <Table.Row key={purchase.id}>
-              <Table.Cell>
-                <Moment format="DD/MM/YYYY">{purchase.purchase_date}</Moment>
-              </Table.Cell>
-              <Table.Cell>{purchase.purchase_number}</Table.Cell>
-              <Table.Cell>{purchase.contact_data_parsed?.name}</Table.Cell>
-              <Table.Cell>{purchase.status}</Table.Cell>
-              <Table.Cell>{money(purchase.total)}</Table.Cell>
-              <Table.Cell>
-                <div className="w-fit">
-                  {(purchase?.total ?? 0) - (purchase?.paid ?? 0) > 0 ? (
-                    money((purchase?.total ?? 0) - (purchase?.paid ?? 0))
-                  ) : (
-                    <Badge color="green">PAID</Badge>
-                  )}
-                </div>
-              </Table.Cell>
-              <Table.Cell>
-                <a
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
-                  onClick={() => {
-                    nav(`/purchase/${purchase.id}`);
-                  }}
-                >
-                  View
-                </a>
-                <a
-                  className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (
-                      window.confirm(
-                        `Are you sure you want to delete  ${purchase.purchase_number}?`
-                      )
-                    ) {
-                      deletePurchase(purchase!.id!).then(() => {
-                        getAllPurchase();
-                      });
-                    }
-                  }}
-                >
-                  Delete
-                </a>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-      <Pagination
-        className="mt-4"
-        currentPage={page}
-        totalPages={pagination?.total_pages ?? 0}
-        onPageChange={(val) => {
-          setPage(val);
-        }}
-        showIcons
-      />
+      <div className="overflow-x-auto">
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>Date</Table.HeadCell>
+            <Table.HeadCell>Purchase Number</Table.HeadCell>
+            <Table.HeadCell>Contact</Table.HeadCell>
+            <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell>Total</Table.HeadCell>
+            <Table.HeadCell>Balance</Table.HeadCell>
+            <Table.HeadCell></Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {purchases.length === 0 && (
+              <Table.Row>
+                <Table.Cell colSpan={6}>
+                  <p className="text-gray-400 text-center">
+                    No purchases found
+                  </p>
+                </Table.Cell>
+              </Table.Row>
+            )}
+            {purchases.map((purchase) => (
+              <Table.Row key={purchase.id}>
+                <Table.Cell>
+                  <Moment format="DD/MM/YYYY">{purchase.purchase_date}</Moment>
+                </Table.Cell>
+                <Table.Cell>{purchase.purchase_number}</Table.Cell>
+                <Table.Cell>{purchase.contact_data_parsed?.name}</Table.Cell>
+                <Table.Cell>{purchase.status}</Table.Cell>
+                <Table.Cell>{money(purchase.total)}</Table.Cell>
+                <Table.Cell>
+                  <div className="w-fit">
+                    {(purchase?.total ?? 0) - (purchase?.paid ?? 0) > 0 ? (
+                      money((purchase?.total ?? 0) - (purchase?.paid ?? 0))
+                    ) : (
+                      <Badge color="green">PAID</Badge>
+                    )}
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <a
+                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                    onClick={() => {
+                      nav(`/purchase/${purchase.id}`);
+                    }}
+                  >
+                    View
+                  </a>
+                  <a
+                    className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (
+                        window.confirm(
+                          `Are you sure you want to delete  ${purchase.purchase_number}?`
+                        )
+                      ) {
+                        deletePurchase(purchase!.id!).then(() => {
+                          getAllPurchase();
+                        });
+                      }
+                    }}
+                  >
+                    Delete
+                  </a>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+        <Pagination
+          className="mt-4"
+          currentPage={page}
+          totalPages={pagination?.total_pages ?? 0}
+          onPageChange={(val) => {
+            setPage(val);
+          }}
+          showIcons
+        />
+      </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Create {title}</Modal.Header>
         <Modal.Body>
