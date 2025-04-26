@@ -75,5 +75,7 @@ export const purchaseUpdateItem = async (id: string, itemId: string, data: any) 
 
 
 export const deletePurchase = async (id: string) => {
-  await customFetch(`api/v1/purchase/${id}`);
+  await customFetch(`api/v1/purchase/${id}`, {
+    method: "DELETE",
+  });
 };
