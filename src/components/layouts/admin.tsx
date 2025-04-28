@@ -86,23 +86,28 @@ const AdminLayout: FC<AdminLayoutProps> = ({
       setCompanies(res.user.companies);
       setMember(res.member);
     });
-    getSetting()
-      .then((val: any) => setActiveCompany(val.data))
-      .catch((err) => {});
-    asyncStorage.getItem(LOCAL_STORAGE_TOKEN).then((token) => {
-      setToken(token);
-      asyncStorage.getItem(LOCAL_STORAGE_COMPANY_ID).then((id) => {
-        if (!id) return;
-        let url = `${process.env.REACT_APP_BASE_WS_URL}/api/v1/ws/${id}`;
-        setSocketUrl(url);
-      });
-    });
   }, [mounted]);
+
+  useEffect(() => {
+    if (mounted && companyID) {
+      getSetting()
+        .then((val: any) => setActiveCompany(val.data))
+        .catch((err) => {});
+      asyncStorage.getItem(LOCAL_STORAGE_TOKEN).then((token) => {
+        setToken(token);
+        asyncStorage.getItem(LOCAL_STORAGE_COMPANY_ID).then((id) => {
+          if (!id) return;
+          let url = `${process.env.REACT_APP_BASE_WS_URL}/api/v1/ws/${id}`;
+          setSocketUrl(url);
+        });
+      });
+    }
+  }, [mounted, companyID]);
 
   const checkPermission = () => {
     if (isCooperative) {
-      if (!activeCompany?.is_cooperation) return false
-    };
+      if (!activeCompany?.is_cooperation) return false;
+    }
     if (!permission) return true;
     if (profile?.roles?.length == 0) return false;
     if (profile?.roles![0].permission_names) {
@@ -188,9 +193,28 @@ const AdminLayout: FC<AdminLayoutProps> = ({
           backgroundPosition: "center",
         }}
       >
-        <div className="bg-white p-4 rounded-md shadow-md">
+        <div className="bg-white p-4 rounded-md shadow-md max-w-[400px]">
           <h2 className="text-lg font-bold">Select Company First</h2>
           <p>You need to select company first to access this page</p>
+
+          {companies?.map((c) => (
+            <div
+              className="px-4 py-2 cursor-pointer hover:bg-gray-100 truncate"
+              key={c.id}
+              onClick={() => {
+                setCompanyID(c.id!);
+                getProfile().then((res: any) => {
+                  setProfile(res.user);
+                  setCompanies(res.user.companies);
+                  setMember(res.member);
+                });
+                // window.location.href = "/";
+              }}
+            >
+              <div className="font-bold">{c.name}</div>
+              <small>{c.address}</small>
+            </div>
+          ))}
         </div>
       </div>
     );

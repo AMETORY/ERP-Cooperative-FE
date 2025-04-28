@@ -69,7 +69,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
     };
 
   const checkPermission = (permission: string) => {
-    if (profile?.roles?.length == 0) return false;
+    if ((profile?.roles??[]).length == 0) return false;
     if (profile?.roles![0].permission_names) {
       return profile?.roles![0].permission_names.includes(permission);
     }

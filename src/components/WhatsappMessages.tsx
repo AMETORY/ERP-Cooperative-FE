@@ -88,7 +88,9 @@ const WhatsappMessages: FC<WhatsappMessagesProps> = ({ sessionId }) => {
                   }),
                 ]);
 
-
+                if (timeout.current) {
+                  window.clearTimeout(timeout.current);
+                }
                 timeout.current = window.setTimeout(() => {
                   markAsRead(message!.id!);
                 }, 500);

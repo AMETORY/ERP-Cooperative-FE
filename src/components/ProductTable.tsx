@@ -60,7 +60,8 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
           />
         </div>
       </div>
-      <Table hoverable>
+      <div className="overflow-x-auto">
+      <Table striped>
         <Table.Head>
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Description</Table.HeadCell>
@@ -76,7 +77,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
             </Table.Row>
           )}
           {products.map((product) => (
-            <Table.Row key={product.id}>
+            <Table.Row key={product.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell>{product.name}</Table.Cell>
               <Table.Cell>{product.description}</Table.Cell>
               <Table.Cell>{money(product.total_stock)} {product?.default_unit?.code}</Table.Cell>
@@ -111,6 +112,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
           ))}
         </Table.Body>
       </Table>
+      </div>
       <Pagination
         className="mt-4"
         currentPage={page}

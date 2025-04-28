@@ -1,5 +1,5 @@
 import { Button, Dropdown, Tabs } from "flowbite-react";
-import { useEffect, useState, type FC } from "react";
+import { useContext, useEffect, useState, type FC } from "react";
 import { asyncStorage } from "../utils/async_storage";
 import {
   LOCAL_STORAGE_TOKEN,
@@ -32,10 +32,12 @@ import { BsCartCheck } from "react-icons/bs";
 import { SalesPurchase } from "../models/misc";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { CompanyIDContext } from "../contexts/CompanyContext";
 
 interface HomeProps {}
 
 const Home: FC<HomeProps> = ({}) => {
+  const { companyID, setCompanyID } = useContext(CompanyIDContext);
   const [mounted, setMounted] = useState(false);
   const [year, setYear] = useState(moment().year());
   const [month, setMonth] = useState(moment().month());
@@ -53,7 +55,8 @@ const Home: FC<HomeProps> = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (mounted) {
+    if (mounted && companyID) {
+
       getSalesTimeRange(timeRange).then((resp: any) => {
         setSalesAmount(resp.data);
       }).catch((err) => toast.error(`${err}`));
@@ -71,7 +74,7 @@ const Home: FC<HomeProps> = ({}) => {
         setPurchases(resp.data.purchase);
       }).catch((err) => toast.error(`${err}`));
     }
-  }, [mounted, timeRange]);
+  }, [mounted, timeRange, companyID]);
   return (
     <AdminLayout>
       <div className=" bg-gray-50 h-[calc(100vh-60px)] overflow-y-auto">
