@@ -9,28 +9,29 @@ import {
   TextInput,
   ToggleSwitch,
 } from "flowbite-react";
+import moment from "moment";
 import { useContext, useEffect, useRef, useState, type FC } from "react";
-import { DateRangeContext, LoadingContext } from "../contexts/LoadingContext";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+import { BsCartCheck, BsJournal } from "react-icons/bs";
+import { LuFilter } from "react-icons/lu";
+import { TbFileInvoice } from "react-icons/tb";
+import Moment from "react-moment";
+import { Link } from "react-router-dom";
+import Select from "react-select";
+import { DateRangeContext, LoadingContext } from "../contexts/LoadingContext";
+import { SearchContext } from "../contexts/SearchContext";
+import { AccountModel } from "../models/account";
+import { TransactionModel } from "../models/transaction";
+import { PaginationResponse } from "../objects/pagination";
+import { getAccounts } from "../services/api/accountApi";
 import {
   createTransaction,
   deleteTransaction,
   getTransactions,
   updateTransaction,
 } from "../services/api/transactionApi";
-import Select, { InputActionMeta } from "react-select";
-import { AccountModel } from "../models/account";
-import { PaginationResponse } from "../objects/pagination";
-import { SearchContext } from "../contexts/SearchContext";
-import { LuFilter } from "react-icons/lu";
-import { getAccounts } from "../services/api/accountApi";
-import { TransactionModel } from "../models/transaction";
-import Moment from "react-moment";
 import { money } from "../utils/helper";
-import { Link } from "react-router-dom";
-import moment from "moment";
-import { BsCartCheck, BsJournal } from "react-icons/bs";
-import { TbFileInvoice } from "react-icons/tb";
 
 interface TransactionTableProps {
   transactionType: string;
@@ -41,6 +42,8 @@ const TransactionTable: FC<TransactionTableProps> = ({
   transactionType,
   disableCreate = false,
 }) => {
+        const { t } = useTranslation();
+  
   const { dateRange, setDateRange } = useContext(DateRangeContext);
 
   const { loading, setLoading } = useContext(LoadingContext);
@@ -121,19 +124,23 @@ const TransactionTable: FC<TransactionTableProps> = ({
   const headerLabel = () => {
     switch (transactionType) {
       case "REVENUE":
-        return "Revenue Transaction";
+        return t("revenue_transaction");
       case "EXPENSE":
-        return "Expense Transaction";
+        return t("expense_transaction");
       case "EQUITY":
-        return "Equity Transaction";
+        return t("equity_transaction");
       case "TRANSFER":
-        return "Transfer Transaction";
+        return t("transfer_transaction");
+      case "PAYABLE":
+        return t("payable_transaction");
+      case "RECEIVABLE":
+        return t("receivable_transaction");
       default:
-        return "";
+        return t("");
     }
   };
   return (
-    <div>
+    <div className="h-[calc(100vh-200px)] overflow-y-auto">
       {renderHeader(headerLabel(), () => {
         switch (transactionType) {
           case "REVENUE":
@@ -185,14 +192,14 @@ const TransactionTable: FC<TransactionTableProps> = ({
       })}
       <Table>
         <Table.Head>
-          <Table.HeadCell>Date</Table.HeadCell>
-          <Table.HeadCell>Description</Table.HeadCell>
-          <Table.HeadCell>Amount</Table.HeadCell>
+          <Table.HeadCell>{t("date")}</Table.HeadCell>
+          <Table.HeadCell>{t("description")}</Table.HeadCell>
+          <Table.HeadCell>{t("amount")}</Table.HeadCell>
           <Table.HeadCell>
-            {transactionType == "TRANSFER" ? "From" : "Category"}
+            {transactionType == "TRANSFER" ? t("from") : t("category")}
           </Table.HeadCell>
           <Table.HeadCell>
-            {transactionType == "TRANSFER" ? "To" : "Account/Ref"}
+            {transactionType == "TRANSFER" ? t("to") : t("account_ref")}
           </Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
@@ -294,7 +301,7 @@ const TransactionTable: FC<TransactionTableProps> = ({
         showIcons
       />
       <Modal show={modalOpen} onClose={() => setModalOpen(false)}>
-        <Modal.Header>{headerLabel()} Form</Modal.Header>
+        <Modal.Header>{headerLabel()}</Modal.Header>
         <Modal.Body>
           <form
             onSubmit={async (e) => {
@@ -334,33 +341,33 @@ const TransactionTable: FC<TransactionTableProps> = ({
           >
             <div className="space-y-4">
               <div>
-                <Label>Date</Label>
+                <Label>{t("date")}</Label>
                 <Datepicker
                   required
                   value={date}
                   onChange={(e) => setDate(e!)}
-                  placeholder="Select date"
+                  placeholder={t("Select date")}
                 />
               </div>
               <div>
-                <Label>Description</Label>
+                <Label>{t("description")}</Label>
                 <Textarea
                   rows={7}
                   required
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter description"
+                  placeholder={t("Enter description")}
                 />
               </div>
               <div>
-                <Label>Amount</Label>
+                <Label>{t("amount")}</Label>
                 <TextInput
                   type="number"
                   ref={amountRef}
                   required
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
-                  placeholder="Enter amount"
+                  placeholder={t("Enter amount")}
                 />
                 {
                   <h1
@@ -379,7 +386,7 @@ const TransactionTable: FC<TransactionTableProps> = ({
                   onChange={(e) => {
                     setIsOpeningBalance(e);
                   }}
-                  label="Is Opening Balance?"
+                  label={t("Is Opening Balance?")}
                 />
               )}
               {transactionType === "EQUITY" && (
@@ -388,12 +395,12 @@ const TransactionTable: FC<TransactionTableProps> = ({
                   onChange={(e) => {
                     setIsPrive(e);
                   }}
-                  label="Is Prive / Dividend?"
+                  label={t("Is Prive / Dividend?")}
                 />
               )}
               <div>
                 <Label>
-                  {transactionType == "TRANSFER" ? "From" : "Category"}
+                  {transactionType == "TRANSFER" ? t("from") : t("category")}
                 </Label>
                 <Select
                   options={sourceAccounts.map((t) => ({
@@ -417,7 +424,7 @@ const TransactionTable: FC<TransactionTableProps> = ({
               </div>
               <div>
                 <Label>
-                  {transactionType == "TRANSFER" ? "To" : "Account"}
+                  {transactionType == "TRANSFER" ? t("to") : t("account")}
                 </Label>
                 <Select
                   options={destinationAccounts.map((t) => ({
@@ -443,7 +450,7 @@ const TransactionTable: FC<TransactionTableProps> = ({
             <div className="h-16"></div>
             <div className="flex justify-end">
               <Button type="submit" onClick={() => {}}>
-                <span>Save</span>
+                <span>{t("save")}</span>
               </Button>
             </div>
           </form>
@@ -453,7 +460,7 @@ const TransactionTable: FC<TransactionTableProps> = ({
         show={selectedTransaction != undefined}
         onClose={() => setSelectedTransaction(undefined)}
       >
-        <Modal.Header>{headerLabel()} Form</Modal.Header>
+        <Modal.Header>{headerLabel()}</Modal.Header>
         <Modal.Body>
           <form
             onSubmit={async (e) => {
@@ -535,13 +542,13 @@ const TransactionTable: FC<TransactionTableProps> = ({
               </div>
               <div>
                 <Label>
-                  {transactionType == "TRANSFER" ? "From" : "Category"}
+                  {transactionType == "TRANSFER" ? t("from") : t("category")}
                 </Label>
                 <div>{selectedTransaction?.account?.name}</div>
               </div>
               <div>
                 <Label>
-                  {transactionType == "TRANSFER" ? "To" : "Account"}
+                  {transactionType == "TRANSFER" ? t("to") : t("account")}
                 </Label>
                 <div>{selectedTransaction?.transaction_ref?.account?.name}</div>
               </div>

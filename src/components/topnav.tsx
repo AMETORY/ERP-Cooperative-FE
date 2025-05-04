@@ -10,10 +10,13 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import { SearchContext } from "../contexts/SearchContext";
 import Moment from "react-moment";
 import { DateRangeContext } from "../contexts/LoadingContext";
+import { useTranslation } from "react-i18next";
 
 interface TopnavProps {}
 
 const Topnav: React.FC<TopnavProps> = () => {
+    const { t, i18n } = useTranslation();
+  
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const { search, setSearch } = useContext(SearchContext);
   const { companies, setCompanies } = useContext(CompaniesContext);
@@ -34,7 +37,7 @@ const Topnav: React.FC<TopnavProps> = () => {
   }, []);
 
   const searchBox = (
-    <div className="relative w-full max-w-[300px] mr-6 focus-within:text-purple-500">
+    <div className="relative w-full max-w-[300px] mr-4 focus-within:text-purple-500">
       <div className="absolute inset-y-0 left-0 flex items-center pl-3">
         <HiMagnifyingGlass />
       </div>
@@ -76,7 +79,6 @@ const Topnav: React.FC<TopnavProps> = () => {
               </svg>
             </button>
             <div className="flex  gap-4 w-full items-center min-w-[500px]">
-         
               {dateRange && (
                 <div
                   className="text-sm  px-4 py-2 hover:bg-gray-50 rounded-lg border cursor-pointer"
@@ -86,18 +88,30 @@ const Topnav: React.FC<TopnavProps> = () => {
                   <Moment format="DD/MM/YYYY">{dateRange[1]}</Moment>
                 </div>
               )}
-                 <div>
-              <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">
-                {now}
-              </Moment>
-            </div>
+              <div>
+                <Moment className="text-sm" format="dddd, D MMMM YYYY | HH:mm">
+                  {now}
+                </Moment>
+              </div>
               <div></div>
             </div>
           </div>
           <div className="flex items-center min-w-[800px] justify-end">
-          {searchBox}
-           
+            {searchBox}
+
             <div className="flex items-center ms-3 gap-4">
+              <Dropdown label={i18n.language === "en" ? `🇬🇧` : `🇮🇩`} color="gray">
+                <Dropdown.Item as={"button"} onClick={() => {
+                  i18n.changeLanguage("id");
+                }}>
+                  🇮🇩 ID
+                </Dropdown.Item>
+                <Dropdown.Item as={"button"} onClick={() => {
+                  i18n.changeLanguage("en");
+                }}>
+                  🇬🇧 EN
+                </Dropdown.Item>
+              </Dropdown>
               <Dropdown
                 label={
                   companies?.find((c) => c.id === companyID)?.name ??
@@ -117,7 +131,12 @@ const Topnav: React.FC<TopnavProps> = () => {
                     {c.name}
                   </Dropdown.Item>
                 ))}
-                <Dropdown.Item as={"button"} onClick={() => nav("/create/company")}>+ New Company</Dropdown.Item>
+                <Dropdown.Item
+                  as={"button"}
+                  onClick={() => nav("/create/company")}
+                >
+                  + New Company
+                </Dropdown.Item>
               </Dropdown>
               <Avatar
                 size="xs"
@@ -155,7 +174,11 @@ const Topnav: React.FC<TopnavProps> = () => {
             <ul className="grid grid-cols-2 gap-4">
               {[...Array(4)].map((_, i) => {
                 const quarter = i + 1;
-                const start = new Date(new Date().getFullYear(), (quarter - 1) * 3, 1);
+                const start = new Date(
+                  new Date().getFullYear(),
+                  (quarter - 1) * 3,
+                  1
+                );
                 const end = new Date(new Date().getFullYear(), quarter * 3, 0);
                 return (
                   <li key={i}>
@@ -169,7 +192,7 @@ const Topnav: React.FC<TopnavProps> = () => {
                   </li>
                 );
               })}
-             
+
               {[...Array(4)].map((_, i) => {
                 const year = new Date().getFullYear() - (i === 0 ? 0 : i);
                 return (

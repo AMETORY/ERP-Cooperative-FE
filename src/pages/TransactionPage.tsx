@@ -1,34 +1,22 @@
-import { useContext, useEffect, useRef, useState, type FC } from "react";
-import AdminLayout from "../components/layouts/admin";
 import {
   Button,
-  Datepicker,
-  Label,
-  Modal,
-  Tabs,
-  Textarea,
-  TextInput,
+  Tabs
 } from "flowbite-react";
-import { BsInfoCircle, BsPaypal, BsReceipt } from "react-icons/bs";
-import { LuFolderOutput, LuFolderInput, LuFilter } from "react-icons/lu";
-import { AccountModel } from "../models/account";
-import { getAccounts } from "../services/api/accountApi";
-import Select, { InputActionMeta } from "react-select";
-import toast from "react-hot-toast";
-import { LoadingContext } from "../contexts/LoadingContext";
-import {
-  createTransaction,
-  getTransactions,
-} from "../services/api/transactionApi";
-import { PaginationResponse } from "../objects/pagination";
-import { SearchContext } from "../contexts/SearchContext";
-import TransactionTable from "../components/TransactionTable";
+import { useContext, useEffect, useState, type FC } from "react";
+import { BsReceipt } from "react-icons/bs";
+import { LuFolderInput, LuFolderOutput } from "react-icons/lu";
+import { MdPayment } from "react-icons/md";
 import { PiMoney } from "react-icons/pi";
 import { TbTransfer } from "react-icons/tb";
-import { MdPayment } from "react-icons/md";
+import AdminLayout from "../components/layouts/admin";
+import TransactionTable from "../components/TransactionTable";
+import { LoadingContext } from "../contexts/LoadingContext";
+import { useTranslation } from "react-i18next";
 interface TransactionPageProps {}
 
 const TransactionPage: FC<TransactionPageProps> = ({}) => {
+    const { t, i18n } = useTranslation();
+  
   const { loading, setLoading } = useContext(LoadingContext);
   const [activeTab, setActiveTab] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,30 +26,7 @@ const TransactionPage: FC<TransactionPageProps> = ({}) => {
     setMounted(true);
   }, []);
 
-  //   useEffect(() => {
-  //     if (mounted) {
-  //       getAllTransactions("REVENUE");
-  //     }
-  //   }, [mounted, page, size, search]);
-
-  const renderHeader = (label: string, onAdd: () => void) => {
-    return (
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">{label}</h1>
-        <div className="flex items-center gap-2">
-          <Button gradientDuoTone="purpleToBlue" pill onClick={onAdd}>
-            + {label}
-          </Button>
-          {/* <LuFilter
-                      className=" cursor-pointer text-gray-400 hover:text-gray-600"
-                      onClick={() => {
-                        setShowFilter(true);
-                      }}
-                    /> */}
-        </div>
-      </div>
-    );
-  };
+ 
 
   return (
     <AdminLayout>
@@ -77,28 +42,28 @@ const TransactionPage: FC<TransactionPageProps> = ({}) => {
         >
           <Tabs.Item
             active={activeTab === 0}
-            title="Revenue"
+            title={t("revenue")}
             icon={LuFolderInput}
           >
             <TransactionTable transactionType="REVENUE" />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 1}
-            title="Expense"
+            title={t("expense")}
             icon={LuFolderOutput}
           >
             <TransactionTable transactionType="EXPENSE" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 2} title="Equity" icon={PiMoney}>
+          <Tabs.Item active={activeTab === 2} title={t("equity")} icon={PiMoney}>
             <TransactionTable transactionType="EQUITY" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 3} title="Transfer" icon={TbTransfer}>
+          <Tabs.Item active={activeTab === 3} title={t("transfer")} icon={TbTransfer}>
             <TransactionTable transactionType="TRANSFER" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 4} title="Payable" icon={MdPayment}>
+          <Tabs.Item active={activeTab === 4} title={t("payable")} icon={MdPayment}>
             <TransactionTable disableCreate transactionType="PAYABLE" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 4} title="Receivable" icon={BsReceipt}>
+          <Tabs.Item active={activeTab === 4} title={t("receivable")} icon={BsReceipt}>
             <TransactionTable disableCreate transactionType="RECEIVABLE" />
           </Tabs.Item>
         </Tabs>

@@ -15,10 +15,12 @@ import { getAccountReport } from "../services/api/accountApi";
 import { money } from "../utils/helper";
 import { TbFileInvoice } from "react-icons/tb";
 import { HiOutlineChartPie } from "react-icons/hi2";
+import { useTranslation } from "react-i18next";
 
 interface AccountReportProps {}
 
 const AccountReport: FC<AccountReportProps> = ({}) => {
+  const { t } = useTranslation();
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const { loading, setLoading } = useContext(LoadingContext);
   const [modalOpen, setModalOpen] = useState(false);
@@ -88,12 +90,12 @@ const AccountReport: FC<AccountReportProps> = ({}) => {
         <div className=" p-1 h-[calc(100vh-200px)] overflow-y-scroll">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
-              <Table.HeadCell>Account</Table.HeadCell>
-              <Table.HeadCell align="right">Debit</Table.HeadCell>
-              <Table.HeadCell align="right">Credit</Table.HeadCell>
-              <Table.HeadCell align="right">Saldo</Table.HeadCell>
+              <Table.HeadCell>{t("date")}</Table.HeadCell>
+              <Table.HeadCell>{t("description")}</Table.HeadCell>
+              <Table.HeadCell>{t("account")}</Table.HeadCell>
+              <Table.HeadCell align="right">{t("debit")}</Table.HeadCell>
+              <Table.HeadCell align="right">{t("credit")}</Table.HeadCell>
+              <Table.HeadCell align="right">{t("balance")}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">

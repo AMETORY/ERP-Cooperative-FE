@@ -31,10 +31,12 @@ import {
 import Logo from "./logo";
 import { FaChartLine, FaWpforms } from "react-icons/fa6";
 import { MdOutlineSavings, MdSavings } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = ({}) => {
+  const { t, i18n } = useTranslation();
   const { member } = useContext(MemberContext);
   const { profile } = useContext(ProfileContext);
   const { collapsed } = useContext(CollapsedContext);
@@ -53,12 +55,6 @@ const Sidebar: FC<SidebarProps> = ({}) => {
 
   useEffect(() => {
     if (mounted) {
-      // getInboxMessagesCount()
-      //   .then((resp: any) => setInboxUnreadCount(resp.data))
-      //   .catch(console.error);
-      // getSentMessagesCount()
-      //   .then((resp: any) => setSentUnreadCount(resp.data))
-      //   .catch(console.error);
     }
   }, [mounted]);
 
@@ -69,7 +65,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
     };
 
   const checkPermission = (permission: string) => {
-    if ((profile?.roles??[]).length == 0) return false;
+    if ((profile?.roles ?? []).length == 0) return false;
     if (profile?.roles![0].permission_names) {
       return profile?.roles![0].permission_names.includes(permission);
     }
@@ -86,10 +82,10 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/")}
             >
-              <Tooltip content="Dashboard">
+              <Tooltip content={t('dashboard')}>
                 <AiOutlineDashboard />
               </Tooltip>
-              {!collapsed && <span className="ms-3">Dashboard</span>}
+              {!collapsed && <span className="ms-3">{t('dashboard')}</span>}
             </span>
           </li>
         </>
@@ -102,7 +98,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 width: collapsed ? 50 : "fit-content",
               }}
             >
-              Feature
+              {t("feature")}
             </li>
           </>
         )}
@@ -112,11 +108,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/account")}
             >
-              <Tooltip content="Account">
+              <Tooltip content={t('account')}>
                 <GoTasklist />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Account</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('account')}</span>
               )}
             </span>
           </li>
@@ -127,12 +123,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/transaction")}
             >
-              <Tooltip content="Transaction">
+              <Tooltip content={t('transaction')}>
                 <AiOutlineTransaction />
               </Tooltip>
               {!collapsed && (
                 <span className="flex-1 ms-3 whitespace-nowrap">
-                  Transaction
+                  {t('transaction')}
                 </span>
               )}
             </span>
@@ -144,11 +140,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/asset")}
             >
-              <Tooltip content="Asset">
+              <Tooltip content={t('asset')}>
                 <TbAsset />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Asset</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('asset')}</span>
               )}
             </span>
           </li>
@@ -159,11 +155,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/journal")}
             >
-              <Tooltip content="Journal">
+              <Tooltip content={t('journal')}>
                 <BsJournal />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Journal</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('journal')}</span>
               )}
             </span>
           </li>
@@ -174,11 +170,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/sales")}
             >
-              <Tooltip content="Sales">
+              <Tooltip content={t('sales')}>
                 <TbFileInvoice />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Sales</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('sales')}</span>
               )}
             </span>
           </li>
@@ -189,11 +185,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/purchase")}
             >
-              <Tooltip content="Purchase">
+              <Tooltip content={t('purchase')}>
                 <BsCartCheck />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Purchase</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('purchase')}</span>
               )}
             </span>
           </li>
@@ -204,110 +200,15 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/report")}
             >
-              <Tooltip content="Report">
+              <Tooltip content={t('report')}>
                 <TbReportAnalytics />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Report</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('report')}</span>
               )}
             </span>
           </li>
         )}
-        {/* 
-        {checkPermission("project_management:project:read") && (
-          <li className=" cursor-pointer" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/project")}
-            >
-              <Tooltip content="Project">
-                <BsKanban />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Project</span>
-              )}
-            </span>
-          </li>
-        )}
-        <li className=" cursor-pointer" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/inbox")}
-          >
-            <Tooltip content="Inbox">
-              <HiOutlineInboxArrowDown />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-            )}
-            {!collapsed && inboxUnreadCount + sentUnreadCount > 0 && (
-              <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                {inboxUnreadCount + sentUnreadCount}
-              </span>
-            )}
-          </span>
-        </li>
-        <li className=" cursor-pointer" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={async () => {
-              let channelID = await asyncStorage.getItem(
-                LOCAL_STORAGE_DEFAULT_CHANNEL
-              );
-              if (channelID) {
-                nav(`/chat/${channelID}`);
-              } else {
-                nav(`/chat`);
-              }
-            }}
-          >
-            <Tooltip content="Chat">
-              <HiOutlineChat />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Chat</span>
-            )}
-            {!collapsed && indexUnreadChat > 0 && (
-              <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                {indexUnreadChat}
-              </span>
-            )}
-          </span>
-        </li>
-        <HR />
-        <li className="text-xs text-gray-300" style={{}}>
-          Omni Channel
-        </li>
-        {checkPermission("customer_relationship:whatsapp:read") && (
-        <li className=" cursor-pointer" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={async () => {
-              let sessionID = await asyncStorage.getItem(
-                LOCAL_STORAGE_DEFAULT_WHATSAPP_SESSION
-              );
-              if (sessionID) {
-                nav(`/whatsapp/${sessionID}`);
-              } else {
-                nav(`/whatsapp`);
-              }
-            }}
-          >
-            <Tooltip content="Whatsapp">
-              <BsWhatsapp />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Whatsapp</span>
-            )}
-            {!collapsed && waUnreadChat > 0 && (
-              <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                {waUnreadChat}
-              </span>
-            )}
-          </span>
-        </li>
-        )}
-        */}
         {checkPermission("menu:admin:inventory") && (
           <>
             <HR />
@@ -317,7 +218,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 width: collapsed ? 50 : "fit-content",
               }}
             >
-              Inventory
+              {t('inventory')}
             </li>
           </>
         )}
@@ -327,11 +228,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/product")}
             >
-              <Tooltip content="Product">
+              <Tooltip content={t('product')}>
                 <RiShoppingBagLine />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Product</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('product')}</span>
               )}
             </span>
           </li>
@@ -342,11 +243,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
               onClick={handleNavigation("/warehouse")}
             >
-              <Tooltip content="Warehouse">
+              <Tooltip content={t('warehouse')}>
                 <LuWarehouse />
               </Tooltip>
               {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">Warehouse</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('warehouse')}</span>
               )}
             </span>
           </li>
@@ -355,13 +256,14 @@ const Sidebar: FC<SidebarProps> = ({}) => {
         {activeCompany?.is_cooperation && (
           <>
             <HR />
+
             <li
               className="text-xs text-gray-300 truncate !-mt-2 bg-gray-50 w-fit pr-2"
               style={{
                 width: collapsed ? 50 : "fit-content",
               }}
             >
-              Cooperative{" "}
+              {t('cooperative')}
             </li>
             {member && (
               <li className=" cursor-pointer" style={{}}>
@@ -369,12 +271,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/activities")}
                 >
-                  <Tooltip content=" My Activities">
+                  <Tooltip content={t('my_activities')}>
                     <BsActivity />
                   </Tooltip>
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                      My Activities
+                      {t('my_activities')}
                     </span>
                   )}
                 </span>
@@ -386,12 +288,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/member")}
                 >
-                  <Tooltip content="Member">
+                  <Tooltip content={t('member')}>
                     <BsPeople />
                   </Tooltip>
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                      Member
+                      {t('member')}
                     </span>
                   )}
                 </span>
@@ -403,11 +305,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/loan")}
                 >
-                  <Tooltip content="Loan ">
+                  <Tooltip content={t('loan')}>
                     <BsBank />
                   </Tooltip>
                   {!collapsed && (
-                    <span className="flex-1 ms-3 whitespace-nowrap">Loan</span>
+                    <span className="flex-1 ms-3 whitespace-nowrap">{t('loan')}</span>
                   )}
                 </span>
               </li>
@@ -419,12 +321,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/saving")}
                 >
-                  <Tooltip content="Saving">
+                  <Tooltip content={t('saving')}>
                     <MdOutlineSavings />
                   </Tooltip>
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                      Saving
+                      {t('saving')}
                     </span>
                   )}
                 </span>
@@ -437,12 +339,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/cooperative/net-surplus")}
                 >
-                  <Tooltip content="Net Surplus">
+                  <Tooltip content={t('net_surplus')}>
                     <HiOutlineChartPie />
                   </Tooltip>
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                      Net Surplus
+                      {t('net_surplus')}
                     </span>
                   )}
                 </span>
@@ -460,7 +362,7 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                 width: collapsed ? 50 : "fit-content",
               }}
             >
-              Preferences
+              {t('preferences')}
             </li>
             {checkPermission("finance:tax:read") && (
               <li className=" cursor-pointer" style={{}}>
@@ -468,11 +370,11 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/tax")}
                 >
-                  <Tooltip content="Tax">
+                  <Tooltip content={t('tax')}>
                     <HiOutlineReceiptPercent />
                   </Tooltip>
                   {!collapsed && (
-                    <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
+                    <span className="flex-1 ms-3 whitespace-nowrap">{t('tax')}</span>
                   )}
                 </span>
               </li>
@@ -483,12 +385,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/contact")}
                 >
-                  <Tooltip content="Contact">
+                  <Tooltip content={t('contact')}>
                     <LuContact2 />
                   </Tooltip>
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                      Contact
+                      {t('contact')}
                     </span>
                   )}
                 </span>
@@ -500,12 +402,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                   onClick={handleNavigation("/setting")}
                 >
-                  <Tooltip content="Setting">
+                  <Tooltip content={t('setting')}>
                     <BsGear />
                   </Tooltip>
                   {!collapsed && (
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                      Setting
+                      {t('setting')}
                     </span>
                   )}
                 </span>
@@ -514,74 +416,6 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           </>
         )}
 
-        {/* 
-        {checkPermission("customer_relationship:form:read") && (
-        <li className=" cursor-pointer" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/form")}
-          >
-            <Tooltip content="Form">
-              <SiGoogleforms />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">Form</span>
-            )}
-          </span>
-        </li>
-        )}
-        {checkPermission("project_management:project:update") && (
-        <li className=" cursor-pointer" style={{}}>
-          <span
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-            onClick={handleNavigation("/task-attribute")}
-          >
-            <Tooltip content="Task Attribute">
-              <BsAsterisk />
-            </Tooltip>
-            {!collapsed && (
-              <span className="flex-1 ms-3 whitespace-nowrap">
-                Task Attribute
-              </span>
-            )}
-          </span>
-        </li>
-        )}
-        {member?.role?.is_super_admin && (
-          <li className=" cursor-pointer" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/gemini-agent")}
-            >
-              <Tooltip content="Gemini Agent">
-                <MdOutlineAssistant />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Gemini Agent
-                </span>
-              )}
-            </span>
-          </li>
-        )}
-      
-        {/* {member?.role?.is_super_admin && (
-          <li className=" cursor-pointer" style={{}}>
-            <span
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-              onClick={handleNavigation("/connection")}
-            >
-              <Tooltip content="Connection">
-                <LuLink2 />
-              </Tooltip>
-              {!collapsed && (
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Connection
-                </span>
-              )}
-            </span>
-          </li>
-        )} */}
       </ul>
       <div
         className="flex flex-row gap-2 items-center cursor-pointer hover:font-bold px-2 mt-4"

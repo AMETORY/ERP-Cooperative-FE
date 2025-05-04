@@ -33,10 +33,13 @@ import { SalesPurchase } from "../models/misc";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { CompanyIDContext } from "../contexts/CompanyContext";
+import { useTranslation } from "react-i18next";
 
 interface HomeProps {}
 
 const Home: FC<HomeProps> = ({}) => {
+  const { t, i18n } = useTranslation();
+
   const { companyID, setCompanyID } = useContext(CompanyIDContext);
   const [mounted, setMounted] = useState(false);
   const [year, setYear] = useState(moment().year());
@@ -98,25 +101,25 @@ const Home: FC<HomeProps> = ({}) => {
         </div>
         <div className="grid grid-cols-4 gap-8 px-8">
           <div className="bg-white rounded-xl cursor-pointer px-4 py-2 hover:shadow-lg shadow-sm  min-h-[60px] ">
-            <h3 className="font-bold text-lg">Sales</h3>
+            <h3 className="font-bold text-lg">{t("sales")}</h3>
             <h1 className="text-right text-2xl mt-8 text-blue-500 font-bold">
               {money(salesAmount)}
             </h1>
           </div>
           <div className="bg-white rounded-xl cursor-pointer px-4 py-2 hover:shadow-lg shadow-sm  min-h-[60px] ">
-            <h3 className="font-bold text-lg">Purchase</h3>
+            <h3 className="font-bold text-lg">{t("purchase")}</h3>
             <h1 className="text-right text-2xl mt-8 text-red-500 font-bold">
               {money(purchaseAmount)}
             </h1>
           </div>
           <div className="bg-white rounded-xl cursor-pointer px-4 py-2 hover:shadow-lg shadow-sm  min-h-[60px] ">
-            <h3 className="font-bold text-lg">Net Worth</h3>
+            <h3 className="font-bold text-lg">{t("profit_and_loss")}</h3>
             <h1 className="text-right text-2xl mt-8 text-purple-500 font-bold">
               {money(netWorth?.net_profit)}
             </h1>
           </div>
           <div className="bg-white rounded-xl cursor-pointer px-4 py-2 hover:shadow-lg shadow-sm  min-h-[60px] ">
-            <h3 className="font-bold text-lg">Cash & Bank Summary</h3>
+            <h3 className="font-bold text-lg">{t("cash_bank_summary")}</h3>
             <h1 className="text-right text-2xl mt-8 text-orange-500 font-bold">
               {money(cashBank, 0)}
             </h1>
@@ -127,7 +130,7 @@ const Home: FC<HomeProps> = ({}) => {
           <ProductPopularChart />
           <div className="bg-white rounded-xl hover:shadow-lg shadow-sm  min-h-[400px] ">
             <Tabs>
-              <Tabs.Item icon={TbFileInvoice} title="Sales">
+              <Tabs.Item icon={TbFileInvoice} title={t("sales")}>
                 {sales.map((item: SalesPurchase) => (
                   <div
                     key={item.id}
@@ -148,7 +151,7 @@ const Home: FC<HomeProps> = ({}) => {
                   </div>
                 ))}
               </Tabs.Item>
-              <Tabs.Item icon={BsCartCheck} title="Purchase">
+              <Tabs.Item icon={BsCartCheck} title={t("purchase")}>
               {purchases.map((item: SalesPurchase) => (
                   <div
                     key={item.id}

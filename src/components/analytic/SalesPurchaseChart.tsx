@@ -8,10 +8,13 @@ import moment from "moment";
 import { MONTHLY, WEEKLY } from "../../utils/constants";
 import { Dropdown } from "flowbite-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface SalesPurchaseChartProps {}
 
 const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
+    const { t, i18n } = useTranslation();
+  
   const [salesPurchaseChart, setSalesPurchaseChart] = useState<any[][]>([]);
   const [salesPurchaseTitle, setSalesPurchaseTitle] = useState<string>("");
   const [mounted, setMounted] = useState(false);
@@ -31,7 +34,7 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
         getMonthlySalesPurchase(year).then((resp: any) => {
           setSalesPurchaseTitle(resp.data.title);
           setSalesPurchaseChart([
-            ["Month", "Sales", "Purchase"],
+            [t("month"), t("sales"), t("purchase")],
             ...resp.data.data.map((item: any) => [
               item.month,
               item.sales,
@@ -44,7 +47,7 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
         getWeeklySalesPurchase(month + 1, year).then((resp: any) => {
           setSalesPurchaseTitle(resp.data.title);
           setSalesPurchaseChart([
-            ["Week", "Sales", "Purchase"],
+            [t("week"), t("sales"), t("purchase")],
             ...resp.data.data.map((item: any) => [
               item.week,
               item.sales,
@@ -54,16 +57,18 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
         }).catch((err) => toast.error(`${err}`));;
       }
     }
-  }, [mounted, mode]);
+  }, [mounted, mode, t]);
   return (
     <div className="bg-white rounded-xl p-2 hover:shadow-lg shadow-sm  min-h-[400px] col-span-2">
       <div className="flex justify-between pt-2 px-2">
-        <h3 className="font-bold text-lg">Sales & Purchase</h3>
-        <Dropdown inline label={mode}>
+        <h3 className="font-bold text-lg">{t("sales_purchase")}</h3>
+        <Dropdown inline label={mode == MONTHLY ? t("monthly") : t("weekly")}>
           <Dropdown.Item onClick={() => setMode(MONTHLY)}>
-            Monthly
+            {t("monthly")}
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => setMode(WEEKLY)}>Weekly</Dropdown.Item>
+          <Dropdown.Item onClick={() => setMode(WEEKLY)}>
+            {t("weekly")}
+          </Dropdown.Item>
         </Dropdown>
       </div>
       <Chart
@@ -73,10 +78,10 @@ const SalesPurchaseChart: FC<SalesPurchaseChartProps> = ({}) => {
           title: salesPurchaseTitle,
           legend: "none",
           hAxis: {
-            title: mode == MONTHLY ? "Month" : "Week",
+            title: mode == MONTHLY ? t("monthly") : t("weekly"),
           },
           vAxis: {
-            title: "Total",
+            title: t("Total"),
           },
           series: {
             0: { color: "#007bff" },

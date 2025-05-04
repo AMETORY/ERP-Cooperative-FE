@@ -30,10 +30,13 @@ import Select, { InputActionMeta } from "react-select";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { chartOfAccounts, OPTION_ACCOUNT_TYPES } from "../utils/constants";
+import { useTranslation } from "react-i18next";
 
 interface AccountPageProps {}
 
 const AccountPage: FC<AccountPageProps> = ({}) => {
+      const { t, i18n } = useTranslation();
+  
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -134,7 +137,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
     <AdminLayout>
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Account</h1>
+          <h1 className="text-3xl font-bold ">{t("chart_of_accounts")}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -157,7 +160,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 );
               }}
             >
-              + Create new account
+              + {t("new_account")}
             </Button>
             <LuFilter
               className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -171,7 +174,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
           {chartOfAccountList.map((coa: any, i: number) => (
             <div key={i} className="mb-8">
               <h1 className="text-2xl font-semibold text-gray-600">
-                {coa.label}
+                {t(coa.label.toLowerCase())}
               </h1>
               <table className="w-full text-sm">
                 <tbody>
