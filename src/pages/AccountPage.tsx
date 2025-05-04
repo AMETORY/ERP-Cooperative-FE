@@ -35,8 +35,8 @@ import { useTranslation } from "react-i18next";
 interface AccountPageProps {}
 
 const AccountPage: FC<AccountPageProps> = ({}) => {
-      const { t, i18n } = useTranslation();
-  
+  const { t, i18n } = useTranslation();
+
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -207,9 +207,15 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                           )}
                         </td>
                         <td className="px-4 py-2 w-32">
-                          {OPTION_ACCOUNT_TYPES.find(
-                            (t) => t.value === account.type
-                          )?.label ?? account.type}
+                          {t(
+                            (
+                              OPTION_ACCOUNT_TYPES.find(
+                                (d) => d.value === account.type
+                              )?.label ??
+                              account.type ??
+                              ""
+                            ).toLowerCase()
+                          )}
                           {/* {getGroupLabel(account.type, account.group)} */}
                         </td>
                         <td className="px-4 py-2 w-32">
@@ -264,98 +270,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
               </table>
             </div>
           ))}
-          {/* <Table className=" rounded-lg shadow-sm ">
-            <Table.Head>
-              <Table.HeadCell>Account</Table.HeadCell>
-              <Table.HeadCell>Type</Table.HeadCell>
-              <Table.HeadCell>Category</Table.HeadCell>
-              <Table.HeadCell align="right">Balance</Table.HeadCell>
-              <Table.HeadCell></Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="divide-y">
-              {accounts.length === 0 && (
-                <Table.Row>
-                  <Table.Cell colSpan={5} className="text-center">
-                    No accounts found.
-                  </Table.Cell>
-                </Table.Row>
-              )}
-              {accounts.map((account, i) => (
-                <Table.Row
-                  key={i}
-                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                >
-                  <Table.Cell
-                    className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
-                    onClick={() => {
-                      nav(`/account/${account.id}/report`);
-                    }}
-                  >
-                    {account.code && `[${account.code}] `}
-                    {account.name}
-                    {account.is_tax && (
-                      <span className="text-xs text-green-400 flex items-center space-x-1">
-                        <BsCheckCircle className="text-green-400" />
-                        <span>Tax Account</span>
-                      </span>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {OPTION_ACCOUNT_TYPES.find((t) => t.value === account.type)
-                      ?.label ?? account.type}
-                  </Table.Cell>
-                  <Table.Cell>{account.category}</Table.Cell>
-                  <Table.Cell align="right">
-                    {money(account.balance)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <a
-                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
-                      onClick={() => {
-                        getAccountTypes().then((res: any) => {
-                          setAccountTypes(res.data);
-                        });
-                        setSelectedAccount(account);
-                        setShowModal(true);
-                      }}
-                    >
-                      View
-                    </a>
-                    {account.is_deletable && (account.balance ?? 0) == 0 && (
-                      <a
-                        href="#"
-                        className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (
-                            window.confirm(
-                              `Are you sure you want to delete project ${account.name}?`
-                            )
-                          ) {
-                            deleteAccount(account?.id!).then(() => {
-                              getAllAccounts();
-                            });
-                          }
-                        }}
-                      >
-                        Delete
-                      </a>
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table> */}
         </div>
-        {/* <Pagination
-          className="mt-4"
-          currentPage={page}
-          totalPages={pagination?.total_pages ?? 0}
-          onPageChange={(val) => {
-            setPage(val);
-          }}
-          showIcons
-        /> */}
       </div>
       <Drawer
         position="right"
@@ -383,7 +298,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
       </Drawer>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>
-          {selectedAccount?.id ? "Update" : "Create"} Account
+          {selectedAccount?.id ? "Update" : t("create_account")}
         </Modal.Header>
         <Modal.Body>
           <form
@@ -421,12 +336,12 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
           >
             <div className="space-y-4">
               <div>
-                <Label>Code</Label>
+                <Label>{t("code")}</Label>
                 <TextInput
                   type="text"
                   name="code"
                   required
-                  placeholder="Enter account code"
+                  placeholder={t("enter_account_code")}
                   value={selectedAccount?.code}
                   onChange={(e) => {
                     setSelectedAccount({
@@ -438,12 +353,12 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
               </div>
 
               <div>
-                <Label>Name</Label>
+                <Label>{t("name")}</Label>
                 <TextInput
                   type="text"
                   name="name"
                   required
-                  placeholder="Enter account name"
+                  placeholder={t("enter_account_name")}
                   value={selectedAccount?.name}
                   onChange={(e) => {
                     setSelectedAccount({
@@ -454,17 +369,25 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 />
               </div>
               <div>
-                <Label>Type</Label>
+                <Label>{t("type")}</Label>
                 <Select
                   isDisabled={selectedAccount?.id ? true : false}
                   name="type"
-                  options={OPTION_ACCOUNT_TYPES}
+                  options={OPTION_ACCOUNT_TYPES.map((v) => ({
+                    label: t(v.label.toLowerCase()),
+                    value: v.value,
+                  }))}
                   required
                   value={{
-                    label:
-                      OPTION_ACCOUNT_TYPES.find(
-                        (t) => t.value === selectedAccount?.type
-                      )?.label ?? selectedAccount?.type,
+                    label: t(
+                      (
+                        OPTION_ACCOUNT_TYPES.find(
+                          (t) => t.value === selectedAccount?.type
+                        )?.label ??
+                        selectedAccount?.type ??
+                        ""
+                      ).toLowerCase()
+                    ),
                     value: selectedAccount?.type,
                   }}
                   onChange={(e) => {
@@ -488,7 +411,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 selectedAccount?.type == "EXPENSE") && (
                 <div>
                   <ToggleSwitch
-                    label="Is Tax Account"
+                    label={t("is_tax_account")}
                     checked={selectedAccount?.is_tax ?? false}
                     onChange={(e) => {
                       setSelectedAccount({
@@ -500,7 +423,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 </div>
               )}
               <div>
-                <Label>Category</Label>
+                <Label>{t("category")}</Label>
                 <Select
                   name="category"
                   options={
@@ -526,7 +449,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 />
               </div>
               <div>
-                <Label>Group</Label>
+                <Label>{t("group")}</Label>
                 <Select
                   name="group"
                   options={
@@ -554,7 +477,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
                 />
               </div>
               <div>
-                <Label>Sub Group</Label>
+                <Label>{t("sub_group")}</Label>
                 <Select
                   name="group"
                   options={
@@ -590,7 +513,7 @@ const AccountPage: FC<AccountPageProps> = ({}) => {
             </div>
             <div className="h-32"></div>
             <div className="flex justify-end">
-              <Button type="submit">Save</Button>
+              <Button type="submit">{t("save")}</Button>
             </div>
           </form>
         </Modal.Body>

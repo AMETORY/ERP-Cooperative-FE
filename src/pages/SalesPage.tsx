@@ -18,9 +18,11 @@ import { useNavigate } from "react-router-dom";
 import SalesTable from "../components/SalesTable";
 import { createSales } from "../services/api/salesApi";
 import ReturnSalesTable from "../components/ReturnSalesTable";
+import { useTranslation } from "react-i18next";
 interface SalesPageProps {}
 
 const SalesPage: FC<SalesPageProps> = ({}) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
@@ -66,34 +68,7 @@ const SalesPage: FC<SalesPageProps> = ({}) => {
     }
   };
 
-  const saveInvoice = async () => {
-    try {
-      if (!selectedContact) {
-        toast.error("Contact is required");
-        return;
-      }
-      if (!salesNumber) {
-        toast.error("Sales number is required");
-        return;
-      }
-      setLoading(true);
-      let resp : any = await createSales({
-        sales_number: salesNumber,
-        type: salesType?.value,
-        notes,
-        contact_id: selectedContact?.value,
-        sales_date: date.toISOString(),
-      });
-      toast.success("Contact created successfully");
-      setShowModal(false);
-      // getAllContacts("");
-      nav(`/sales/${resp.data.id}`);
-    } catch (error) {
-      toast.error(`${error}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
   return (
     <AdminLayout>
       <div className="w-full h-full flex flex-col gap-4 px-8">
@@ -108,25 +83,25 @@ const SalesPage: FC<SalesPageProps> = ({}) => {
         >
           <Tabs.Item
             active={activeTab === 0}
-            title="Invoice"
+            title={t("invoice")}
             icon={TbFileInvoice}
           >
-            <SalesTable title="Invoice" docType="INVOICE" />
+            <SalesTable title={t("invoice")} docType="INVOICE" />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 1}
-            title="Delivery"
+            title={t("delivery_order")}
             icon={TbTruckDelivery}
           >
-            <SalesTable title="Delivery" docType="DELIVERY" />
+            <SalesTable title={t("delivery_order")} docType="DELIVERY" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 2} title="Sales Order" icon={BsCart2}>
-            <SalesTable title="Sales Order" docType="SALES_ORDER" />
+          <Tabs.Item active={activeTab === 2} title={t("sales_order")} icon={BsCart2}>
+            <SalesTable title={t("sales_order")} docType="SALES_ORDER" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 3} title="Sales Quote" icon={PiQuotes}>
-            <SalesTable title="Sales Quote" docType="SALES_QUOTE" />
+          <Tabs.Item active={activeTab === 3} title={t("sales_quote")} icon={PiQuotes}>
+            <SalesTable title={t("sales_quote")} docType="SALES_QUOTE" />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 4} title="Sales Return" icon={TbTruckReturn}>
+          <Tabs.Item active={activeTab === 4} title={t("sales_return")} icon={TbTruckReturn}>
             <ReturnSalesTable />
           </Tabs.Item>
         </Tabs>

@@ -30,10 +30,12 @@ import Select, { InputActionMeta } from "react-select";
 import Moment from "react-moment";
 import { HiFire } from "react-icons/hi";
 import { deleteTransaction } from "../services/api/transactionApi";
+import { useTranslation } from "react-i18next";
 
 interface JournalDetailProps {}
 
 const JournalDetail: FC<JournalDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const { journalId } = useParams();
   const { loading, setLoading } = useContext(LoadingContext);
   const [mounted, setMounted] = useState(false);
@@ -95,14 +97,14 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
       <div className="flex flex-row w-full h-full flex-1 gap-2">
         <div className="w-[300px] h-full p-4 space-y-4 flex flex-col overflow-y-auto">
           <div className="flex justify-between items-center">
-            <h3 className="text-2xl font-bold">Journal Detail</h3>
+            <h3 className="text-2xl font-bold">{t("journal_detail")}</h3>
             <div className="flex gap-2 items-center"></div>
           </div>
           <div className="flex flex-col space-y-4">
             <div>
-              <Label>Date</Label>
+              <Label>{t("date")}</Label>
               <Datepicker
-                placeholder="Select Date"
+                placeholder={t("select_date")}
                 value={moment(journal?.date).toDate()}
                 onChange={(date: any) => {
                   setJournal({
@@ -113,7 +115,7 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
               />
             </div>
             <div>
-              <Label>Description</Label>
+              <Label>{t("description")}</Label>
               <Textarea
                 rows={7}
                 value={journal?.description}
@@ -127,7 +129,7 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
                 setLoading(true);
                 updateJournal(journal!.id!, journal!)
                   .then((resp: any) => {
-                    toast.success("Journal updated successfully");
+                    toast.success(t("journal_updated_successfully"));
                     getJournalDetail(journalId!).then((resp: any) => {
                       setJournal(resp.data);
                     });
@@ -136,7 +138,7 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
                   .finally(() => setLoading(false));
               }}
             >
-              Save
+              {t("save")}
             </Button>
             {journal?.unbalanced && (
               <Toast>
@@ -145,7 +147,7 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
                 </div>
                 <div className="ml-3 text-sm font-normal">
                   <span className="text-red-500 font-bold">
-                    Attention: Journal is not balance
+                    {t("attention_journal_not_balanced")}
                   </span>
                 </div>
                 <ToastToggle />
@@ -155,7 +157,7 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
         </div>
         <div className="w-[calc(100%-300px)] border-l relative bg-gray-50 p-4">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold ">Transactions</h1>
+            <h1 className="text-3xl font-bold ">{t("transaction")}</h1>
             <div className="flex items-center gap-2">
               <Button
                 gradientDuoTone="purpleToBlue"
@@ -172,11 +174,11 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
           </div>
           <Table className=" rounded-lg shadow-md ">
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
-              <Table.HeadCell>Account</Table.HeadCell>
-              <Table.HeadCell align="right">Debit</Table.HeadCell>
-              <Table.HeadCell align="right">Credit</Table.HeadCell>
+              <Table.HeadCell>{t("date")}</Table.HeadCell>
+              <Table.HeadCell>{t("description")}</Table.HeadCell>
+              <Table.HeadCell>{t("account")}</Table.HeadCell>
+              <Table.HeadCell align="right">{t("debit")}</Table.HeadCell>
+              <Table.HeadCell align="right">{t("credit")}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -241,31 +243,31 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
         </div>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Header>Transaction Form</Modal.Header>
+        <Modal.Header>{t("new_transaction")}</Modal.Header>
         <Modal.Body>
           <div className="space-y-4">
             <div>
-              <Label>Date</Label>
+              <Label>{t("date")}</Label>
               <Datepicker
                 required
                 value={date}
                 onChange={(e) => setDate(e!)}
-                placeholder="Select date"
+                placeholder={t("select_date")}
               />
             </div>
             <div>
-              <Label>Description</Label>
+              <Label>{t("description")}</Label>
               <Textarea
                 rows={7}
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter description"
+                placeholder={t("enter_description")}
               />
             </div>
 
             <div>
-              <Label>{isDouble ? "Source" : "Account"}</Label>
+              <Label>{isDouble ? t("source") : t("account")}</Label>
               <Select
                 isClearable
                 options={sourceAccounts.map((t) => ({
@@ -290,19 +292,19 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
                 onInputChange={(e) => {
                   getSourceAccounts(e);
                 }}
-                placeholder="Select source"
+                placeholder={t("select_source")}
               />
             </div>
             <div>
               <ToggleSwitch
                 checked={isDouble}
                 onChange={(e) => setIsDouble(e!)}
-                label="Double Entry"
+                label={t("double_entry")}
               />
             </div>
             {isDouble && (
               <div>
-                <Label>Destination</Label>
+                <Label>{t("destination")}</Label>
                 <Select
                   isClearable
                   options={destinationAccounts.map((t) => ({
@@ -327,20 +329,20 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
                   onInputChange={(e) => {
                     getDestinationAccounts(e);
                   }}
-                  placeholder="Select destination"
+                  placeholder={t("select_destination")}
                 />
               </div>
             )}
             {isDouble && (
               <div>
-                <Label>Amount</Label>
+                <Label>{t("amount")}</Label>
                 <TextInput
                   type="number"
                   ref={amountRef}
                   required
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
-                  placeholder="Enter amount"
+                  placeholder={t("enter_amount")}
                 />
                 {
                   <h1
@@ -356,14 +358,14 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
             )}
             {!isDouble && (
               <div>
-                <Label>Debit</Label>
+                <Label>{t("debit")}</Label>
                 <TextInput
                   type="number"
                   ref={debitRef}
                   required
                   value={debit}
                   onChange={(e) => setDebit(Number(e.target.value))}
-                  placeholder="Enter debit"
+                  placeholder={t("enter_debit")}
                 />
                 {
                   <h1
@@ -379,14 +381,14 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
             )}
             {!isDouble && (
               <div>
-                <Label>Credit</Label>
+                <Label>{t("credit")}</Label>
                 <TextInput
                   type="number"
                   ref={creditRef}
                   required
                   value={credit}
                   onChange={(e) => setCredit(Number(e.target.value))}
-                  placeholder="Enter credit"
+                  placeholder={t("enter_credit")}
                 />
                 {
                   <h1
@@ -434,7 +436,7 @@ const JournalDetail: FC<JournalDetailProps> = ({}) => {
                 }
               }}
             >
-              Save
+              {t("save")}
             </Button>
           </div>
         </Modal.Footer>

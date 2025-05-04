@@ -17,7 +17,13 @@ import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
-import { BsAirplane, BsCart2, BsDownload, BsPlusCircle, BsTrash } from "react-icons/bs";
+import {
+  BsAirplane,
+  BsCart2,
+  BsDownload,
+  BsPlusCircle,
+  BsTrash,
+} from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -59,10 +65,12 @@ import { paymentMethods } from "../utils/constants";
 import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
 import ModalSalesReturn from "../components/ModalSalesReturn";
+import { useTranslation } from "react-i18next";
 
 interface SalesDetailProps {}
 
 const SalesDetail: FC<SalesDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const nav = useNavigate();
   const { loading, setLoading } = useContext(LoadingContext);
   const { salesId } = useParams();
@@ -108,7 +116,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const getDetail = () => {
     getSalesDetail(salesId!).then((res: any) => {
       setSales(res.data);
-      setIsEditable(res.data.status == "DRAFT");
+      setIsEditable(res.data.status == "DRAFT"  && res.data.document_type != "DELIVERY");
     });
     getAllItems();
     getAllTaxes("");
@@ -151,10 +159,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
 
   const saveSales = async (data: SalesModel) => {
     try {
-      if (!data.sales_number) {
-        toast.error("Sales number is required");
-        return;
-      }
+      // if (!data.sales_number) {
+      //   toast.error("Sales number is required");
+      //   return;
+      // }
       setLoading(true);
       let resp: any = await createSales(data);
       toast.success("sales created successfully");
@@ -227,7 +235,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
             className="flex gap-2 flex-row"
             color="green"
           >
-            Invoice
+            {t("invoice")}
           </Badge>
         );
         break;
@@ -239,7 +247,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
             className="flex gap-2 flex-row"
             color="pink"
           >
-            Delivery
+            {t("delivery_order")}
           </Badge>
         );
         break;
@@ -247,7 +255,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
       case "SALES_ORDER":
         return (
           <Badge icon={BsCart2} className="flex gap-2 flex-row" color="purple">
-            Sales Order
+            {t("sales_order")}
           </Badge>
         );
         break;
@@ -259,7 +267,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
             className="flex gap-2 flex-row"
             color="warning"
           >
-            Sales Quote
+            {t("sales_quote")}
           </Badge>
         );
         break;
@@ -304,23 +312,25 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   POST INVOICE
                 </Dropdown.Item>
               )}
-              { sales?.document_type == "INVOICE" && (
+              {sales?.status != "DRAFT" && (
                 <Dropdown.Item
                   icon={BsDownload}
                   onClick={() => {
                     setLoading(true);
-                    downloadSalesPdf(sales?.id!).then((res: any) => {
-                      const url = window.URL.createObjectURL(res);
-                      const link = document.createElement("a");
-                      link.href = url;
-                      link.download = `${sales?.sales_number}.pdf`;
-                      link.click();
-                    }).finally(() => {
-                      setLoading(false);
-                    })
+                    downloadSalesPdf(sales?.id!)
+                      .then((res: any) => {
+                        const url = window.URL.createObjectURL(res);
+                        const link = document.createElement("a");
+                        link.href = url;
+                        link.download = `${sales?.sales_number}.pdf`;
+                        link.click();
+                      })
+                      .finally(() => {
+                        setLoading(false);
+                      });
                   }}
                 >
-                  DOWNLOAD INVOICE
+                  DOWNLOAD {sales?.document_type?.toUpperCase()}
                 </Dropdown.Item>
               )}
               {sales?.published_at && sales?.document_type == "INVOICE" && (
@@ -383,7 +393,24 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </Dropdown.Item>
               )}
               {sales?.document_type == "INVOICE" && (
-                <Dropdown.Item icon={TbTruckDelivery}>
+                <Dropdown.Item
+                  icon={TbTruckDelivery}
+                  onClick={() => {
+                    setTempSales({
+                      ...sales,
+                      document_type: "DELIVERY",
+                      sales_number: "",
+                      notes: "",
+                      status: "DRAFT",
+                      ref_id: sales?.id,
+                      ref_type: sales?.document_type,
+                      sales_date: moment().toISOString(),
+                      items: items,
+                    });
+                    setSalesTitle("Delivery Letter");
+                    setShowCreateSales(true);
+                  }}
+                >
                   Create Delivery Letter
                 </Dropdown.Item>
               )}
@@ -411,7 +438,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
         <div className="grid grid-cols-3 gap-8 mt-4">
           <div className="flex flex-col space-y-4">
             <div>
-              <Label>Date</Label>
+              <Label>{t("date")}</Label>
               {isEditable ? (
                 <Datepicker
                   value={moment(sales?.sales_date).toDate()}
@@ -430,10 +457,12 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               )}
             </div>
             <div>
-              <Label>Due Date</Label>
+              <Label>{t("due_date")}</Label>
               {isEditable ? (
                 <Datepicker
-                  value={moment(sales?.due_date ?? moment().add(30, "days")).toDate()}
+                  value={moment(
+                    sales?.due_date ?? moment().add(30, "days")
+                  ).toDate()}
                   onChange={(date) => {
                     setSales({
                       ...sales!,
@@ -444,12 +473,14 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               ) : (
                 <div className="text-data">
-                  {sales?.due_date && <Moment format="DD MMM YYYY">{sales?.due_date}</Moment>}
+                  {sales?.due_date && (
+                    <Moment format="DD MMM YYYY">{sales?.due_date}</Moment>
+                  )}
                 </div>
               )}
             </div>
             <div>
-              <Label>Notes</Label>
+              <Label>{t("notes")}</Label>
               {isEditable ? (
                 <Textarea
                   value={sales?.notes}
@@ -472,7 +503,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           </div>
           <div className="flex flex-col space-y-4">
             <div>
-              <Label>Billed To</Label>
+              <Label>{t("billed_to")}</Label>
               <div>{sales?.contact_data_parsed?.name}</div>
               <div>{sales?.contact_data_parsed?.address}</div>
               <div>
@@ -482,7 +513,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               </div>
             </div>
             <div>
-              <Label>Shipped To</Label>
+              <Label>{t("shipped_to")}</Label>
               {sales?.delivery ? (
                 <>
                   <div>{sales?.delivery_data_parsed?.name}</div>
@@ -510,19 +541,31 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
         <div className="overflow-x-auto">
           <Table className=" overflow-x-auto border rounded-none" hoverable>
             <Table.Head>
-              <Table.HeadCell style={{ width: "300px" }}>Item</Table.HeadCell>
+              <Table.HeadCell style={{ width: "300px" }}>
+                {t("item")}
+              </Table.HeadCell>
               {/* {showWarehouse && (
                 <Table.HeadCell style={{ width: "150px" }}>
-                  Warehouse
+                  {t('warehouse')}
                 </Table.HeadCell>
               )} */}
-              <Table.HeadCell style={{ width: "100px" }}>Qty</Table.HeadCell>
-              <Table.HeadCell style={{ width: "120px" }}>Price</Table.HeadCell>
-              <Table.HeadCell style={{ width: "40px" }}>Disc</Table.HeadCell>
+              <Table.HeadCell style={{ width: "100px" }}>
+                {t("qty")}
+              </Table.HeadCell>
+              <Table.HeadCell style={{ width: "120px" }}>
+                {t("price")}
+              </Table.HeadCell>
+              <Table.HeadCell style={{ width: "40px" }}>
+                {t("discount")}
+              </Table.HeadCell>
               {showTax && (
-                <Table.HeadCell style={{ width: "100px" }}>Tax</Table.HeadCell>
+                <Table.HeadCell style={{ width: "100px" }}>
+                  {t("tax")}
+                </Table.HeadCell>
               )}
-              <Table.HeadCell style={{ width: "130px" }}>Amount</Table.HeadCell>
+              <Table.HeadCell style={{ width: "130px" }}>
+                {t("amount")}
+              </Table.HeadCell>
               <Table.HeadCell className="w-10">
                 {/* <div className="flex justify-end">
                   <Dropdown
@@ -998,7 +1041,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         }}
                       >
                         <BsPlusCircle />
-                        Add Item
+                        {t("add_item")}
                       </button>
                     </div>
                   </Table.Cell>
@@ -1008,279 +1051,290 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           </Table>
         </div>
         <HR />
-        <div className="grid grid-cols-2 gap-8 mt-4 ">
-          <div className="flex flex-col gap-2 space-y-4 bg-gray-50 rounded-lg p-4">
-            <div>
-              <Label>Description</Label>
-              {isEditable ? (
-                <Textarea
-                  value={sales?.description}
-                  onChange={(e) => {
-                    setSales({
-                      ...sales,
-                      description: e.target.value,
-                    });
-                    setIsEdited(true);
-                  }}
-                  className="input-white"
-                  style={{
-                    backgroundColor: "white",
-                  }}
-                  placeholder="Sales Description"
-                  onBlur={() => {}}
-                />
-              ) : (
-                <div className="text-data">{sales?.description}</div>
-              )}
-            </div>
-            <div>
+        {sales?.document_type !== "DELIVERY" && (
+          <div className="grid grid-cols-2 gap-8 mt-4 ">
+            <div className="flex flex-col gap-2 space-y-4 bg-gray-50 rounded-lg p-4">
               <div>
-                <Label>Payment Term</Label>
-              </div>
-              {isEditable ? (
-                <div>
-                  <select
-                    className="rs-input"
-                    value={sales?.payment_terms_code}
-                    onChange={(val: any) => {
+                <Label>{t("description")}</Label>
+                {isEditable ? (
+                  <Textarea
+                    value={sales?.description}
+                    onChange={(e) => {
+                      setSales({
+                        ...sales,
+                        description: e.target.value,
+                      });
                       setIsEdited(true);
-                      let selected = paymentTerms.find(
-                        (e) => e.code == val.target.value
-                      );
-                      if (selected) {
-                        setSales({
-                          ...sales,
-                          payment_terms: JSON.stringify(selected),
-                          payment_terms_code: selected.code,
-                        });
-                      }
                     }}
-                  >
-                    <option value={""}>Select Payment Term</option>
-                    {paymentTermGroups.map((pt) => (
-                      <optgroup label={pt.group} key={pt.group}>
-                        {pt.terms.map((t) => (
-                          <option key={t.code} value={t.code}>
-                            {t.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
-                  {sales?.payment_terms && (
-                    <div className="p-2 rounded-lg bg-gray-50 text-xs">
-                      {
-                        (JSON.parse(sales?.payment_terms) as PaymentTermModel)
-                          .description
-                      }
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-data">
-                  {sales?.payment_terms && (
-                    <>
-                      <strong>{JSON.parse(sales?.payment_terms).name}</strong>{" "}
-                      {JSON.parse(sales?.payment_terms).description}{" "}
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-            <div>
-              <Label>Term & Condition</Label>
-              {isEditable ? (
-                <Editor
-                  apiKey={process.env.REACT_APP_TINY_MCE_KEY}
-                  init={{
-                    plugins:
-                      "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount ",
-                    toolbar:
-                      "closeButton saveButton aiButton | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat ",
-
-                    menubar: "file edit view insert format tools table custom",
-                    menu: {
-                      custom: {
-                        title: "Editor",
-                        items: "closeButton saveButton",
-                      },
-                    },
-                  }}
-                  initialValue={sales?.term_condition ?? ""}
-                  onChange={handleEditorChange}
-                />
-              ) : (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: sales?.term_condition ?? "",
-                  }}
-                />
-              )}
-            </div>
-          </div>
-          <div>
-            <h3 className="font-semibold text-lg">Summary</h3>
-            <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4">
-              <div className="w-full h-fit">
-                <table className="w-full">
-                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                    <td className="py-2 px-4">
-                      <strong className="text-sm">Sub Total</strong>
-                    </td>
-                    <td className="text-right px-4">
-                      <span>{money(sales?.total_before_disc)}</span>
-                    </td>
-                  </tr>
-                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                    <td className="py-2 px-4">
-                      <strong className="text-sm">Total Discount</strong>
-                    </td>
-                    <td className="text-right px-4">
-                      <span>{money(sales?.total_discount)}</span>
-                    </td>
-                  </tr>
-                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                    <td className="py-2 px-4">
-                      <strong className="text-sm">After Discount</strong>
-                    </td>
-                    <td className="text-right px-4">
-                      <span>{money(sales?.subtotal)}</span>
-                    </td>
-                  </tr>
-                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                    <td className="py-2 px-4">
-                      <strong className="text-sm">Total Tax</strong>
-                    </td>
-                    <td className="text-right px-4">
-                      <span>{money(sales?.total_tax)}</span>
-                    </td>
-                  </tr>
-                  <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                    <td className="py-2 px-4">
-                      <strong className="text-lg">Total</strong>
-                    </td>
-                    <td className="text-right px-4">
-                      <span className="text-lg">{money(sales?.total)}</span>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-            {sales?.document_type == "INVOICE" && (
-              <div>
-                {sales?.status == "POSTED" && (
-                  <>
-                    <div className="flex justify-between items-center ">
-                      <h3 className="font-semibold text-lg">Payment History</h3>
-                      {(sales.total ?? 0) - (sales.paid ?? 0) > 0 && (
-                        <Button
-                          size="xs"
-                          color="green"
-                          onClick={() => {
-                            let payment_discount = 0;
-                            let paymentTerm: PaymentTermModel;
-                            if (sales?.payment_terms) {
-                              paymentTerm = JSON.parse(
-                                sales?.payment_terms
-                              ) as PaymentTermModel;
-                              if (
-                                paymentTerm.discount_due_days &&
-                                moment(sales?.discount_due_date) <
-                                  moment(sales?.published_at).add(
-                                    paymentTerm.discount_due_days,
-                                    "days"
-                                  )
-                              ) {
-                                setDiscountEnabled(true);
-                                payment_discount =
-                                  paymentTerm.discount_amount ?? 0;
-                              }
-                            }
-                            setPayment({
-                              payment_date: new Date(),
-                              sales_id: sales?.id!,
-                              amount: sales?.total! - sales?.paid!,
-                              notes: "",
-                              payment_discount,
-                              payment_method: "CASH",
-                              payment_method_notes: "",
-                            });
-                            getAccounts({
-                              page: 1,
-                              size: 10,
-                              cashflow_sub_group: "cash_bank",
-                            }).then((e: any) => {
-                              setAssets(e.data.items);
-                            });
-                          }}
-                        >
-                          + Payment
-                        </Button>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4 mt-4">
-                      <div className="w-full h-fit">
-                        <table className="w-full">
-                          {(sales?.sales_payments ?? []).map((payment) => (
-                            <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                              <td className="py-2 px-4">
-                                <div className="flex flex-col">
-                                  <strong className="text-sm">
-                                    {payment.notes}
-                                  </strong>
-                                  <Moment
-                                    className="text-xs"
-                                    format="DD/MM/YYYY"
-                                  >
-                                    {payment?.payment_date}
-                                  </Moment>
-                                </div>
-                              </td>
-                              <td className="text-right px-4">
-                                <span>{money(payment?.amount)}</span>
-                              </td>
-                            </tr>
-                          ))}
-                          <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
-                            <td className="py-2 px-4">
-                              <div className="flex flex-col">
-                                <strong className="text-xl">Balance</strong>
-                              </div>
-                            </td>
-                            <td className="text-right px-4">
-                              <span className="text-xl">
-                                {money(
-                                  (sales?.total ?? 0) - (sales?.paid ?? 0)
-                                ) == 0
-                                  ? "PAID"
-                                  : money(
-                                      (sales?.total ?? 0) - (sales?.paid ?? 0)
-                                    )}
-                              </span>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                  </>
+                    className="input-white"
+                    style={{
+                      backgroundColor: "white",
+                    }}
+                    placeholder={t("description")}
+                    onBlur={() => {}}
+                  />
+                ) : (
+                  <div className="text-data">{sales?.description}</div>
                 )}
-                {sales?.payment_account?.type == "ASSET" && (
-                  <div
-                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-                    role="alert"
-                  >
-                    <strong className="font-bold">Attention!</strong>
-                    <span className="block sm:inline">
-                      {" "}
-                      This invoice is already paid in cash, you cannot add
-                      payment
-                    </span>
+              </div>
+              <div>
+                <div>
+                  <Label>{t("payment_terms")}</Label>
+                </div>
+                {isEditable ? (
+                  <div>
+                    <select
+                      className="rs-input"
+                      value={sales?.payment_terms_code}
+                      onChange={(val: any) => {
+                        setIsEdited(true);
+                        let selected = paymentTerms.find(
+                          (e) => e.code == val.target.value
+                        );
+                        if (selected) {
+                          setSales({
+                            ...sales,
+                            payment_terms: JSON.stringify(selected),
+                            payment_terms_code: selected.code,
+                          });
+                        }
+                      }}
+                    >
+                      <option value={""}>{t("select_payment_terms")}</option>
+                      {paymentTermGroups.map((pt) => (
+                        <optgroup label={pt.group} key={pt.group}>
+                          {pt.terms.map((t) => (
+                            <option key={t.code} value={t.code}>
+                              {t.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                    {sales?.payment_terms && (
+                      <div className="p-2 rounded-lg bg-gray-50 text-xs">
+                        {
+                          (JSON.parse(sales?.payment_terms) as PaymentTermModel)
+                            .description
+                        }
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-data">
+                    {sales?.payment_terms && (
+                      <>
+                        <strong>{JSON.parse(sales?.payment_terms).name}</strong>{" "}
+                        {JSON.parse(sales?.payment_terms).description}{" "}
+                      </>
+                    )}
                   </div>
                 )}
               </div>
-            )}
+              <div>
+                <Label>{t("term_condition")}</Label>
+                {isEditable ? (
+                  <Editor
+                    apiKey={process.env.REACT_APP_TINY_MCE_KEY}
+                    init={{
+                      plugins:
+                        "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount ",
+                      toolbar:
+                        "closeButton saveButton aiButton | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat ",
+
+                      menubar:
+                        "file edit view insert format tools table custom",
+                      menu: {
+                        custom: {
+                          title: "Editor",
+                          items: "closeButton saveButton",
+                        },
+                      },
+                    }}
+                    initialValue={sales?.term_condition ?? ""}
+                    onChange={handleEditorChange}
+                  />
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: sales?.term_condition ?? "",
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg">{t("summary")}</h3>
+              <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4">
+                <div className="w-full h-fit">
+                  <table className="w-full">
+                    <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                      <td className="py-2 px-4">
+                        <strong className="text-sm">
+                          {t("total_before_discount")}
+                        </strong>
+                      </td>
+                      <td className="text-right px-4">
+                        <span>{money(sales?.total_before_disc)}</span>
+                      </td>
+                    </tr>
+                    <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                      <td className="py-2 px-4">
+                        <strong className="text-sm">
+                          {t("total_discount")}
+                        </strong>
+                      </td>
+                      <td className="text-right px-4">
+                        <span>{money(sales?.total_discount)}</span>
+                      </td>
+                    </tr>
+                    <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                      <td className="py-2 px-4">
+                        <strong className="text-sm">
+                          {t("after_discount")}
+                        </strong>
+                      </td>
+                      <td className="text-right px-4">
+                        <span>{money(sales?.subtotal)}</span>
+                      </td>
+                    </tr>
+                    <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                      <td className="py-2 px-4">
+                        <strong className="text-sm">{t("total_tax")}</strong>
+                      </td>
+                      <td className="text-right px-4">
+                        <span>{money(sales?.total_tax)}</span>
+                      </td>
+                    </tr>
+                    <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                      <td className="py-2 px-4">
+                        <strong className="text-lg">{t("total")}</strong>
+                      </td>
+                      <td className="text-right px-4">
+                        <span className="text-lg">{money(sales?.total)}</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              {sales?.document_type == "INVOICE" && (
+                <div>
+                  {sales?.status == "POSTED" && (
+                    <>
+                      <div className="flex justify-between items-center ">
+                        <h3 className="font-semibold text-lg">
+                          {t("payment_history")}
+                        </h3>
+                        {(sales.total ?? 0) - (sales.paid ?? 0) > 0 && (
+                          <Button
+                            size="xs"
+                            color="green"
+                            onClick={() => {
+                              let payment_discount = 0;
+                              let paymentTerm: PaymentTermModel;
+                              if (sales?.payment_terms) {
+                                paymentTerm = JSON.parse(
+                                  sales?.payment_terms
+                                ) as PaymentTermModel;
+                                if (
+                                  paymentTerm.discount_due_days &&
+                                  moment(sales?.discount_due_date) <
+                                    moment(sales?.published_at).add(
+                                      paymentTerm.discount_due_days,
+                                      "days"
+                                    )
+                                ) {
+                                  setDiscountEnabled(true);
+                                  payment_discount =
+                                    paymentTerm.discount_amount ?? 0;
+                                }
+                              }
+                              setPayment({
+                                payment_date: new Date(),
+                                sales_id: sales?.id!,
+                                amount: sales?.total! - sales?.paid!,
+                                notes: "",
+                                payment_discount,
+                                payment_method: "CASH",
+                                payment_method_notes: "",
+                              });
+                              getAccounts({
+                                page: 1,
+                                size: 10,
+                                cashflow_sub_group: "cash_bank",
+                              }).then((e: any) => {
+                                setAssets(e.data.items);
+                              });
+                            }}
+                          >
+                            + Payment
+                          </Button>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4 mt-4">
+                        <div className="w-full h-fit">
+                          <table className="w-full">
+                            {(sales?.sales_payments ?? []).map((payment) => (
+                              <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                                <td className="py-2 px-4">
+                                  <div className="flex flex-col">
+                                    <strong className="text-sm">
+                                      {payment.notes}
+                                    </strong>
+                                    <Moment
+                                      className="text-xs"
+                                      format="DD/MM/YYYY"
+                                    >
+                                      {payment?.payment_date}
+                                    </Moment>
+                                  </div>
+                                </td>
+                                <td className="text-right px-4">
+                                  <span>{money(payment?.amount)}</span>
+                                </td>
+                              </tr>
+                            ))}
+                            <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
+                              <td className="py-2 px-4">
+                                <div className="flex flex-col">
+                                  <strong className="text-xl">Balance</strong>
+                                </div>
+                              </td>
+                              <td className="text-right px-4">
+                                <span className="text-xl">
+                                  {money(
+                                    (sales?.total ?? 0) - (sales?.paid ?? 0)
+                                  ) == 0
+                                    ? "PAID"
+                                    : money(
+                                        (sales?.total ?? 0) - (sales?.paid ?? 0)
+                                      )}
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {sales?.payment_account?.type == "ASSET" && (
+                    <div
+                      className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                      role="alert"
+                    >
+                      <strong className="font-bold">Attention!</strong>
+                      <span className="block sm:inline">
+                        {" "}
+                        This invoice is already paid in cash, you cannot add
+                        payment
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <Modal show={payment != undefined} onClose={() => setPayment(undefined)}>
         <Modal.Header>Payment</Modal.Header>

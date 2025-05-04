@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState, type FC } from "react";
 import AdminLayout from "../components/layouts/admin";
 import {
+  Badge,
   Button,
   Datepicker,
   Label,
@@ -22,10 +23,13 @@ import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
 import { HiFire } from "react-icons/hi";
 import CurrencyInput from "react-currency-input-field";
+import { useTranslation } from "react-i18next";
 
 interface AssetPageProps {}
 
 const AssetPage: FC<AssetPageProps> = ({}) => {
+  const { t, i18n } = useTranslation();
+
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -137,12 +141,12 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
         <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Asset Number</Table.HeadCell>
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Acquisition Cost</Table.HeadCell>
-              <Table.HeadCell>Book Value</Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
+              <Table.HeadCell>{t("date")}</Table.HeadCell>
+              <Table.HeadCell>{t("asset_number")}</Table.HeadCell>
+              <Table.HeadCell>{t("name")}</Table.HeadCell>
+              <Table.HeadCell>{t("acquisition_cost")}</Table.HeadCell>
+              <Table.HeadCell>{t("book_value")}</Table.HeadCell>
+              <Table.HeadCell>{t("status")}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -165,6 +169,21 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                   <Table.Cell>{asset.name}</Table.Cell>
                   <Table.Cell>{money(asset.acquisition_cost)}</Table.Cell>
                   <Table.Cell>{money(asset.book_value)}</Table.Cell>
+                  <Table.Cell>
+                    <div className="w-fit">
+                      <Badge
+                        color={
+                          asset.status === "ACTIVE"
+                            ? "green"
+                            : asset.status === "INACTIVE"
+                            ? "red"
+                            : "gray"
+                        }
+                      >
+                        {asset.status}
+                      </Badge>
+                    </div>
+                  </Table.Cell>
 
                   <Table.Cell width={200}>
                     <Link
@@ -204,12 +223,12 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
           onClose={() => setShowModal(false)}
           aria-labelledby="create-asset-modal"
         >
-          <Modal.Header>Create New Asset</Modal.Header>
+          <Modal.Header>{t("create_new_asset")}</Modal.Header>
           <Modal.Body>
             <form>
               <div className="space-y-6">
                 <div>
-                  <Label htmlFor="asset-title" value="Date" />
+                  <Label htmlFor="asset-title" value={t("date")} />
                   <Datepicker
                     value={date}
                     onChange={(val) => {
@@ -219,32 +238,32 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                 </div>
 
                 <div>
-                  <Label htmlFor="asset-asset_number" value="Asset Number" />
+                  <Label htmlFor="asset-asset_number" value={t("asset_number")} />
                   <TextInput
                     value={asset_number}
                     onChange={(e) => {
                       setAssetNumber(e.target.value);
                     }}
                     id="asset-asset_number"
-                    placeholder="Asset Number"
+                    placeholder={t("asset_number")}
                   />
                 </div>
-                
+
                 <div>
-                  <Label htmlFor="asset-name" value="Name" />
+                  <Label htmlFor="asset-name" value={t("asset_name")} />
                   <TextInput
                     value={name}
                     onChange={(e) => {
                       setName(e.target.value);
                     }}
                     id="asset-name"
-                    placeholder="Asset Name"
+                    placeholder={t("asset_name")}
                   />
                 </div>
                 <div>
                   <Label
                     htmlFor="asset-acquisition_cost"
-                    value="Acquisition Cost"
+                    value={t("acquisition_cost")}
                   />
                   <CurrencyInput
                     value={acquisition_cost}
@@ -254,12 +273,12 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                       setAcquisitionCost(val?.float ?? 0);
                     }}
                     id="asset-acquisition_cost"
-                    placeholder="Acquisition Cost"
+                    placeholder={t("acquisition_cost")}
                     className="rs-input "
                   />
                 </div>
                 <div>
-                  <Label htmlFor="asset-title" value="Description" />
+                  <Label htmlFor="asset-title" value={t("description")} />
                   <Textarea
                     rows={5}
                     value={description}
@@ -267,7 +286,7 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                       setDescription(e.target.value);
                     }}
                     id="asset-description"
-                    placeholder="Asset Description"
+                    placeholder={t("description")}
                     required
                   />
                 </div>
@@ -278,26 +297,26 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                     onChange={(val) => {
                       setIsDepreciated(val);
                     }}
-                    label="Is Depreciated"
+                    label={t("is_depreciated")}
                   />
                 </div>
                 {is_depreciated && (
                   <>
                     <div>
-                      <Label htmlFor="asset-lifetime" value="Lifetime" />
+                      <Label htmlFor="asset-lifetime" value={t("lifetime")} />
                       <TextInput
                         value={lifetime}
                         onChange={(e) => {
                           setLifetime(Number(e.target.value));
                         }}
                         id="asset-lifetime"
-                        placeholder="Lifetime"
+                        placeholder={t("lifetime")}
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor="asset-salvage_value"
-                        value="Salvage Value"
+                        value={t("salvage_value")}
                       />
                       <CurrencyInput
                         value={salvageValue}
@@ -307,7 +326,7 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                           setSalvageValue(val?.float ?? 0);
                         }}
                         id="asset-salvage_value"
-                        placeholder="Salvage Value"
+                        placeholder={t("salvage_value")}
                         className="rs-input"
                       />
                     </div>
@@ -319,7 +338,7 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
           </Modal.Body>
           <Modal.Footer>
             <div className="flex justify-end w-full">
-              <Button onClick={saveAsset}>Save</Button>
+              <Button onClick={saveAsset}>{t("save")}</Button>
             </div>
           </Modal.Footer>
         </Modal>

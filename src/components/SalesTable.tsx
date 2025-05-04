@@ -28,6 +28,7 @@ import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
 import ModalSales from "./ModalSales";
 import { isEditable } from "@testing-library/user-event/dist/utils";
+import { useTranslation } from "react-i18next";
 
 interface SalesTableProps {
   docType: string;
@@ -35,6 +36,7 @@ interface SalesTableProps {
 }
 
 const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
+  const { t } = useTranslation();
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -155,13 +157,13 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
       <div className="overflow-x-auto">
       <Table>
         <Table.Head>
-          <Table.HeadCell>Date</Table.HeadCell>
-          <Table.HeadCell>Due Date</Table.HeadCell>
-          <Table.HeadCell>Sales Number</Table.HeadCell>
-          <Table.HeadCell>Contact</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
-          <Table.HeadCell>Total</Table.HeadCell>
-          <Table.HeadCell>Balance</Table.HeadCell>
+          <Table.HeadCell>{t("date")}</Table.HeadCell>
+          <Table.HeadCell>{t("due_date")}</Table.HeadCell>
+          <Table.HeadCell>No.</Table.HeadCell>
+          <Table.HeadCell>{t("contact")}</Table.HeadCell>
+          <Table.HeadCell>{t("status")}</Table.HeadCell>
+          <Table.HeadCell>{t("total")}</Table.HeadCell>
+          <Table.HeadCell>{t("balance")}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body>
@@ -240,7 +242,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           <form>
             <div className=" space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="date">Date</Label>
+                <Label htmlFor="date">{t("date")}</Label>
                 <Datepicker
                   id="date"
                   value={date}
@@ -248,18 +250,18 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sales-number">{title} Number</Label>
+                <Label htmlFor="sales-number">No. {(`${title}`)}</Label>
                 <TextInput
                   id="sales-number"
                   type="text"
-                  placeholder={`${title} Number`}
+                  placeholder={`${(`${title}`)}`}
                   required={true}
                   value={salesNumber}
                   onChange={(e) => setSalesNumber(e.target.value)}
                 />
               </div>
               <div>
-                <Label htmlFor="date">Sales Type</Label>
+                <Label htmlFor="date">{t("sales_type")}</Label>
                 <Select
                   id="sales-type"
                   value={salesType}
@@ -268,7 +270,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="contact">Contact</Label>
+                <Label htmlFor="contact">{t("contact")}</Label>
                 <CreatableSelect
                   id="contact"
                   value={selectedContact}
@@ -294,11 +296,11 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t("notes")}</Label>
                 <Textarea
                   rows={7}
                   id="notes"
-                  placeholder="Description"
+                  placeholder={t("notes")}
                   required={true}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -310,7 +312,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
         </Modal.Body>
         <Modal.Footer className="flex justify-end">
           <Button type="submit" onClick={saveInvoice}>
-            Create
+            {t("create")}
           </Button>
         </Modal.Footer>
       </Modal>

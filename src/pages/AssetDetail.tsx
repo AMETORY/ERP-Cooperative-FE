@@ -26,10 +26,12 @@ import { getAccounts } from "../services/api/accountApi";
 import { AccountModel } from "../models/account";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 interface AssetDetailProps {}
 
 const AssetDetail: FC<AssetDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const { assetId } = useParams();
   const { loading, setLoading } = useContext(LoadingContext);
   const [mounted, setMounted] = useState(false);
@@ -131,20 +133,20 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
               </thead>
               <tbody className="">
                 <tr>
-                  <td className="px-2 py-2 font-semibold">Asset Number</td>
+                  <td className="px-2 py-2 font-semibold">{t("asset_number")}</td>
                   <td className="px-2 py-2">{asset?.asset_number}</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-2 font-semibold">Name</td>
+                  <td className="px-2 py-2 font-semibold">{t("name")}</td>
                   <td className="px-2 py-2">{asset?.name}</td>
                 </tr>
 
                 <tr>
-                  <td className="px-2 py-2 font-semibold">Description</td>
+                  <td className="px-2 py-2 font-semibold">{t("description")}</td>
                   <td className="px-2 py-2">{asset?.description}</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-2 font-semibold">Date</td>
+                  <td className="px-2 py-2 font-semibold">{t("date")}</td>
                   <td className="px-2 py-2">
                     {isEditable ? (
                       <Datepicker
@@ -159,14 +161,14 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-2 font-semibold">Acquisition Cost</td>
+                  <td className="px-2 py-2 font-semibold">{t("acquisition_cost")}</td>
                   <td className="px-2 py-2">
                     {money(asset?.acquisition_cost)}
                   </td>
                 </tr>
                 <tr>
                   <td className="px-2 py-1 font-semibold">
-                    Cash / Equity Account
+                    {t("cash_equity_account")}
                   </td>
                   <td className="px-2 py-1">
                     {isEditable ? (
@@ -234,7 +236,7 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                 </tr>
                 <tr>
                   <td className="px-2 py-1 font-semibold">
-                    Fixed Asset Account
+                    {t("fixed_asset_account")}
                   </td>
                   <td className="px-2 py-1">
                     {isEditable ? (
@@ -265,7 +267,7 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 font-semibold">Status</td>
+                  <td className="px-2 py-1 font-semibold">{t("status")}</td>
                   <td className="px-2 py-1">
                     <div className="w-fit">
                       <Badge
@@ -355,8 +357,8 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
             </table>
           </div>
           <div className="p-4 bg-white rounded shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-xl font-bold mb-4">Depreciation Info</h3>
-            {!asset?.is_depreciation_asset && "This asset is not depreciated."}
+            <h3 className="text-xl font-bold mb-4">{t("depreciation_info")}</h3>
+            {!asset?.is_depreciation_asset && t("asset_not_depreciated")}
 
             {asset?.is_depreciation_asset && (
               <table className="w-full">
@@ -368,12 +370,12 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                 </thead>
                 <tbody className="">
                   <tr>
-                    <td className="px-2 py-1 font-semibold">Lifetime</td>
-                    <td className="px-2 py-1">{asset?.life_time} year</td>
+                    <td className="px-2 py-1 font-semibold">{t("lifetime")}</td>
+                    <td className="px-2 py-1">{asset?.life_time} {t("year")}</td>
                   </tr>
                   <tr>
                     <td className="px-2 py-1 font-semibold">
-                      Depreciation Method
+                      {t("depreciation_method")}
                     </td>
                     <td className="px-2 py-1">
                       {isEditable ? (
@@ -411,7 +413,7 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
 
                   <tr>
                     <td className="px-2 py-1 font-semibold">
-                      Depreciation Account
+                      {t("depreciation_account")}
                     </td>
                     <td className="px-2 py-1">
                       {isEditable ? (
@@ -441,7 +443,7 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                   </tr>
                   <tr>
                     <td className="px-2 py-1 font-semibold">
-                      Accumulated Depreciation Account
+                      {t("accumulated_depreciation_account")}
                     </td>
                     <td className="px-2 py-1">
                       {isEditable ? (
@@ -474,7 +476,9 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                     </td>
                   </tr>
                   <tr>
-                    <td className="px-2 py-1 font-semibold">Is Monthly</td>
+                    <td className="px-2 py-1 font-semibold">
+                      {t("is_monthly")}
+                    </td>
                     <td className="px-2 py-1">
                       {isEditable ? (
                         <ToggleSwitch
@@ -503,21 +507,24 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                           {asset?.is_monthly ? (
                             <BsCheck2Circle className="text-green-500" />
                           ) : (
-                            "No"
+                            t("no")
                           )}
                         </div>
                       )}
                     </td>
                   </tr>
                   <tr>
-                    <td className="px-2 py-2 font-semibold">Salvage Value</td>
+                    <td className="px-2 py-2 font-semibold">
+                      {t("salvage_value")}
+                    </td>
                     <td className="px-2 py-2">{money(asset?.salvage_value)}</td>
                   </tr>
                   <tr>
-                    <td className="px-2 py-2 font-semibold">Book Value</td>
+                    <td className="px-2 py-2 font-semibold">
+                      {t("book_value")}
+                    </td>
                     <td className="px-2 py-2">{money(asset?.book_value)}</td>
                   </tr>
-                  {/* Add more rows as needed for other asset details */}
                 </tbody>
               </table>
             )}
@@ -526,7 +533,7 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
         {!isEditable && (
           <div className="p-4 bg-white rounded shadow hover:shadow-lg transition-shadow">
             <div className="flex justify-between mb-4">
-              <h4 className="font-semibold text-2xl ">Depreciation</h4>
+              <h4 className="font-semibold text-2xl ">{t("depreciation")}</h4>
               {(asset?.depreciations ?? []).map((e) => e.is_checked).length >
                 0 && (
                 <Button
@@ -558,7 +565,7 @@ const AssetDetail: FC<AssetDetailProps> = ({}) => {
                     getDetail();
                   }}
                 >
-                  Apply Depreciation
+                  {t('apply_depreciation')}
                 </Button>
               )}
             </div>

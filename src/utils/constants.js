@@ -103,12 +103,12 @@ export let AUTO_NUMERIC_FORMAL = [
 
 export const OPTION_ACCOUNT_TYPES = [
     { value: "ASSET", label: "Asset" },
-    { value: "CONTRA_ASSET", label: "Contra Asset" },
+    { value: "CONTRA_ASSET", label: "Contra_Asset" },
     { value: "RECEIVABLE", label: "Receivable" },
     { value: "LIABILITY", label: "Liability" },
     { value: "EQUITY", label: "Equity" },
     { value: "REVENUE", label: "Revenue" },
-    { value: "CONTRA_REVENUE", label: "Contra Revenue" },
+    { value: "CONTRA_REVENUE", label: "Contra_Revenue" },
     { value: "EXPENSE", label: "Expense" },
     { value: "COST", label: "Cost" },
 ];

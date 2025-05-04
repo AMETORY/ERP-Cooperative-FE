@@ -24,10 +24,12 @@ import {
 import { getPagination } from "../utils/helper";
 import Moment from "react-moment";
 import { HiFire } from "react-icons/hi";
+import { useTranslation } from "react-i18next";
 
 interface JournalPageProps {}
 
 const JournalPage: FC<JournalPageProps> = ({}) => {
+  const { t } = useTranslation();
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -86,7 +88,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
     <AdminLayout permission="finance:journal:read">
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Journal</h1>
+          <h1 className="text-3xl font-bold ">{t("journal")}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -95,7 +97,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
                 setShowModal(true);
               }}
             >
-              + Create new journal
+              + {t("new_journal")}
             </Button>
             <LuFilter
               className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -108,8 +110,8 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
         <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>{t("date")}</Table.HeadCell>
+              <Table.HeadCell>{t("description")}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
@@ -117,7 +119,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
               {journals.length === 0 && (
                 <Table.Row>
                   <Table.Cell colSpan={5} className="text-center">
-                    No journals found.
+                    {t("no_journals_found")}
                   </Table.Cell>
                 </Table.Row>
               )}
@@ -138,7 +140,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
                         </div>
                         <div className="ml-3 text-sm font-normal">
                           <span className="text-red-500 font-semibold">
-                            Attention: Journal is not balance
+                            {t("attention_journal_not_balanced")}
                           </span>
                         </div>
                       </div>
@@ -150,7 +152,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
                       to={`/journal/${journal.id}`}
                       className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
                     >
-                      View
+                      {t("view")}
                     </Link>
                     <a
                       href="#"
@@ -159,7 +161,9 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
                         e.preventDefault();
                         if (
                           window.confirm(
-                            `Are you sure you want to delete project ${journal.description}?`
+                            t("confirm_delete", {
+                              description: journal.description,
+                            })
                           )
                         ) {
                           deleteJournal(journal?.id!).then(() => {
@@ -168,7 +172,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
                         }
                       }}
                     >
-                      Delete
+                      {t("delete")}
                     </a>
                   </Table.Cell>
                 </Table.Row>
@@ -184,12 +188,12 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
           size="lg"
           aria-labelledby="create-journal-modal"
         >
-          <Modal.Header>Create New Journal</Modal.Header>
+          <Modal.Header>{t("new_journal")}</Modal.Header>
           <Modal.Body>
             <form>
               <div className="space-y-6">
                 <div>
-                  <Label htmlFor="journal-title" value="Date" />
+                  <Label htmlFor="journal-title" value={t("date")} />
                   <Datepicker
                     value={date}
                     onChange={(val) => {
@@ -198,7 +202,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="journal-title" value="Description" />
+                  <Label htmlFor="journal-title" value={t("description")} />
                   <Textarea
                     rows={7}
                     value={description}
@@ -216,7 +220,7 @@ const JournalPage: FC<JournalPageProps> = ({}) => {
           </Modal.Body>
           <Modal.Footer>
             <div className="flex justify-end w-full">
-              <Button onClick={saveJournal}>Save</Button>
+              <Button onClick={saveJournal}>{t('save')}</Button>
             </div>
           </Modal.Footer>
         </Modal>
