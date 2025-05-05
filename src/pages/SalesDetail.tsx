@@ -75,6 +75,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const { loading, setLoading } = useContext(LoadingContext);
   const { salesId } = useParams();
   const [mounted, setMounted] = useState(false);
+  const [mountedAmount, setMountedAmount] = useState(true);
   const [sales, setSales] = useState<SalesModel>();
   const [showWarehouse, setShowWarehouse] = useState(true);
   const [showTax, setShowTax] = useState(true);
@@ -85,6 +86,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const [showModalProduct, setShowModalProduct] = useState(false);
   const [taxes, setTaxes] = useState<TaxModel[]>([]);
   const [modalNoteOpen, setModalNoteOpen] = useState(false);
+  const [modalBilledOpen, setModalBilledOpen] = useState(false);
   const [modalShippingOpen, setModalShippingOpen] = useState(false);
   const [warehouses, setWarehouses] = useState<WarehouseModel[]>([]);
   const [itemNotes, setItemNotes] = useState("");
@@ -517,18 +519,34 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           <div className="flex flex-col space-y-4">
             <div>
               <Label>{t("billed_to")}</Label>
-              <div>{sales?.contact_data_parsed?.name}</div>
-              <div>{sales?.contact_data_parsed?.address}</div>
-              <div>
-                {sales?.contact_data_parsed?.phone}{" "}
-                {sales?.contact_data_parsed?.email && "-"}{" "}
-                {sales?.contact_data_parsed?.email}
+              <div
+                className="cursor-pointer p-2 hover:bg-gray-50"
+                onClick={() => {
+                  if (isEditable) {
+                    setModalBilledOpen(true);
+                  }
+                }}
+              >
+                <div>{sales?.contact_data_parsed?.name}</div>
+                <div>{sales?.contact_data_parsed?.address}</div>
+                <div>
+                  {sales?.contact_data_parsed?.phone}{" "}
+                  {sales?.contact_data_parsed?.email && "-"}{" "}
+                  {sales?.contact_data_parsed?.email}
+                </div>
               </div>
             </div>
             <div>
               <Label>{t("shipped_to")}</Label>
               {sales?.delivery ? (
-                <>
+                <div
+                  className="cursor-pointer p-2 hover:bg-gray-50"
+                  onClick={() => {
+                    if (isEditable) {
+                      setModalShippingOpen(true);
+                    }
+                  }}
+                >
                   <div>{sales?.delivery_data_parsed?.name}</div>
                   <div>{sales?.delivery_data_parsed?.address}</div>
                   <div>
@@ -536,7 +554,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                     {sales?.delivery_data_parsed?.email && "-"}{" "}
                     {sales?.delivery_data_parsed?.email}
                   </div>
-                </>
+                </div>
               ) : (
                 <div
                   className="text-xs italic cursor-pointer"
@@ -757,27 +775,33 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                     {isEditable ? (
                       <div className="flex w-full items-center">
                         <div className=" relative min-w-[32px]">
-                          <CurrencyInput
-                            className="rs-input !p-1.5 "
-                            value={item.quantity ?? 0}
-                            groupSeparator="."
-                            decimalSeparator=","
-                            onValueChange={(value, name, values) => {
-                              setItems([
-                                ...items.map((i) => {
-                                  if (i.id === item.id) {
-                                    i.quantity = values?.float ?? 0;
-                                  }
-                                  return i;
-                                }),
-                              ]);
-                            }}
-                            onKeyUp={(e) => {
-                              if (e.key === "Enter") {
+                          {mountedAmount && (
+                            <CurrencyInput
+                              className="rs-input !p-1.5 "
+                              defaultValue={item.quantity ?? 0}
+                              groupSeparator="."
+                              decimalSeparator=","
+                              onValueChange={(value, name, values) => {
+                                setItems([
+                                  ...items.map((i) => {
+                                    if (i.id === item.id) {
+                                      i.quantity = values?.float ?? 0;
+                                    }
+                                    return i;
+                                  }),
+                                ]);
+                              }}
+                              onKeyUp={(e) => {
+                                if (e.key === "Enter") {
+                                  updateItem(item);
+                                }
+                              }}
+                              onBlur={(e) => {
                                 updateItem(item);
-                              }
-                            }}
-                          />
+                              }}
+                            />
+                          )}
+
                           {item.unit && (
                             <div className="absolute top-2.5 right-2 text-xs">
                               {item?.unit?.code}
@@ -826,9 +850,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   <Table.Cell valign="top">
                     {isEditable ? (
                       <div className="flex gap-2 relative">
+                        {mountedAmount && (
                         <CurrencyInput
                           className="rs-input !p-1.5"
-                          value={item.unit_price ?? 0}
+                          defaultValue={item.unit_price ?? 0}
                           groupSeparator="."
                           decimalSeparator=","
                           onValueChange={(value, name, values) => {
@@ -846,7 +871,11 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                               updateItem(item);
                             }
                           }}
+                          onBlur={(e) => {
+                            updateItem(item);
+                          }}
                         />
+                        )}
                         {(item.availablePrices ?? []).length > 0 && (
                           <div className="absolute top-2 right-2">
                             <Dropdown inline placement="bottom-end">
@@ -898,27 +927,32 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   <Table.Cell valign="top">
                     {isEditable ? (
                       <div className="relative flex justify-end w-fit">
-                        <CurrencyInput
-                          className="rs-input !p-1.5 "
-                          value={item.discount_percent ?? 0}
-                          groupSeparator="."
-                          decimalSeparator=","
-                          onValueChange={(value, name, values) => {
-                            setItems([
-                              ...items.map((i) => {
-                                if (i.id === item.id) {
-                                  i.discount_percent = values?.float ?? 0;
-                                }
-                                return i;
-                              }),
-                            ]);
-                          }}
-                          onKeyUp={(e) => {
-                            if (e.key === "Enter") {
+                        {mountedAmount && (
+                          <CurrencyInput
+                            className="rs-input !p-1.5 "
+                            defaultValue={item.discount_percent ?? 0}
+                            groupSeparator="."
+                            decimalSeparator=","
+                            onValueChange={(value, name, values) => {
+                              setItems([
+                                ...items.map((i) => {
+                                  if (i.id === item.id) {
+                                    i.discount_percent = values?.float ?? 0;
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                            }}
+                            onKeyUp={(e) => {
+                              if (e.key === "Enter") {
+                                updateItem(item);
+                              }
+                            }}
+                            onBlur={(e) => {
                               updateItem(item);
-                            }
-                          }}
-                        />
+                            }}
+                          />
+                        )}
 
                         <span className="absolute top-2 right-1">%</span>
                       </div>
@@ -1310,7 +1344,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                             <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                               <td className="py-2 px-4">
                                 <div className="flex flex-col">
-                                  <strong className="text-xl">{t("balance")}</strong>
+                                  <strong className="text-xl">
+                                    {t("balance")}
+                                  </strong>
                                 </div>
                               </td>
                               <td className="text-right px-4">
@@ -1371,7 +1407,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           >
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="font-semibold text-sm">{t("payment_date")}</label>
+                <label className="font-semibold text-sm">
+                  {t("payment_date")}
+                </label>
                 <Datepicker
                   required
                   value={payment?.payment_date}
@@ -1385,7 +1423,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">{t("description")}</label>
+                <label className="font-semibold text-sm">
+                  {t("description")}
+                </label>
                 <Textarea
                   required
                   placeholder={t("description")}
@@ -1400,7 +1440,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">{t("payment_amount")}</label>
+                <label className="font-semibold text-sm">
+                  {t("payment_amount")}
+                </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <CurrencyInput
@@ -1502,7 +1544,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">{t("payment_method")}</label>
+                <label className="font-semibold text-sm">
+                  {t("payment_method")}
+                </label>
                 <Select
                   options={paymentMethods}
                   required
@@ -1629,6 +1673,21 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           </div>
         </Modal.Footer>
       </Modal>
+      <ModalListContact
+        show={modalBilledOpen}
+        onClose={() => setModalBilledOpen(false)}
+        onSelect={(val) => {
+          setModalBilledOpen(false);
+          setSales({
+            ...sales,
+            contact_id: val.id,
+            contact: val,
+            contact_data: JSON.stringify(val),
+            contact_data_parsed: val,
+          });
+          setIsEdited(true);
+        }}
+      />
       <ModalListContact
         show={modalShippingOpen}
         onClose={() => setModalShippingOpen(false)}

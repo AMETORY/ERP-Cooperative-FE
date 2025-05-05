@@ -65,17 +65,19 @@ import { getAccounts } from "../services/api/accountApi";
 import { paymentMethods } from "../utils/constants";
 import ModalPurchaseReturn from "../components/ModalPurchaseReturn";
 import { useTranslation } from "react-i18next";
+import ModalListContact from "../components/ModalListContact";
 
 interface PurchaseDetailProps {}
 
 const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
   const { t } = useTranslation();
-
+  const [mounted, setMounted] = useState(false);
   const nav = useNavigate();
   const { loading, setLoading } = useContext(LoadingContext);
   const { purchaseId } = useParams();
-  const [mounted, setMounted] = useState(false);
+  const [mountedAmount, setMountedAmount] = useState(true);
   const [purchase, setPurchase] = useState<PurchaseModel>();
+  const [modalBilledOpen, setModalBilledOpen] = useState(false);
   const [showWarehouse, setShowWarehouse] = useState(true);
   const [showTax, setShowTax] = useState(true);
   const [items, setItems] = useState<PurchaseItemModel[]>([]);
@@ -390,7 +392,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               <Label>{t("due_date")}</Label>
               {isEditable ? (
                 <Datepicker
-                  value={moment(purchase?.due_date ?? moment().add(30, "days")).toDate()}
+                  value={moment(
+                    purchase?.due_date ?? moment().add(30, "days")
+                  ).toDate()}
                   onChange={(date) => {
                     setPurchase({
                       ...purchase!,
@@ -401,9 +405,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 />
               ) : (
                 <div className="text-data">
-                  <Moment format="DD MMM YYYY">
-                    {purchase?.due_date}
-                  </Moment>
+                  <Moment format="DD MMM YYYY">{purchase?.due_date}</Moment>
                 </div>
               )}
             </div>
@@ -443,12 +445,21 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
           <div className="flex flex-col space-y-4">
             <div>
               <Label>{t("billed_from")}</Label>
-              <div>{purchase?.contact_data_parsed?.name}</div>
-              <div>{purchase?.contact_data_parsed?.address}</div>
-              <div>
-                {purchase?.contact_data_parsed?.phone}{" "}
-                {purchase?.contact_data_parsed?.email && "-"}{" "}
-                {purchase?.contact_data_parsed?.email}
+              <div
+                className="cursor-pointer p-2 hover:bg-gray-50"
+                onClick={() => {
+                  if (isEditable) {
+                    setModalBilledOpen(true);
+                  }
+                }}
+              >
+                <div>{purchase?.contact_data_parsed?.name}</div>
+                <div>{purchase?.contact_data_parsed?.address}</div>
+                <div>
+                  {purchase?.contact_data_parsed?.phone}{" "}
+                  {purchase?.contact_data_parsed?.email && "-"}{" "}
+                  {purchase?.contact_data_parsed?.email}
+                </div>
               </div>
             </div>
           </div>
@@ -457,19 +468,31 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
         <div className="overflow-x-auto">
           <Table className=" overflow-x-auto border rounded-none" hoverable>
             <Table.Head>
-              <Table.HeadCell style={{ width: "300px" }}>{t("item")}</Table.HeadCell>
+              <Table.HeadCell style={{ width: "300px" }}>
+                {t("item")}
+              </Table.HeadCell>
               {/* {showWarehouse && (
                 <Table.HeadCell style={{ width: "150px" }}>
                   {t("warehouse")}
                 </Table.HeadCell>
               )} */}
-              <Table.HeadCell style={{ width: "100px" }}>{t("qty")}</Table.HeadCell>
-              <Table.HeadCell style={{ width: "120px" }}>{t("price")}</Table.HeadCell>
-              <Table.HeadCell style={{ width: "40px" }}>{t("discount")}</Table.HeadCell>
+              <Table.HeadCell style={{ width: "100px" }}>
+                {t("qty")}
+              </Table.HeadCell>
+              <Table.HeadCell style={{ width: "120px" }}>
+                {t("price")}
+              </Table.HeadCell>
+              <Table.HeadCell style={{ width: "40px" }}>
+                {t("discount")}
+              </Table.HeadCell>
               {showTax && (
-                <Table.HeadCell style={{ width: "100px" }}>{t("tax")}</Table.HeadCell>
+                <Table.HeadCell style={{ width: "100px" }}>
+                  {t("tax")}
+                </Table.HeadCell>
               )}
-              <Table.HeadCell style={{ width: "130px" }}>{t("amount")}</Table.HeadCell>
+              <Table.HeadCell style={{ width: "130px" }}>
+                {t("amount")}
+              </Table.HeadCell>
               <Table.HeadCell className="w-10">
                 {/* <div className="flex justify-end">
                   <Dropdown
@@ -658,27 +681,33 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                     {isEditable ? (
                       <div className="flex w-full items-center">
                         <div className=" relative min-w-[32px]">
-                          <CurrencyInput
-                            className="rs-input !p-1.5 "
-                            value={item.quantity ?? 0}
-                            groupSeparator="."
-                            decimalSeparator=","
-                            onValueChange={(value, name, values) => {
-                              setItems([
-                                ...items.map((i) => {
-                                  if (i.id === item.id) {
-                                    i.quantity = values?.float ?? 0;
-                                  }
-                                  return i;
-                                }),
-                              ]);
-                            }}
-                            onKeyUp={(e) => {
-                              if (e.key === "Enter") {
+                          {mountedAmount && (
+                            <CurrencyInput
+                              className="rs-input !p-1.5 "
+                              defaultValue={item.quantity ?? 0}
+                              groupSeparator="."
+                              decimalSeparator=","
+                              onValueChange={(value, name, values) => {
+                                setItems([
+                                  ...items.map((i) => {
+                                    if (i.id === item.id) {
+                                      i.quantity = values?.float ?? 0;
+                                    }
+                                    return i;
+                                  }),
+                                ]);
+                              }}
+                              onKeyUp={(e) => {
+                                if (e.key === "Enter") {
+                                  updateItem(item);
+                                }
+                              }}
+                              onBlur={() => {
                                 updateItem(item);
-                              }
-                            }}
-                          />
+                              }}
+                            />
+                          )}
+
                           {item.unit && (
                             <div className="absolute top-2.5 right-2 text-xs">
                               {item?.unit?.code}
@@ -727,27 +756,32 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   <Table.Cell valign="top">
                     {isEditable ? (
                       <div className="flex gap-2 relative">
-                        <CurrencyInput
-                          className="rs-input !p-1.5"
-                          value={item.unit_price ?? 0}
-                          groupSeparator="."
-                          decimalSeparator=","
-                          onValueChange={(value, name, values) => {
-                            setItems([
-                              ...items.map((i) => {
-                                if (i.id === item.id) {
-                                  i.unit_price = values?.float ?? 0;
-                                }
-                                return i;
-                              }),
-                            ]);
-                          }}
-                          onKeyUp={(e) => {
-                            if (e.key === "Enter") {
+                        {mountedAmount && (
+                          <CurrencyInput
+                            className="rs-input !p-1.5"
+                            defaultValue={item.unit_price ?? 0}
+                            groupSeparator="."
+                            decimalSeparator=","
+                            onValueChange={(value, name, values) => {
+                              setItems([
+                                ...items.map((i) => {
+                                  if (i.id === item.id) {
+                                    i.unit_price = values?.float ?? 0;
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                            }}
+                            onKeyUp={(e) => {
+                              if (e.key === "Enter") {
+                                updateItem(item);
+                              }
+                            }}
+                            onBlur={() => {
                               updateItem(item);
-                            }
-                          }}
-                        />
+                            }}
+                          />
+                        )}
                       </div>
                     ) : (
                       <div className="text-data">{money(item.unit_price)}</div>
@@ -756,9 +790,10 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   <Table.Cell valign="top">
                     {isEditable && !item.is_cost ? (
                       <div className="relative flex justify-end w-fit">
+                        {mountedAmount && (
                         <CurrencyInput
                           className="rs-input !p-1.5 "
-                          value={item.discount_percent ?? 0}
+                          defaultValue={item.discount_percent ?? 0}
                           groupSeparator="."
                           decimalSeparator=","
                           onValueChange={(value, name, values) => {
@@ -776,7 +811,11 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                               updateItem(item);
                             }
                           }}
+                          onBlur={() => {
+                            updateItem(item);
+                          }}
                         />
+                        )}
 
                         <span className="absolute top-2 right-1">%</span>
                       </div>
@@ -914,7 +953,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                         }}
                       >
                         <BsPlusCircle />
-{t('add_item')}
+                        {t("add_item")}
                       </button>
                       <button
                         className="flex gap-2 justify-center items-center hover:bg-gray-100 py-2 px-4 rounded-lg"
@@ -932,7 +971,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                         }}
                       >
                         <BsPlusCircle />
-                        {t('add_cost')}
+                        {t("add_cost")}
                       </button>
                     </div>
                   </Table.Cell>
@@ -945,7 +984,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
         <div className="grid grid-cols-2 gap-8 mt-4 ">
           <div className="flex flex-col gap-2 space-y-4 bg-gray-50 rounded-lg p-4">
             <div>
-              <Label>{t('description')}</Label>
+              <Label>{t("description")}</Label>
               {isEditable ? (
                 <Textarea
                   value={purchase?.description}
@@ -960,7 +999,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   style={{
                     backgroundColor: "white",
                   }}
-                  placeholder={t('description')}
+                  placeholder={t("description")}
                   onBlur={() => {}}
                 />
               ) : (
@@ -968,7 +1007,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               )}
             </div>
             <div>
-              <Label>{t('payment_terms')}</Label>
+              <Label>{t("payment_terms")}</Label>
               {isEditable ? (
                 <div>
                   <select
@@ -988,7 +1027,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                       }
                     }}
                   >
-                    <option value={""}>{t('select_payment_terms')}</option>
+                    <option value={""}>{t("select_payment_terms")}</option>
                     {paymentTermGroups.map((pt) => (
                       <optgroup label={pt.group} key={pt.group}>
                         {pt.terms.map((t) => (
@@ -1025,7 +1064,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               )}
             </div>
             <div>
-              <Label>{t('term_condition')}</Label>
+              <Label>{t("term_condition")}</Label>
               {isEditable ? (
                 <Editor
                   apiKey={process.env.REACT_APP_TINY_MCE_KEY}
@@ -1056,13 +1095,15 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
             </div>
           </div>
           <div>
-            <h3 className="font-semibold text-lg">{t('summary')}</h3>
+            <h3 className="font-semibold text-lg">{t("summary")}</h3>
             <div className="flex flex-col gap-2  border rounded-lg h-fit mb-4">
               <div className="w-full h-fit">
                 <table className="w-full">
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                     <td className="py-2 px-4">
-                      <strong className="text-sm">{t('summary_sub_total')}</strong>
+                      <strong className="text-sm">
+                        {t("summary_sub_total")}
+                      </strong>
                     </td>
                     <td className="text-right px-4">
                       <span>{money(purchase?.total_before_disc)}</span>
@@ -1070,7 +1111,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                     <td className="py-2 px-4">
-                      <strong className="text-sm">{t('total_discount')}</strong>
+                      <strong className="text-sm">{t("total_discount")}</strong>
                     </td>
                     <td className="text-right px-4">
                       <span>{money(purchase?.total_discount)}</span>
@@ -1078,7 +1119,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                     <td className="py-2 px-4">
-                      <strong className="text-sm">{t('after_discount')}</strong>
+                      <strong className="text-sm">{t("after_discount")}</strong>
                     </td>
                     <td className="text-right px-4">
                       <span>{money(purchase?.subtotal)}</span>
@@ -1086,7 +1127,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                     <td className="py-2 px-4">
-                      <strong className="text-sm">{t('total_tax')}</strong>
+                      <strong className="text-sm">{t("total_tax")}</strong>
                     </td>
                     <td className="text-right px-4">
                       <span>{money(purchase?.total_tax)}</span>
@@ -1094,7 +1135,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                   </tr>
                   <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                     <td className="py-2 px-4">
-                      <strong className="text-lg">{t('total')}</strong>
+                      <strong className="text-lg">{t("total")}</strong>
                     </td>
                     <td className="text-right px-4">
                       <span className="text-lg">{money(purchase?.total)}</span>
@@ -1108,7 +1149,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 {purchase?.status == "POSTED" && (
                   <>
                     <div className="flex justify-between items-center ">
-                      <h3 className="font-semibold text-lg">{t('payment_history')}</h3>
+                      <h3 className="font-semibold text-lg">
+                        {t("payment_history")}
+                      </h3>
                       {(purchase.total ?? 0) - (purchase.paid ?? 0) > 0 && (
                         <Button
                           size="xs"
@@ -1152,7 +1195,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                             });
                           }}
                         >
-                          + {t('payment')}
+                          + {t("payment")}
                         </Button>
                       )}
                     </div>
@@ -1184,7 +1227,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                           <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                             <td className="py-2 px-4">
                               <div className="flex flex-col">
-                                <strong className="text-xl">{t('balance')}</strong>
+                                <strong className="text-xl">
+                                  {t("balance")}
+                                </strong>
                               </div>
                             </td>
                             <td className="text-right px-4">
@@ -1192,7 +1237,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                                 {money(
                                   (purchase?.total ?? 0) - (purchase?.paid ?? 0)
                                 ) == 0
-                                  ? t('PAID')
+                                  ? t("PAID")
                                   : money(
                                       (purchase?.total ?? 0) -
                                         (purchase?.paid ?? 0)
@@ -1210,10 +1255,12 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                     className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
                     role="alert"
                   >
-                    <strong className="font-bold">{t('Attention!')}</strong>
+                    <strong className="font-bold">{t("Attention!")}</strong>
                     <span className="block sm:inline">
                       {" "}
-                      {t('This invoice is already paid in cash, you cannot add payment')}
+                      {t(
+                        "This invoice is already paid in cash, you cannot add payment"
+                      )}
                     </span>
                   </div>
                 )}
@@ -1223,7 +1270,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
         </div>
       </div>
       <Modal show={payment != undefined} onClose={() => setPayment(undefined)}>
-        <Modal.Header>{t('payment')}</Modal.Header>
+        <Modal.Header>{t("payment")}</Modal.Header>
         <Modal.Body>
           <form
             onSubmit={async (e) => {
@@ -1244,7 +1291,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
           >
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="font-semibold text-sm">{t('payment_date')}</label>
+                <label className="font-semibold text-sm">
+                  {t("payment_date")}
+                </label>
                 <Datepicker
                   required
                   value={payment?.payment_date}
@@ -1258,10 +1307,12 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">{t('description')}</label>
+                <label className="font-semibold text-sm">
+                  {t("description")}
+                </label>
                 <Textarea
                   required
-                  placeholder={t('description')}
+                  placeholder={t("description")}
                   value={payment?.notes}
                   onChange={(val) => {
                     setPayment({
@@ -1273,7 +1324,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">{t('payment_amount')}</label>
+                <label className="font-semibold text-sm">
+                  {t("payment_amount")}
+                </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <CurrencyInput
@@ -1345,7 +1398,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-sm">{t('account')}</label>
+                <label className="font-semibold text-sm">{t("account")}</label>
                 <Select
                   options={assets.map((a) => ({
                     label: a.name,
@@ -1376,7 +1429,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">{t('payment_method')}</label>
+                <label className="font-semibold text-sm">
+                  {t("payment_method")}
+                </label>
                 <Select
                   options={paymentMethods}
                   required
@@ -1396,10 +1451,10 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               </div>
               <div>
                 <label className="font-semibold text-sm">
-                  {t('payment_method_notes')}
+                  {t("payment_method_notes")}
                 </label>
                 <Textarea
-                  placeholder={t('payment_method_notes')}
+                  placeholder={t("payment_method_notes")}
                   value={payment?.payment_method_notes}
                   onChange={(val) => {
                     setPayment({
@@ -1413,7 +1468,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               {discountEnabled && (
                 <div>
                   <label className="font-semibold text-sm">
-                    {t('paymentDiscount')}
+                    {t("paymentDiscount")}
                   </label>
                   <div className="relative w-fit">
                     <CurrencyInput
@@ -1439,7 +1494,7 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
               <div className="w-full flex">
                 <Button type="submit" className="w-full">
                   <IoPaperPlaneOutline className="mr-2" />
-                  {t('send_payment')}
+                  {t("send_payment")}
                 </Button>
               </div>
             </div>
@@ -1503,6 +1558,24 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
           </div>
         </Modal.Footer>
       </Modal>
+      <ModalListContact
+        is_customer={false}
+        is_vendor={true}
+        is_supplier={true}
+        show={modalBilledOpen}
+        onClose={() => setModalBilledOpen(false)}
+        onSelect={(val) => {
+          setModalBilledOpen(false);
+          setPurchase({
+            ...purchase!,
+            contact_id: val.id,
+            contact: val,
+            contact_data: JSON.stringify(val),
+            contact_data_parsed: val,
+          });
+          setIsEdited(true);
+        }}
+      />
       {/* <ModalListContact
         show={modalShippingOpen}
         onClose={() => setModalShippingOpen(false)}

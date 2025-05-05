@@ -97,7 +97,7 @@ const ModalProduct: FC<ModalProductProps> = ({
             <Label htmlFor="product-price" value={t("price")} />
             <CurrencyInput
               className="rs-input !p-1.5 "
-              value={product?.price ?? 0}
+              defaultValue={product?.price ?? 0}
               groupSeparator="."
               decimalSeparator=","
               onValueChange={(value, name, values) => {

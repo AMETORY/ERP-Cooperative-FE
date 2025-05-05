@@ -8,9 +8,12 @@ interface ModalListContactProps {
   show: boolean;
   onClose: () => void;
   onSelect: (contact: ContactModel) => void;
+  is_customer?: boolean,
+  is_vendor?: boolean,
+  is_supplier?: boolean,
 }
 
-const ModalListContact: FC<ModalListContactProps> = ({ show, onClose, onSelect }) => {
+const ModalListContact: FC<ModalListContactProps> = ({ show, onClose, onSelect, is_customer = true, is_vendor = true, is_supplier = true }) => {
   const [contacts, setContacts] = useState<ContactModel[]>([]);
   const [search, setSearch] = useState("");
 
@@ -22,9 +25,9 @@ const ModalListContact: FC<ModalListContactProps> = ({ show, onClose, onSelect }
       page: 1,
       size: 10,
       search: s,
-      is_customer: true,
-      is_vendor: true,
-      is_supplier: true,
+      is_customer: is_customer,
+      is_vendor: is_vendor,
+      is_supplier: is_supplier,
     }).then((res: any) => {
       setContacts(res.data.items);
     });
