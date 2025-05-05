@@ -13,10 +13,12 @@ import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import { LuLink } from "react-icons/lu";
 import CashFlowComponent from "../components/report/CashFlowComponent";
+import { useTranslation } from "react-i18next";
 
 interface CashFlowProps {}
 
 const CashFlow: FC<CashFlowProps> = ({}) => {
+  const { t } = useTranslation();
   const { setLoading } = useContext(LoadingContext);
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const [report, setReport] = useState<CashFlowReport>();
@@ -41,7 +43,7 @@ const CashFlow: FC<CashFlowProps> = ({}) => {
   return (
     <AdminLayout>
       <div className="p-6">
-        <h1 className="text-3xl text-gray-900 font-bold">Cash Flow Report</h1>
+        <h1 className="text-3xl text-gray-900 font-bold">{t("cash_flow_statement")}</h1>
         <div className=" mt-8 h-[calc(100vh-180px)] overflow-y-auto">
           {report && <CashFlowComponent cashFlow={report} />}
         </div>

@@ -13,10 +13,13 @@ import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
 import { LuLink } from "react-icons/lu";
 import CapitalChangeComponent from "../components/report/CapitalChangeComponent";
+import { useTranslation } from "react-i18next";
 
 interface CapitalChangeProps {}
 
 const CapitalChange: FC<CapitalChangeProps> = ({}) => {
+    const { t } = useTranslation();
+  
   const { setLoading } = useContext(LoadingContext);
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const [report, setReport] = useState<CapitalChangeModel>();
@@ -43,7 +46,7 @@ const CapitalChange: FC<CapitalChangeProps> = ({}) => {
     <AdminLayout>
       <div className="p-6">
         <h1 className="text-3xl text-gray-900 font-bold">
-          Capital Change Report
+          {t('capital_change_statement')}
         </h1>
         <div className=" mt-8">
           {report && <CapitalChangeComponent capitalChange={report} />}

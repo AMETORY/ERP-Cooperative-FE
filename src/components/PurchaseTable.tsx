@@ -30,6 +30,7 @@ import Select, { InputActionMeta } from "react-select";
 import ModalContact from "./ModalContact";
 import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
+import { useTranslation } from "react-i18next";
 
 interface PurchaseTableProps {
   docType: string;
@@ -37,6 +38,7 @@ interface PurchaseTableProps {
 }
 
 const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
+  const { t } = useTranslation();
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -154,12 +156,12 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
       <div className="overflow-x-auto">
         <Table>
           <Table.Head>
-            <Table.HeadCell>Date</Table.HeadCell>
-            <Table.HeadCell>Purchase Number</Table.HeadCell>
-            <Table.HeadCell>Contact</Table.HeadCell>
-            <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell>Total</Table.HeadCell>
-            <Table.HeadCell>Balance</Table.HeadCell>
+            <Table.HeadCell>{t("date")}</Table.HeadCell>
+            <Table.HeadCell>No.</Table.HeadCell>
+            <Table.HeadCell>{t("contact")}</Table.HeadCell>
+            <Table.HeadCell>{t("status")}</Table.HeadCell>
+            <Table.HeadCell>{t("total")}</Table.HeadCell>
+            <Table.HeadCell>{t("balance")}</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>
@@ -237,7 +239,7 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
           <form>
             <div className=" space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="date">Date</Label>
+                <Label htmlFor="date">{t("date")}</Label>
                 <Datepicker
                   id="date"
                   value={date}
@@ -245,18 +247,18 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="purchases-number">{title} Number</Label>
+                <Label htmlFor="purchases-number">No.</Label>
                 <TextInput
                   id="purchases-number"
                   type="text"
-                  placeholder={`${title} Number`}
+                  placeholder={`No.`}
                   required={true}
                   value={purchasesNumber}
                   onChange={(e) => setPurchaseNumber(e.target.value)}
                 />
               </div>
               <div>
-                <Label htmlFor="date">Purchase Type</Label>
+                <Label htmlFor="date">{t("purchase_type")}</Label>
                 <Select
                   id="purchases-type"
                   value={purchasesTypeSelected}
@@ -265,7 +267,7 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="contact">Contact</Label>
+                <Label htmlFor="contact">{t("contact")}</Label>
                 <CreatableSelect
                   id="contact"
                   value={selectedContact}
@@ -291,11 +293,11 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t("notes")}</Label>
                 <Textarea
                   rows={7}
                   id="notes"
-                  placeholder="Description"
+                  placeholder={t("description")}
                   required={true}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -307,7 +309,7 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
         </Modal.Body>
         <Modal.Footer className="flex justify-end">
           <Button type="submit" onClick={saveInvoice}>
-            Create
+            {t("create")}
           </Button>
         </Modal.Footer>
       </Modal>

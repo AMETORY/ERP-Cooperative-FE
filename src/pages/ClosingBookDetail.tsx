@@ -32,10 +32,13 @@ import toast from "react-hot-toast";
 import { TbFileInvoice } from "react-icons/tb";
 import { HiOutlineChartPie } from "react-icons/hi2";
 import { money } from "../utils/helper";
+import { useTranslation } from "react-i18next";
 
 interface ClosingBookDetailProps {}
 
 const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
+  const { t } = useTranslation();
+
   const { closingBookId } = useParams();
   const { loading, setLoading } = useContext(LoadingContext);
   const [mounted, setMounted] = useState(false);
@@ -138,14 +141,14 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
         <div className="  px-2">
           <table>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Periode</th>
+              <th className="px-2 py-2 w-64 text-left">{t("period")}</th>
               <td className="px-2 py-2">
                 <Moment format="DD MMM YYYY">{closingBook?.start_date}</Moment>{" "}
                 - <Moment format="DD MMM YYYY">{closingBook?.end_date}</Moment>
               </td>
             </tr>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Status</th>
+              <th className="px-2 py-2 w-64 text-left">{t("status")}</th>
               <td className="px-2 py-2">
                 <div className="w-fit">
                   <Badge
@@ -170,27 +173,39 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             </tr>
 
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Total Income</th>
-              <td className="px-2 py-2">{money(closingBook?.closing_summary?.total_income)}</td>
+              <th className="px-2 py-2 w-64 text-left">{t("total_income")}</th>
+              <td className="px-2 py-2">
+                {money(closingBook?.closing_summary?.total_income)}
+              </td>
             </tr>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Total Expense</th>
-              <td className="px-2 py-2">{money(closingBook?.closing_summary?.total_expense)}</td>
+              <th className="px-2 py-2 w-64 text-left">{t("total_expense")}</th>
+              <td className="px-2 py-2">
+                {money(closingBook?.closing_summary?.total_expense)}
+              </td>
             </tr>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Net Profit (Before Tax)</th>
-              <td className="px-2 py-2">{money(closingBook?.closing_summary?.net_income)}</td>
+              <th className="px-2 py-2 w-64 text-left">
+                {t("net_profit_before_tax")}
+              </th>
+              <td className="px-2 py-2">
+                {money(closingBook?.closing_summary?.net_income)}
+              </td>
             </tr>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Tax Total</th>
-              <td className="px-2 py-2">{money(closingBook?.closing_summary?.income_tax)}</td>
+              <th className="px-2 py-2 w-64 text-left">{t("tax_total")}</th>
+              <td className="px-2 py-2">
+                {money(closingBook?.closing_summary?.income_tax)}
+              </td>
             </tr>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Tax</th>
-              <td className="px-2 py-2">{money(closingBook?.closing_summary?.tax_percentage)}%</td>
+              <th className="px-2 py-2 w-64 text-left">{t("tax")}</th>
+              <td className="px-2 py-2">
+                {money(closingBook?.closing_summary?.tax_percentage)}%
+              </td>
             </tr>
             <tr className="">
-              <th className="px-2 py-2 w-64 text-left">Notes</th>
+              <th className="px-2 py-2 w-64 text-left">{t("notes")}</th>
               <td className="px-2 py-2">{closingBook?.notes}</td>
             </tr>
             <tr className="">
@@ -200,8 +215,9 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
                     onClick={() => {
                       setModalOpen(true);
                     }}
+                    className="w-full"
                   >
-                    Release
+                    {t("release")}
                   </Button>
                 )}
               </td>
@@ -210,60 +226,59 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
         </div>
         {closingBook?.status === "RELEASED" && (
           <div className="px-2">
-            <h2 className="text-lg font-bold">Closing Book Journal</h2>
+            <h2 className="text-lg font-bold">{t("closing_book_journal")}</h2>
             <div className="overflow-x-auto">
-            <Table>
-              <Table.Head>
-                <Table.HeadCell className="w-64">Date</Table.HeadCell>
-                <Table.HeadCell>Description</Table.HeadCell>
-                <Table.HeadCell align="right">Debit</Table.HeadCell>
-                <Table.HeadCell align="right">Credit</Table.HeadCell>
-                <Table.HeadCell></Table.HeadCell>
-              </Table.Head>
-              <Table.Body className="divide-y">
-                {(closingBook?.transactions ?? []).length === 0 && (
-                  <Table.Row>
-                    <Table.Cell colSpan={5} className="text-center">
-                      No transactions found.
-                    </Table.Cell>
-                  </Table.Row>
-                )}
+              <Table>
+                <Table.Head>
+                  <Table.HeadCell className="w-64">{t("date")}</Table.HeadCell>
+                  <Table.HeadCell>{t("description")}</Table.HeadCell>
+                  <Table.HeadCell align="right">{t("debit")}</Table.HeadCell>
+                  <Table.HeadCell align="right">{t("credit")}</Table.HeadCell>
+                  <Table.HeadCell></Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                  {(closingBook?.transactions ?? []).length === 0 && (
+                    <Table.Row>
+                      <Table.Cell colSpan={5} className="text-center">
+                        {t("no_transactions_found")}
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
 
-                {(closingBook?.transactions ?? []).map((transaction, i) => (
-                  <Table.Row
-                    key={i}
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <Table.Cell
-                      className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
-                      onClick={() => {}}
+                  {(closingBook?.transactions ?? []).map((transaction, i) => (
+                    <Table.Row
+                      key={i}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
-                      <Moment format="DD/MM/YYYY">{transaction.date}</Moment>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <div className="flex flex-col">
-                        <span className="font-semibold">
-                          {transaction.description}
-                        </span>
-                        {transaction.notes && (
-                          <span className="text-xs text-gray-500">
-                            {transaction.notes}
+                      <Table.Cell
+                        className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer hover:font-semibold"
+                        onClick={() => {}}
+                      >
+                        <Moment format="DD/MM/YYYY">{transaction.date}</Moment>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <div className="flex flex-col">
+                          <span className="font-semibold">
+                            {transaction.description}
                           </span>
-                        )}
-                      </div>
-                    </Table.Cell>
-       
-                    <Table.Cell align="right">
-                      {money(transaction.debit)}
-                    </Table.Cell>
-                    <Table.Cell align="right">
-                      {money(transaction.credit)}
-                    </Table.Cell>
-                 
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
+                          {transaction.notes && (
+                            <span className="text-xs text-gray-500">
+                              {transaction.notes}
+                            </span>
+                          )}
+                        </div>
+                      </Table.Cell>
+
+                      <Table.Cell align="right">
+                        {money(transaction.debit)}
+                      </Table.Cell>
+                      <Table.Cell align="right">
+                        {money(transaction.credit)}
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
             </div>
           </div>
         )}
@@ -276,7 +291,6 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
         <div className="mb-2">
           <h1 className="text-3xl font-bold">Tutup Buku</h1>
         </div>
-
         <Tabs
           aria-label="Default tabs"
           variant="default"
@@ -289,7 +303,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             title={
               <div className="flex items-center gap-2">
                 <img src="/icon/analysis.png" width={24} />
-                <span>Summary</span>
+                <span>{t("summary")}</span>
               </div>
             }
             active={activeTab == 0}
@@ -300,7 +314,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             title={
               <div className="flex items-center gap-2">
                 <img src="/icon/trial.png" width={24} />
-                <span>Trial Balance</span>
+                <span>{t("trial_balance")}</span>
               </div>
             }
             active={activeTab == 1}
@@ -319,7 +333,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             title={
               <div className="flex items-center gap-2">
                 <img src="/icon/profit-loss.png" width={24} />
-                <span>Profit Loss</span>
+                <span>{t("profit_loss")}</span>
               </div>
             }
             active={activeTab == 2}
@@ -336,7 +350,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             title={
               <div className="flex items-center gap-2">
                 <img src="/icon/budget-balance.png" width={24} />
-                <span>Balance Sheet</span>
+                <span>{t("balance_sheet")}</span>
               </div>
             }
             active={activeTab == 3}
@@ -355,7 +369,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             title={
               <div className="flex items-center gap-2">
                 <img src="/icon/cash-flow.png" width={24} />
-                <span>Cash Flow</span>
+                <span>{t("cash_flow")}</span>
               </div>
             }
             active={activeTab == 4}
@@ -372,7 +386,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
             title={
               <div className="flex items-center gap-2">
                 <img src="/icon/investment.png" width={24} />
-                <span>Capital Change</span>
+                <span>{t("capital_change")}</span>
               </div>
             }
             active={activeTab == 5}
@@ -390,20 +404,17 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
         </Tabs>
       </div>
       <Modal show={modalOpen} onClose={() => setModalOpen(false)}>
-        <Modal.Header>Release Closing Book</Modal.Header>
+        <Modal.Header>{t("release_closing_book")}</Modal.Header>
         <Modal.Body>
           <div className="flex flex-col space-y-4">
             <div>
+              <p className="">{t("are_you_sure_release_closing_book")}</p>
               <p className="">
-                Are you sure you want to release this closing book?
-              </p>
-              <p className="">
-                Make sure you have done stock opname and bank reconcile for this
-                period before releasing this closing book.
+                {t("make_sure_stock_opname_and_bank_reconcile_done")}
               </p>
             </div>
             <div>
-              <Label>Summary Account</Label>
+              <Label>{t("summary_account")}</Label>
               <Select
                 options={sumAccounts.map((a) => {
                   return {
@@ -424,7 +435,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
               />
             </div>
             <div>
-              <Label>Earning Retain Account</Label>
+              <Label>{t("earning_retain_account")}</Label>
               <Select
                 options={profitLossAccounts.map((a) => {
                   return {
@@ -447,7 +458,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
               />
             </div>
             <div>
-              <Label>Tax Account</Label>
+              <Label>{t("tax_account")}</Label>
 
               <Select
                 options={taxPayableAccounts.map((a) => {
@@ -471,7 +482,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
               />
             </div>
             <div>
-              <Label>Tax Expense Account</Label>
+              <Label>{t("tax_expense_account")}</Label>
 
               <Select
                 options={taxExpenseAccounts.map((a) => {
@@ -495,7 +506,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
               />
             </div>
             <div>
-              <Label>Tax Amount</Label>
+              <Label>{t("tax_amount")}</Label>
               <div className="w-[100px]">
                 <TextInput
                   type="number"
@@ -510,7 +521,7 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
               </div>
             </div>
             {/* <div>
-              <Label>Notes</Label>
+              <Label>{t("notes")}</Label>
               <Textarea
                 rows={7}
                 value={notes}
@@ -522,19 +533,21 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
+          <div className="w-full flex justify-end">
           <Button
+          className="w-32"
             onClick={async () => {
               setLoading(true);
               if (!selectedSumAccount) {
-                toast.error("Please select earning return ");
+                toast.error(t("please_select_earning_return"));
                 return;
               }
               if (!selectedProfitLossAccount) {
-                toast.error("Please select reatin earning account");
+                toast.error(t("please_select_retain_earning_account"));
                 return;
               }
               // if (!notes) {
-              //   toast.error("Please add notes");
+              //   toast.error(t("please_add_notes"));
               //   return;
               // }
 
@@ -549,15 +562,18 @@ const ClosingBookDetail: FC<ClosingBookDetailProps> = ({}) => {
                 });
                 getDetail();
               } catch (error) {
-                toast.error(`Failed to generate closing book ${error}`);
+                toast.error(
+                  `${t("failed_to_generate_closing_book")} ${error}`
+                );
               } finally {
                 setModalOpen(false);
                 setLoading(false);
               }
             }}
           >
-            Release
+            {t("release")}
           </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </AdminLayout>

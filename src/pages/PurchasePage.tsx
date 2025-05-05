@@ -18,9 +18,11 @@ import {
   import PurchaseTable from "../components/PurchaseTable";
   import { createPurchase } from "../services/api/purchaseApi";
 import ReturnPurchaseTable from "../components/ReturnPurchaseTable";
+import { useTranslation } from "react-i18next";
   interface PurchasePageProps {}
   
   const PurchasePage: FC<PurchasePageProps> = ({}) => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState(0);
     const { search, setSearch } = useContext(SearchContext);
     const [showModal, setShowModal] = useState(false);
@@ -104,21 +106,21 @@ import ReturnPurchaseTable from "../components/ReturnPurchaseTable";
           >
             <Tabs.Item
               active={activeTab === 0}
-              title="Purchase"
+              title={t("purchase")}
               icon={TbFileInvoice}
             >
-              <PurchaseTable title="Purchase" docType="BILL" />
+              <PurchaseTable title={t("purchase")} docType="BILL" />
             </Tabs.Item>
             <Tabs.Item
               active={activeTab === 1}
-              title="Purchase Order"
+              title={t("purchase_order")}
               icon={TbTruckDelivery}
             >
-              <PurchaseTable title="Purchase Order" docType="PURCHASE_ORDER" />
+              <PurchaseTable title={t("purchase_order")} docType="PURCHASE_ORDER" />
             </Tabs.Item>
             <Tabs.Item
               active={activeTab === 2}
-              title="Purchase Return"
+              title={t("purchase_return")}
               icon={TbTruckReturn}
             >
               <ReturnPurchaseTable />

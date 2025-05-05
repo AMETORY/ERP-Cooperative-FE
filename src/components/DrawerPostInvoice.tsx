@@ -21,6 +21,7 @@ import moment from "moment";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { postInvoice } from "../services/api/salesApi";
 import { PaymentTermModel } from "../models/payment_term";
+import { useTranslation } from "react-i18next";
 interface DrawerPostInvoiceProps {
   open: boolean;
   onClose: () => void;
@@ -34,6 +35,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
   sales,
   setSales,
 }) => {
+  const { t } = useTranslation();
   const { loading, setLoading } = useContext(LoadingContext);
   const [incomeAccounts, setIncomeAccounts] = useState<AccountModel[]>([]);
   const [assetAccounts, setAssetAccounts] = useState<AccountModel[]>([]);
@@ -123,7 +125,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
       <DrawerItems>
         <div className="mt-8">
           <h1 className="text-2xl font-semibold">
-            {sales?.sales_number} Release
+            {sales?.sales_number} {t("release")}
           </h1>
         </div>
       </DrawerItems>
@@ -131,7 +133,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
         <div className="overflow-x-auto h-[calc(100vh-180px)] mt-4 p-2  space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Due Date</Label>
+              <Label>{t("due_date")}</Label>
               <Datepicker
                 value={dueDate ? moment(dueDate).toDate() : new Date()}
                 onChange={(e) => setDueDate(e!)}
@@ -142,7 +144,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
               </small>
             </div>
             <div>
-              <Label>Transaction Date</Label>
+              <Label>{t("transaction_date")}</Label>
               <Datepicker
                 value={transactionDate}
                 onChange={(e: any) => setTransactionDate(e)}
@@ -152,7 +154,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="w-full">
-              <Label className="">Payment Account</Label>
+              <Label className="">{t("payment_account")}</Label>
               <Select
                 value={{
                   label: sales?.payment_account?.name!,
@@ -196,7 +198,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
               />
             </div>
             <div className="w-full">
-              <Label className="">Notes</Label>
+              <Label className="">{t("notes")}</Label>
               <Textarea
                 value={sales?.notes}
                 onChange={(e) => {
@@ -218,11 +220,11 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
             hoverable
           >
             <Table.Head>
-              <Table.HeadCell style={{ width: "40%" }}>Item</Table.HeadCell>
+              <Table.HeadCell style={{ width: "40%" }}>{t("item")}</Table.HeadCell>
               <Table.HeadCell style={{ width: "30%" }}>
-                Warehouse
+                {t("warehouse")}
               </Table.HeadCell>
-              <Table.HeadCell style={{ width: "30%" }}>Account</Table.HeadCell>
+              <Table.HeadCell style={{ width: "30%" }}>{t("account")}</Table.HeadCell>
             </Table.Head>
             <Table.Body>
               {items?.map((item, i) => (
@@ -239,7 +241,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                         {money(item.subtotal_before_disc)}
                       </div>
                       <div className="text-xs">
-                        Disc:{" "}
+                        {t("discount")}:{" "}
                         {money(
                           item.discount_percent > 0
                             ? `${money(item.discount_percent)}%`
@@ -248,7 +250,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                       </div>
                       {item.tax_id && (
                         <div className="text-xs">
-                          Tax: {money(item.tax?.amount)}%
+                          {t("tax")}: {money(item.tax?.amount)}%
                         </div>
                       )}
                       <div className="text-normal font-semibold">
@@ -370,7 +372,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                       )}
                     </div>
                     {/* <div className="h-4"></div> */}
-                    {/* <Label className="">Asset Account</Label>
+                    {/* <Label className="">{t("asset_account")}</Label>
                     <div className="flex gap-2">
                       <Select
                         isDisabled={isGlobalAsset && i > 0}
@@ -440,14 +442,14 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                 for (const item of items) {
                   if (!item.sale_account_id) {
                     toast.error(
-                      `Sales account for ${item.description} is required`
+                      `${t("sales_account_required")} ${item.description}`
                     );
                     return;
                   }
 
                   if (!item.warehouse_id && item.product_id) {
                     toast.error(
-                      `Warehouse for ${item.description} is required`
+                      `${t("warehouse_required")} ${item.description}`
                     );
                     return;
                   }
@@ -463,7 +465,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
                 };
 
                 await postInvoice(sales!.id!, data);
-                toast.success("Invoice Posted successfully");
+                toast.success(t("invoice_posted_successfully"));
                 onClose();
               } catch (error) {
                 toast.error(`${error}`);
@@ -472,7 +474,7 @@ const DrawerPostInvoice: FC<DrawerPostInvoiceProps> = ({
               }
             }}
           >
-            POST INVOICE
+            {t("post_invoice")}
           </Button>
         </div>
       </DrawerItems>

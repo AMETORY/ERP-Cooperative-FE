@@ -9,10 +9,13 @@ import { TrialBalanceReportModel } from "../models/trial_balance";
 import { money } from "../utils/helper";
 import Moment from "react-moment";
 import TrialBalanceComponent from "../components/report/TrialBalanceComponent";
+import { useTranslation } from "react-i18next";
 
 interface TrialBalanceReportProps {}
 
 const TrialBalanceReport: FC<TrialBalanceReportProps> = ({}) => {
+      const { t } = useTranslation();
+  
   const { setLoading } = useContext(LoadingContext);
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const [report, setReport] = useState<TrialBalanceReportModel>();
@@ -38,7 +41,7 @@ const TrialBalanceReport: FC<TrialBalanceReportProps> = ({}) => {
     <AdminLayout>
       <div className="p-6">
         <h1 className="text-3xl text-gray-900 font-bold">
-          Trial Balance Report
+          {t("trial_balance")}
         </h1>
         <small>
           <Moment format="DD MMM YYYY">{report?.start_date}</Moment> -{" "}

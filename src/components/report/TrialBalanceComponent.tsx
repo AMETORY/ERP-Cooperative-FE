@@ -3,6 +3,7 @@ import { TrialBalanceReportModel } from "../../models/trial_balance";
 import { Table } from "flowbite-react";
 import { money } from "../../utils/helper";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface TrialBalanceComponentProps {
   trialBalance: TrialBalanceReportModel;
@@ -11,6 +12,7 @@ interface TrialBalanceComponentProps {
 const TrialBalanceComponent: FC<TrialBalanceComponentProps> = ({
   trialBalance,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="overflow-x-auto">
     <Table className=""  >
@@ -18,19 +20,19 @@ const TrialBalanceComponent: FC<TrialBalanceComponentProps> = ({
         <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
           <Table.Cell></Table.Cell>
           <Table.Cell colSpan={2} className="font-semibold text-center border-l border-r" rowSpan={2} width={200}>
-            Saldo Awal
+            {t('opening_balance')}
           </Table.Cell>
           <Table.Cell colSpan={2} className="font-semibold text-center">
-            Pergerakan
+            {t('movement')}
           </Table.Cell>
           <Table.Cell colSpan={2} className="font-semibold text-center border-l" rowSpan={2} width={200}>
-            Saldo Akhir
+            {t('closing_balance')}
           </Table.Cell>
         </Table.Row>
         <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
           <Table.Cell className="font-semibold text-center"></Table.Cell>
-          <Table.Cell className="font-semibold text-center">Debit</Table.Cell>
-          <Table.Cell className="font-semibold text-center">Kredit</Table.Cell>
+          <Table.Cell className="font-semibold text-center">{t('debit')}</Table.Cell>
+          <Table.Cell className="font-semibold text-center">{t('credit')}</Table.Cell>
         </Table.Row>
         {trialBalance?.trial_balance.map((item, index) => (
           <Table.Row key={index}>
@@ -60,7 +62,7 @@ const TrialBalanceComponent: FC<TrialBalanceComponentProps> = ({
           </Table.Row>
         ))}
         <Table.Row>
-          <Table.Cell className="font-semibold text-right">TOTAL</Table.Cell>
+          <Table.Cell className="font-semibold text-right">{t('total')}</Table.Cell>
           <Table.Cell className="text-right font-semibold" colSpan={2}>
             {money(
               trialBalance?.trial_balance.reduce(

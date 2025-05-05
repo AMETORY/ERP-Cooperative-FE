@@ -116,7 +116,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
   const getDetail = () => {
     getSalesDetail(salesId!).then((res: any) => {
       setSales(res.data);
-      setIsEditable(res.data.status == "DRAFT"  && res.data.document_type != "DELIVERY");
+      setIsEditable(
+        res.data.status == "DRAFT" && res.data.document_type != "DELIVERY"
+      );
     });
     getAllItems();
     getAllTaxes("");
@@ -500,6 +502,17 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 <div className="text-data">{sales?.notes}</div>
               )}
             </div>
+            {sales?.published_at && (
+              <div className="flex flex-col">
+                <Label>{t("released")}</Label>
+                <div>
+                  <Moment format="DD MMM YYYY, hh:mm">
+                    {sales?.published_at}
+                  </Moment>
+                </div>
+                <small>{sales?.published_by?.full_name}</small>
+              </div>
+            )}
           </div>
           <div className="flex flex-col space-y-4">
             <div>
@@ -1267,7 +1280,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                               });
                             }}
                           >
-                            + Payment
+                            + {t("payment")}
                           </Button>
                         )}
                       </div>
@@ -1297,7 +1310,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                             <tr className="border-b last:border-b-0 hover:bg-gray-50 ">
                               <td className="py-2 px-4">
                                 <div className="flex flex-col">
-                                  <strong className="text-xl">Balance</strong>
+                                  <strong className="text-xl">{t("balance")}</strong>
                                 </div>
                               </td>
                               <td className="text-right px-4">
@@ -1358,7 +1371,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
           >
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="font-semibold text-sm">Payment Date</label>
+                <label className="font-semibold text-sm">{t("payment_date")}</label>
                 <Datepicker
                   required
                   value={payment?.payment_date}
@@ -1372,10 +1385,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">Description</label>
+                <label className="font-semibold text-sm">{t("description")}</label>
                 <Textarea
                   required
-                  placeholder="Description"
+                  placeholder={t("description")}
                   value={payment?.notes}
                   onChange={(val) => {
                     setPayment({
@@ -1387,7 +1400,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">Payment Amount</label>
+                <label className="font-semibold text-sm">{t("payment_amount")}</label>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <CurrencyInput
@@ -1417,7 +1430,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       style={{ fontSize: "1.5rem" }}
                     />
                     <HelperText>
-                      Balance :{" "}
+                      {t("balance")} :{" "}
                       {money(
                         (sales?.total ?? 0) -
                           (sales?.paid ?? 0) -
@@ -1458,7 +1471,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-sm">Account</label>
+                <label className="font-semibold text-sm">{t("account")}</label>
                 <Select
                   options={assets.map((a) => ({
                     label: a.name,
@@ -1489,7 +1502,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 />
               </div>
               <div>
-                <label className="font-semibold text-sm">Payment Method</label>
+                <label className="font-semibold text-sm">{t("payment_method")}</label>
                 <Select
                   options={paymentMethods}
                   required
@@ -1509,10 +1522,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               </div>
               <div>
                 <label className="font-semibold text-sm">
-                  Payment Method Notes
+                  {t("payment_method_notes")}
                 </label>
                 <Textarea
-                  placeholder="Payment Method Notes"
+                  placeholder={t("payment_method_notes")}
                   value={payment?.payment_method_notes}
                   onChange={(val) => {
                     setPayment({
@@ -1526,7 +1539,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               {discountEnabled && (
                 <div>
                   <label className="font-semibold text-sm">
-                    Payment Discount
+                    {t("payment_discount")}
                   </label>
                   <div className="relative w-fit">
                     <CurrencyInput
@@ -1552,7 +1565,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
               <div className="w-full flex">
                 <Button type="submit" className="w-full">
                   <IoPaperPlaneOutline className="mr-2" />
-                  Send Payment
+                  {t("send_payment")}
                 </Button>
               </div>
             </div>

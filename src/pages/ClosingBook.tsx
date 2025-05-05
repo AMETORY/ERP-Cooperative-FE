@@ -21,10 +21,13 @@ import { ClosingBookReport } from "../models/report";
 import { PaginationResponse } from "../objects/pagination";
 import { SearchContext } from "../contexts/SearchContext";
 import Moment from "react-moment";
+import { useTranslation } from "react-i18next";
 
 interface ClosingBookProps {}
 
 const ClosingBook: FC<ClosingBookProps> = ({}) => {
+      const { t } = useTranslation();
+  
   const { setLoading } = useContext(LoadingContext);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
@@ -67,7 +70,7 @@ const ClosingBook: FC<ClosingBookProps> = ({}) => {
     <AdminLayout>
       <div className="p-8">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Closing The Book</h1>
+          <h1 className="text-3xl font-bold ">{t("closing_the_book")}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -76,7 +79,7 @@ const ClosingBook: FC<ClosingBookProps> = ({}) => {
                 setShow(true);
               }}
             >
-              + Closing
+              + {t("closing_the_book")}
             </Button>
             {/* <LuFilter
               className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -87,9 +90,9 @@ const ClosingBook: FC<ClosingBookProps> = ({}) => {
         <div className="h-[calc(100vh-300px)] overflow-y-auto">
           <Table hoverable className=" ">
             <Table.Head>
-              <Table.HeadCell>Periode</Table.HeadCell>
-              <Table.HeadCell>Notes</Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
+              <Table.HeadCell>{t("period")}</Table.HeadCell>
+              <Table.HeadCell>{t("notes")}</Table.HeadCell>
+              <Table.HeadCell>{t("status")}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body>
@@ -149,11 +152,11 @@ getDetail();
           setShow(false);
         }}
       >
-        <Modal.Header>Create Closing</Modal.Header>
+        <Modal.Header>{t("closing_the_book")}</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
             <div>
-              <Label value="Start Date" />
+              <Label value={t("start_date")} />
               <Datepicker
                 type="datepicker"
                 placeholder="2022-01-01"
@@ -163,7 +166,7 @@ getDetail();
               />
             </div>
             <div>
-              <Label value="End Date" />
+              <Label value={t("end_date")} />
               <Datepicker
                 type="datepicker"
                 placeholder="2022-01-01"
@@ -173,9 +176,9 @@ getDetail();
               />
             </div>
             <div>
-              <Label value="Notes" />
+              <Label value={t("notes")} />
               <Textarea
-                placeholder="Write your notes here"
+                placeholder={t("notes")}
                 required={true}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -192,7 +195,7 @@ getDetail();
                 try {
                   setLoading(true);
                   if (!notes) {
-                    throw new Error("Notes is required");
+                    throw new Error(t("notes_is_required"));
                   }
                   let resp: any = await createClosingBook({
                     start_date: startDate!,
@@ -207,7 +210,7 @@ getDetail();
                 }
               }}
             >
-              Save
+              {t("save")}
             </Button>
           </div>
         </Modal.Footer>

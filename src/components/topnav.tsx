@@ -100,7 +100,7 @@ const Topnav: React.FC<TopnavProps> = () => {
             {searchBox}
 
             <div className="flex items-center ms-3 gap-4">
-              <Dropdown label={i18n.language === "en" ? `🇬🇧` : `🇮🇩`} color="gray">
+              <Dropdown label={i18n.language === "en" ? `🇬🇧` : i18n.language === "id" ? `🇮🇩` : `🇯🇵`} color="gray">
                 <Dropdown.Item as={"button"} onClick={() => {
                   i18n.changeLanguage("id");
                 }}>
@@ -110,6 +110,11 @@ const Topnav: React.FC<TopnavProps> = () => {
                   i18n.changeLanguage("en");
                 }}>
                   🇬🇧 EN
+                </Dropdown.Item>
+                <Dropdown.Item as={"button"} onClick={() => {
+                  i18n.changeLanguage("ja");
+                }}>
+                  🇯🇵 JA
                 </Dropdown.Item>
               </Dropdown>
               <Dropdown

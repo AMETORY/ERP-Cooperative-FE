@@ -2,19 +2,22 @@ import type { FC } from "react";
 import { CashFlowReport, CashflowSubGroup } from "../../models/report";
 import { Table } from "flowbite-react";
 import { money } from "../../utils/helper";
+import { useTranslation } from "react-i18next";
 
 interface CashFlowComponentProps {
   cashFlow: CashFlowReport;
 }
 
 const CashFlowComponent: FC<CashFlowComponentProps> = ({ cashFlow }) => {
+    const { t } = useTranslation();
+  
   return (
     <div className="overflow-auto">
       <Table className="" hoverable>
         <Table.Body className="divide-y">
           <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              OPERASIONAL
+              {t("operating").toUpperCase()}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -22,7 +25,7 @@ const CashFlowComponent: FC<CashFlowComponentProps> = ({ cashFlow }) => {
               className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
               align="right"
             >
-              Jumlah
+              {t('amount')}
             </Table.Cell>
           </Table.Row>
           {cashFlow?.operating.map((item: CashflowSubGroup, index: number) => (
@@ -48,7 +51,7 @@ const CashFlowComponent: FC<CashFlowComponentProps> = ({ cashFlow }) => {
           </Table.Row>
           <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              INVESTASI
+              {t("investing").toUpperCase()}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -56,7 +59,7 @@ const CashFlowComponent: FC<CashFlowComponentProps> = ({ cashFlow }) => {
               className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
               align="right"
             >
-              Jumlah
+              {t('amount')}
             </Table.Cell>
           </Table.Row>
 
@@ -83,7 +86,7 @@ const CashFlowComponent: FC<CashFlowComponentProps> = ({ cashFlow }) => {
           </Table.Row>
           <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              PENDANAAN
+              {t("financing").toUpperCase()}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -91,7 +94,7 @@ const CashFlowComponent: FC<CashFlowComponentProps> = ({ cashFlow }) => {
               className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
               align="right"
             >
-              Jumlah
+              {t('amount')}
             </Table.Cell>
           </Table.Row>
           {cashFlow?.financing.map((item: CashflowSubGroup, index: number) => (

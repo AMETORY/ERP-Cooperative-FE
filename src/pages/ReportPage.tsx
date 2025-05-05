@@ -3,63 +3,66 @@ import AdminLayout from "../components/layouts/admin";
 import { Card } from "flowbite-react";
 import { BsGraphUp, BsTable, BsPieChart } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 interface ReportPageProps {}
 
 const ReportPage: FC<ReportPageProps> = ({}) => {
+const { t } = useTranslation();
+
   const reportCards = [
     {
       icon: <img src="/icon/cash-flow.png" width={40} />,
-      title: "Cashflow Statement",
-      description: "View detailed cash inflows and outflows.",
+      title: t("cash_flow_statement"),
+      description: t("cash_flow_statement_description"),
       link: "/cashflow-statement",
     },
     {
       icon: <img src="/icon/cogs.png" width={40} />,
-      title: "Cost of Goods Sold (COGS)",
-      description: "Analyze your direct costs.",
+      title: t("cogs_statement"),
+      description: t("cogs_statement_description"),
       link: "/cogs",
     },
     {
       // icon: <BsPieChart size={40} />,
       icon: <img src="/icon/profit-loss.png" width={40} />,
-      title: "Profit and Loss Statement",
-      description: "Check the profit and loss trends over time.",
+      title: t("profit_loss_statement"),
+      description: t("profit_loss_statement_description"),
       link: "/profit-loss-statement",
     },
     {
       icon: <img src="/icon/budget-balance.png" width={40} />,
-      title: "Balance Sheet",
-      description: "View detailed assets, liabilities, and equity.",
+      title: t("balance_sheet"),
+      description: t("balance_sheet_description"),
       link: "/balance-sheet",
     },
     {
       icon: <img src="/icon/investment.png" width={40} />,
-      title: "Capital Change Statement",
-      description: "Review changes in equity capital over a period.",
+      title: t("capital_change_statement"),
+      description: t("capital_change_statement_description"),
       link: "/capital-change-statement",
     },
     {
       icon: <img src="/icon/trial.png" width={40} />,
-      title: "Trial Balance",
-      description: "View detailed trial balance.",
+      title: t("trial_balance"),
+      description: t("trial_balance_description"),
       link: "/trial-balance",
     },
     {
       icon: <img src="/icon/closed-book.png" width={40} />,
-      title: "Closing The Book",
-      description: "Finalize your financial records for the period.",
+      title: t("closing_the_book"),
+      description: t("closing_the_book_description"),
       link: "/closing-the-book",
     },
     {
       icon: <img src="/icon/journal.png" width={40} />,
-      title: "General Journal",
-      description: "View detailed general journal, including all transactions, debits and credits, and account balances.",
+      title: t("general_journal"),
+      description: t("general_journal_description"),
       link: "/general-journal",
     },
     {
       icon: <img src="/icon/ledger.png" width={40} />,
-      title: "General Ledger",
-      description: "View detailed ledger accounts, including debit and credit transactions.",
+      title: t("general_ledger"),
+      description: t("general_ledger_description"),
       link: "/general-ledger",
     },
    

@@ -14,10 +14,12 @@ import { Link } from "react-router-dom";
 import { LuLink } from "react-icons/lu";
 import Moment from "react-moment";
 import BalanceSheetComponent from "../components/report/BalanceSheetComponent";
+import { useTranslation } from "react-i18next";
 
 interface BalanceSheetProps {}
 
 const BalanceSheet: FC<BalanceSheetProps> = ({}) => {
+  const { t } = useTranslation();
   const { setLoading } = useContext(LoadingContext);
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const [report, setReport] = useState<BalanceSheetModel>();
@@ -43,7 +45,7 @@ const BalanceSheet: FC<BalanceSheetProps> = ({}) => {
     <AdminLayout>
       <div className="p-6">
         <div>
-          <h1 className="text-3xl text-gray-900 font-bold">Balance Sheet</h1>
+          <h1 className="text-3xl text-gray-900 font-bold">{t("balance_sheet")}</h1>
         </div>
         <div className=" mt-4 h-[calc(100vh-200px)] overflow-y-auto p-4">
           {report && <BalanceSheetComponent balanceSheet={report} />}

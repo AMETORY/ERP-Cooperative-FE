@@ -43,6 +43,7 @@ export interface SalesModel {
   document_type?: string;
   items?: SalesItemModel[];
   published_at?: string;
+  published_by?: UserModel;
   taxes?: TaxModel[];
   is_compound?: boolean;
   tax_breakdown?: string;

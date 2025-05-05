@@ -25,10 +25,13 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Moment from "react-moment";
 import ModalSalesReturn from "./ModalSalesReturn";
+import { useTranslation } from "react-i18next";
 
 interface ReturnSalesTableProps {}
 
 const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
+  const { t } = useTranslation();
+
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -84,7 +87,7 @@ const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Sales Return</h1>
+        <h1 className="text-3xl font-bold ">{t('sales_return')}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -93,7 +96,7 @@ const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
               setShowModal(true);
             }}
           >
-            + Sales Return
+            + {t('sales_return')}
           </Button>
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"

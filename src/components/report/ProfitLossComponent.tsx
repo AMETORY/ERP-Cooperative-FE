@@ -3,19 +3,22 @@ import type { FC } from "react";
 import { ProfitLossAccount, ProfitLossModel } from "../../models/report";
 import { Link } from "react-router-dom";
 import { money } from "../../utils/helper";
+import { useTranslation } from "react-i18next";
 
 interface ProfitLossComponentProps {
   profitLoss: ProfitLossModel;
 }
 
 const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
+        const { t } = useTranslation();
+  
   return (
     <div className="overflow-x-auto">
       <Table className="">
         <Table.Body className="divide-y">
           <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              PENDAPATAN
+              {t('revenue')}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -23,7 +26,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
               className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
               align="right"
             >
-              Jumlah
+              {t('total')}
             </Table.Cell>
           </Table.Row>
           {(profitLoss?.profit ?? [])
@@ -52,7 +55,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
             ))}
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              Laba Kotor
+              {t('gross_profit')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>
@@ -63,7 +66,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
 
           <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              PENGELUARAN
+              {t('expenses')}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -71,7 +74,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
               className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
               align="right"
             >
-              Jumlah
+              {t('total')}
             </Table.Cell>
           </Table.Row>
           {(profitLoss?.loss ?? [])
@@ -100,7 +103,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
             ))}
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              Total Pengeluaran
+              {t('total_expenses')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>
@@ -111,7 +114,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
 
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              LABA RUGI
+              {t('net_profit')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>
@@ -122,7 +125,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
           {(profitLoss?.total_net_surplus ?? 0) != 0 && (
             <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                Sisa Hasil Usaha Sudah Dibagi
+                {t('shared_surplus')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -130,7 +133,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
                 className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
                 align="right"
               >
-                Jumlah
+                {t('total')}
               </Table.Cell>
             </Table.Row>
           )}
@@ -161,7 +164,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
           {profitLoss.income_tax > 0 && (
             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                Total Pajak
+                {t('total_tax')}
               </Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
@@ -173,7 +176,7 @@ const ProfitLossComponent: FC<ProfitLossComponentProps> = ({ profitLoss }) => {
           {profitLoss.income_tax > 0 && (
             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                Laba Bersih
+                {t('net_profit_after_tax')}
               </Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>

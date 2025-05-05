@@ -7,10 +7,13 @@ import { CogsReportModel } from "../models/report";
 import toast from "react-hot-toast";
 import { money } from "../utils/helper";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface CogsReportProps {}
 
 const CogsReport: FC<CogsReportProps> = ({}) => {
+      const { t } = useTranslation();
+  
   const { setLoading } = useContext(LoadingContext);
   const { dateRange, setDateRange } = useContext(DateRangeContext);
   const [report, setReport] = useState<CogsReportModel>();
@@ -35,19 +38,19 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
   return (
     <AdminLayout>
       <div className="p-6">
-        <h1 className="text-3xl text-gray-900 font-bold">Cogs Report</h1>
+        <h1 className="text-3xl text-gray-900 font-bold">{t('cogs_statement')}</h1>
         <div className=" mt-8">
           <Table className="">
             <Table.Head>
-              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>{t('description')}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
-              <Table.HeadCell align="right">Amount</Table.HeadCell>
+              <Table.HeadCell align="right">{t('amount')}</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                  Persediaan Awal
+                  {t('beginning_inventory')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -57,7 +60,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                  Pembelian
+                  {t('purchases')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell align="right">
@@ -67,7 +70,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                  Biaya Angkut dan lain-lain
+                  {t('freight_in_and_other_cost')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell align="right">
@@ -77,7 +80,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Total Pembelian
+                  {t('total_purchases')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -87,7 +90,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                  Diskon Pembelian
+                  {t('purchase_discounts')}
                 </Table.Cell>
                 <Table.Cell align="right">
                   {money(report?.purchase_discounts)}
@@ -97,7 +100,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-                  Retur Pembelian
+                  {t('purchase_returns')}
                 </Table.Cell>
                 <Table.Cell align="right">
                   {money(report?.purchase_returns)}
@@ -107,7 +110,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Total Potongan Pembelian
+                  {t('total_purchase_discounts')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -117,7 +120,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Pembelian Bersih
+                  {t('net_purchases')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -127,7 +130,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Persediaan Tersedia Dijual
+                  {t('goods_available')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -141,7 +144,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
                     to={`/account/${report?.inventory_account?.id}/report`}
                     className="hover:font-semibold"
                   >
-                    Persediaan Akhir
+                    {t('ending_inventory')}
                   </Link>
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -152,7 +155,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Penyesuaian Persediaan
+                  {t('stock_opname')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
@@ -162,7 +165,7 @@ const CogsReport: FC<CogsReportProps> = ({}) => {
               </Table.Row>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
                 <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                  Harga Pokok Penjualan
+                  {t('cogs')}
                 </Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>

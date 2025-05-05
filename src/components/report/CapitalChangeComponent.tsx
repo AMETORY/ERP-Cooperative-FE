@@ -3,6 +3,7 @@ import { CapitalChangeModel } from "../../models/report";
 import { Table } from "flowbite-react";
 import { money } from "../../utils/helper";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface CapitalChangeComponentProps {
   capitalChange: CapitalChangeModel;
@@ -11,13 +12,15 @@ interface CapitalChangeComponentProps {
 const CapitalChangeComponent: FC<CapitalChangeComponentProps> = ({
   capitalChange,
 }) => {
+    const { t } = useTranslation();
+  
   return (
     <div className="overflow-auto">
       <Table className="">
         <Table.Body className="divide-y">
           <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-              Description
+              {t('description')}
             </Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
             <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -25,12 +28,12 @@ const CapitalChangeComponent: FC<CapitalChangeComponentProps> = ({
               className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
               align="right"
             >
-              Amount
+              {t('amount')}
             </Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-              Modal Awal
+              {t('initial_capital')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>
@@ -44,7 +47,7 @@ const CapitalChangeComponent: FC<CapitalChangeComponentProps> = ({
                 to={"/profit-loss-statement"}
                 className="hover:font-semibold"
               >
-                Laba Rugi
+                {t('profit_loss')}
               </Link>
             </Table.Cell>
             <Table.Cell></Table.Cell>
@@ -55,7 +58,7 @@ const CapitalChangeComponent: FC<CapitalChangeComponentProps> = ({
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-              Prive / Dividen
+              {t('prive')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>
@@ -65,7 +68,7 @@ const CapitalChangeComponent: FC<CapitalChangeComponentProps> = ({
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-              Penambahan Modal
+              {t('capital_change')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>
@@ -75,7 +78,7 @@ const CapitalChangeComponent: FC<CapitalChangeComponentProps> = ({
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap  text-gray-900 dark:text-white">
-              Modal Akhir
+              {t('ending_capital')}
             </Table.Cell>
             <Table.Cell></Table.Cell>
             <Table.Cell></Table.Cell>

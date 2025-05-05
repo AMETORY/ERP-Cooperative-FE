@@ -3,6 +3,7 @@ import { BalanceSheetAccount, BalanceSheetModel } from "../../models/report";
 import { Table } from "flowbite-react";
 import { money } from "../../utils/helper";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface BalanceSheetComponentProps {
   balanceSheet: BalanceSheetModel;
@@ -11,6 +12,8 @@ interface BalanceSheetComponentProps {
 const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
   balanceSheet,
 }) => {
+    const { t } = useTranslation();
+  
   return (
     <div className="grid grid-cols-2 gap-8">
       <div className="bg-white border rounded-lg h-fit overflow-auto">
@@ -18,7 +21,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
           <Table.Body className="divide-y">
             <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                AKTIVA
+                {t('assets')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -31,7 +34,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
             </Table.Row>
             <Table.Row className="">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                AKTIVA TETAP
+                {t('fixed_assets')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -39,7 +42,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
                 className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
                 align="right"
               >
-                Jumlah
+                {t('total')}
               </Table.Cell>
             </Table.Row>
             {(balanceSheet?.fixed_assets ?? [])
@@ -83,7 +86,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
             </Table.Row>
             <Table.Row className="">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                AKTIVA LANCAR
+                {t('current_assets')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -91,7 +94,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
                 className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
                 align="right"
               >
-                Jumlah
+                {t('total')}
               </Table.Cell>
             </Table.Row>
             {(balanceSheet?.current_assets ?? [])
@@ -141,7 +144,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
           <Table.Body className="divide-y">
             <Table.Row className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                PASIVA
+                {t('liabilities_and_equity')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -154,7 +157,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
             </Table.Row>
             <Table.Row className="">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                HUTANG
+                {t('liabilities')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -162,7 +165,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
                 className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
                 align="right"
               >
-                Jumlah
+                {t('total')}
               </Table.Cell>
             </Table.Row>
             {(balanceSheet?.liable_assets ?? [])
@@ -206,7 +209,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
             </Table.Row>
             <Table.Row className="">
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">
-                MODAL
+                {t('equity')}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
               <Table.Cell className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"></Table.Cell>
@@ -214,7 +217,7 @@ const BalanceSheetComponent: FC<BalanceSheetComponentProps> = ({
                 className="whitespace-nowrap font-semibold text-gray-900 dark:text-white"
                 align="right"
               >
-                Jumlah
+                {t('total')}
               </Table.Cell>
             </Table.Row>
             {(balanceSheet?.equity ?? [])
