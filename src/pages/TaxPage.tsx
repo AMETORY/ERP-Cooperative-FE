@@ -19,10 +19,12 @@ import { getAccountDetail, getAccounts } from "../services/api/accountApi";
 import Select, { InputActionMeta } from "react-select";
 import { BsPercent } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 interface TaxPageProps {}
 
 const TaxPage: FC<TaxPageProps> = ({}) => {
+  const { t } = useTranslation();
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -100,7 +102,7 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
     <AdminLayout>
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Tax</h1>
+          <h1 className="text-3xl font-bold ">{t('tax')}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -109,7 +111,7 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
                 setShowModal(true);
               }}
             >
-              + Create new tax
+              + {t('new_tax')}
             </Button>
             <LuFilter
               className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -122,10 +124,10 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
         <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Amount</Table.HeadCell>
-              <Table.HeadCell>Payable Account</Table.HeadCell>
-              <Table.HeadCell>Receivable Account</Table.HeadCell>
+              <Table.HeadCell>{t('name')}</Table.HeadCell>
+              <Table.HeadCell>{t('amount')} (%)</Table.HeadCell>
+              <Table.HeadCell>{t('payable_account')}</Table.HeadCell>
+              <Table.HeadCell>{t('receivable_account')}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -201,7 +203,7 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
         </div>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Header> Tax Form</Modal.Header>
+        <Modal.Header> {t('tax')}</Modal.Header>
         <Modal.Body>
           <form
             onSubmit={async (e) => {
@@ -239,31 +241,31 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
           >
             <div className="flex flex-col space-y-4">
               <div>
-                <Label htmlFor="tax-title" value="Name" />
+                <Label htmlFor="tax-title" value={t('name')} />
                 <TextInput
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
                   id="tax-title"
-                  placeholder="Tax Name"
+                  placeholder={t('taxName')}
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="tax-code" value="Code" />
+                <Label htmlFor="tax-code" value={t('code')} />
                 <TextInput
                   value={code}
                   onChange={(e) => {
                     setCode(e.target.value);
                   }}
                   id="tax-code"
-                  placeholder="Tax Code"
+                  placeholder={t('taxCode')}
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="tax-amount" value="Amount" />
+                <Label htmlFor="tax-amount" value={t('amount')} />
                 <TextInput
                   value={amount}
                   onChange={(e) => {
@@ -273,13 +275,13 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
                   max={100}
                   type="number"
                   id="tax-amount"
-                  placeholder="Tax Amount"
+                  placeholder={t('taxAmount')}
                   required
                   rightIcon={BsPercent}
                 />
               </div>
               <div>
-                <Label htmlFor="payable-account" value="Payable Account" />
+                <Label htmlFor="payable-account" value={t('payable_account')} />
                 <Select
                   options={payableAccounts.map((t) => ({
                     label: t.name!,
@@ -303,13 +305,13 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
                   onInputChange={(e) => {
                     getPayables(e);
                   }}
-                  placeholder="Select source"
+                  placeholder={t('selectSource')}
                 />
               </div>
               <div>
                 <Label
                   htmlFor="receivable-account"
-                  value="Receivable Account"
+                  value={t('receivable_account')}
                 />
                 <Select
                   options={receibleAccounts.map((t) => ({
@@ -334,13 +336,13 @@ const TaxPage: FC<TaxPageProps> = ({}) => {
                   onInputChange={(e) => {
                     getReceivables(e);
                   }}
-                  placeholder="Select source"
+                  placeholder={t('selectSource')}
                 />
               </div>
             </div>
             <div className="mt-8 flex justify-end">
               <Button type="submit" onClick={() => {}}>
-                {tax ? "Update" : "Save"}
+                {tax ? t('update') : t('save')}
               </Button>
             </div>
           </form>

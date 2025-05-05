@@ -40,10 +40,12 @@ import toast from "react-hot-toast";
 import { Editor } from "@tinymce/tinymce-react";
 import { HiFire } from "react-icons/hi2";
 import { IoRefreshCircle, IoRefreshCircleOutline } from "react-icons/io5";
+import { useTranslation } from 'react-i18next';
 
 interface LoanApplicationDetailProps {}
 
 const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const { activeCompany } = useContext(ActiveCompanyContext);
   const { loanId } = useParams();
   const { loading, setLoading } = useContext(LoadingContext);
@@ -140,7 +142,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 {/* Llama Cicilan */}
 
                 <div>
-                  <Label>Tgl Pengajuan</Label>
+                  <Label>{t('submission_date')}</Label>
                   <Datepicker
                     disabled={!isEditable}
                     value={moment(loan?.submission_date).toDate()}
@@ -151,23 +153,23 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                   />
                 </div>
                 <div>
-                  <Label>Anggota</Label>
+                  <Label>{t('member')}</Label>
                   <div>{loan?.member?.name}</div>
                 </div>
                 <div>
-                  <Label>Jumlah Pinjaman</Label>
+                  <Label>{t('loan_amount')}</Label>
 
                   <h3 className="text-xl font-bold">
                     {money(loan?.loan_amount)}
                   </h3>
                 </div>
                 <div>
-                  <Label>Tujuan Pinjaman</Label>
+                  <Label>{t('loan_purpose')}</Label>
                   <div>{loan?.loan_purpose}</div>
                 </div>
 
                 <div>
-                  <Label>Lama Cicilan</Label>
+                  <Label>{t('repayment_term')}</Label>
                   <TextInput
                     type="number"
                     className="input-white"
@@ -182,7 +184,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                   />
                 </div>
                 <div>
-                  <Label>Metode Cicilan</Label>
+                  <Label>{t('installment_method')}</Label>
                   {activeCompany?.cooperative_setting?.is_islamic && (
                     <Select
                       disabled={!isEditable}
@@ -218,7 +220,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 {/* Bunga Cicilan */}
                 {!activeCompany?.cooperative_setting?.is_islamic && (
                   <div>
-                    <Label>Bunga Cicilan (%)</Label>
+                    <Label>{t('interest_rate')}</Label>
                     <TextInput
                       type="number"
                       className="input-white"
@@ -234,7 +236,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 )}
                 {loan?.loan_type == "MUDHARABAH" && (
                   <div>
-                    <Label>Proyeksi Keuntungan</Label>
+                    <Label>{t('projected_profit')}</Label>
                     <CurrencyInput
                       disabled={!isEditable}
                       className="rs-input !p-1.5 "
@@ -246,7 +248,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                       }
                     />
                     <small className="italic">
-                      Proyeksi Keuntungan Koperasi:{" "}
+                      {t('cooperative_projected_profit')}:{" "}
                       {money(
                         ((loan?.projected_profit ?? 0) *
                           (loan?.expected_profit_rate ?? 0)) /
@@ -268,7 +270,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                   </div>
                 )}
                 <div>
-                  <Label>Biaya Admin</Label>
+                  <Label>{t('admin_fee')}</Label>
                   <CurrencyInput
                     disabled={!isEditable}
                     className="rs-input !p-1.5 "
@@ -283,7 +285,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
 
                 {/* Status */}
                 <div className="mb-4">
-                  <Label>Status</Label>
+                  <Label>{t('status')}</Label>
                   <div className="w-fit">
                     <Badge
                       color={
@@ -308,7 +310,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 {/* Akun Piutang */}
 
                 <div>
-                  <Label>Akun Piutang</Label>
+                  <Label>{t('account_receivable')}</Label>
                   <ReactSelect
                     isDisabled={!isEditable}
                     options={receivableAccounts.map((e) => ({
@@ -334,7 +336,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
 
                 {/* Akun Biaya Admin */}
                 <div>
-                  <Label>Akun Biaya Admin</Label>
+                  <Label>{t('account_admin_fee')}</Label>
                   <ReactSelect
                     isDisabled={!isEditable}
                     options={incomeAccounts.map((e) => ({
@@ -361,7 +363,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 {/* Akun Pendapatan Pinjaman */}
 
                 <div>
-                  <Label>Akun Pendapatan Pinjaman</Label>
+                  <Label>{t('account_income')}</Label>
                   <ReactSelect
                     isDisabled={!isEditable}
                     options={incomeAccounts.map((e) => ({
@@ -387,11 +389,11 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
 
                 {/* Catatan */}
                 <div className="mb-4">
-                  <Label>Catatan</Label>
+                  <Label>{t('remarks')}</Label>
                   <Textarea
                     disabled
                     className="input-white"
-                    placeholder="Catatan"
+                    placeholder={t('remarks')}
                     rows={4}
                     value={loan?.remarks}
                   />
@@ -407,7 +409,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                           setShowApprovalModal(true);
                         }}
                       >
-                        Reject
+                        {t('reject')}
                       </Button>
                     )}
                     {loan?.status == "DRAFT" && (
@@ -418,7 +420,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                           setShowApprovalModal(true);
                         }}
                       >
-                        Approve
+                        {t('approve')}
                       </Button>
                     )}
                   </div>
@@ -428,7 +430,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                         try {
                           setLoading(true);
                           await updateLoan(loanId!, loan);
-                          toast.success("Loan updated");
+                          toast.success(t('loan_updated'));
                           getDetail();
                         } catch (error) {
                           toast.error(`${error}`);
@@ -437,7 +439,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                         }
                       }}
                     >
-                      Save
+                      {t('save')}
                     </Button>
                   )}
                   {loan?.status == "APPROVED" && (
@@ -446,7 +448,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                         setShowDisbursementModal(true);
                       }}
                     >
-                      Disbursement
+                      {t('disbursement')}
                     </Button>
                   )}
                 </div>
@@ -653,18 +655,20 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
           <div className="border rounded-lg bg-white p-4 ">
             <>
               <div className="">
-                <h3 className="text-xl font-semibold mb-4">Tabel Cicilan</h3>
+                <h3 className="text-xl font-semibold mb-4">
+                  {t("installment_table")}
+                </h3>
                 <table className="mt-2 w-full border text-sm">
                   <thead>
                     <tr className="text-left border-b bg-gray-50">
-                      <th className="px-4 py-2 border-r w-24">Cicilan</th>
-                      <th className="px-4 py-2 text-right border-r">Pokok</th>
+                      <th className="px-4 py-2 border-r w-24">{t("installment")}</th>
+                      <th className="px-4 py-2 text-right border-r">{t("loan_capital")}</th>
                       <th className="px-4 py-2 text-right border-r">
-                        {loan?.loan_type == "CONVENTIONAL" ? "Bunga" : "Profit"}
+                        {loan?.loan_type == "CONVENTIONAL" ? t("interest") : t("profit")}
                       </th>
-                      <th className="px-4 py-2 text-right border-r">Admin</th>
-                      <th className="px-4 py-2 text-right border-r">Total</th>
-                      <th className="px-4 py-2 text-right border-r ">Sisa</th>
+                      <th className="px-4 py-2 text-right border-r">{t("admin_fee")}</th>
+                      <th className="px-4 py-2 text-right border-r">{t("total")}</th>
+                      <th className="px-4 py-2 text-right border-r ">{t('balance')}</th>
                       <th className="px-4 py-2 text-right w-24"></th>
                     </tr>
                   </thead>
@@ -728,7 +732,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                                   setPaymentData(data);
                                 }}
                               >
-                                Pembayaran
+                                {t('payment')}
                               </Button>
                             )}
                           </td>
@@ -738,7 +742,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                   </tbody>
                   <tfoot>
                     <tr className="text-left border-b bg-gray-50">
-                      <th className="px-4 py-2 border-r">Total</th>
+                      <th className="px-4 py-2 border-r">{t('total')}</th>
                       <th className="px-4 py-2 text-right border-r">
                         {money(
                           (loan?.installments ?? [])
@@ -784,7 +788,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
         show={showApprovalModal}
         onClose={() => setShowApprovalModal(false)}
       >
-        <Modal.Header>Approval</Modal.Header>
+        <Modal.Header>{t('approval')}</Modal.Header>
         <Modal.Body>
           <Textarea
             placeholder="Enter your remarks here..."
@@ -821,17 +825,17 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
         show={showDisbursementModal}
         onClose={() => setShowDisbursementModal(false)}
       >
-        <Modal.Header>Disbursement</Modal.Header>
+        <Modal.Header>{t('disbursement')}</Modal.Header>
         <Modal.Body>
           <div className="flex flex-col space-y-4">
             <div>
-              <Label>Total Pinjaman</Label>
+              <Label>{t('total_loan')}</Label>
               <div className="text-lg font-semibold">
                 {money(loan?.loan_amount)}
               </div>
             </div>
             <div>
-              <Label>Asset Account</Label>
+              <Label></Label>
               <ReactSelect
                 options={cashAccounts.map((e) => ({
                   label: e.name,
@@ -852,7 +856,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
               />
             </div>
             <div>
-              <Label>Remarks</Label>
+              <Label>{t('remarks')}</Label>
               <Textarea
                 placeholder="Enter your remarks here..."
                 value={remarks}
@@ -883,17 +887,17 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 }
               }}
             >
-              Disburse
+              {t('disburse')}
             </Button>
           </div>
         </Modal.Footer>
       </Modal>
       <Modal show={showModalPayment} onClose={() => setShowModalPayment(false)}>
-        <Modal.Header>Payment #{paymentData?.installment_no}</Modal.Header>
+        <Modal.Header>{t('payment')} #{paymentData?.installment_no}</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
             <div className="flex flex-col gap-1">
-              <Label>Payment Date</Label>
+              <Label>{t('payment_date')}</Label>
               <Datepicker
                 defaultValue={moment(paymentData?.payment_date).toDate()}
                 onChange={(date) =>
@@ -906,7 +910,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label>Payment Amount</Label>
+              <Label>{t('payment_amount')}</Label>
               <div className="relative">
                 <CurrencyInput
                   className="rs-input !p-1.5 text-xl"
@@ -942,7 +946,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
               </div>
             </div>
             <div>
-              <Label>Asset Account</Label>
+              <Label>{t('asset_account')}</Label>
               <ReactSelect
                 options={cashAccounts.map((e) => ({
                   label: e.name,
@@ -963,7 +967,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label>Remarks</Label>
+              <Label>{t('remarks')}</Label>
               <Textarea
                 placeholder="Enter your remarks here..."
                 value={paymentData?.remarks}
@@ -989,12 +993,12 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                     <HiFire className="h-5 w-5" />
                   </div>
                   <div className="ml-3 text-sm font-normal">
-                    Kelebihan pembayaran{" "}
+                    {t('excess_payment_of')}
                     {money(
                       (paymentData?.payment_amount ?? 0) -
                         (paymentData?.total_paid ?? 0)
                     )}{" "}
-                    akan otomatis masuk ke transaksi Simpanan Sukarela
+                    {t('will_automatically_enter_voluntary_savings_transaction')}
                   </div>
                 </Toast>
               )}
@@ -1009,7 +1013,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                     <HiFire className="h-5 w-5" />
                   </div>
                   <div className="ml-3 text-sm font-normal">
-                    Kekurangan pembayaran{" "}
+                    {t('shortage_of_payment')}{" "}
                     {money(
                       (paymentData?.payment_amount ?? 0) -
                         (paymentData?.total_paid ?? 0)
@@ -1059,7 +1063,7 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                 }
               }}
             >
-              Add Payment
+              {t('add_payment')}
             </Button>
           </div>
         </Modal.Footer>

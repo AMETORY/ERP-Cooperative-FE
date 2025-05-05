@@ -37,10 +37,12 @@ import CurrencyInput from "react-currency-input-field";
 import { money } from "../utils/helper";
 import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
+import { useTranslation } from "react-i18next";
 
 interface StockOpnameDetailProps {}
 
 const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const { loading, setLoading } = useContext(LoadingContext);
   const { stockOpnameId } = useParams();
   const [data, setData] = useState<StockOpnameModel>();
@@ -120,25 +122,25 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
   return (
     <AdminLayout>
       <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4">Stock Opname Detail</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("stock_opname")}</h1>
         <div className="grid grid-cols-2 gap-4">
           <div className=" border rounded-lg">
             <div className="overflow-x-auto">
               <Table className="min-w-full">
                 <TableBody>
                   <TableRow>
-                    <TableCell className="font-bold">
-                      Stock Opname Number
-                    </TableCell>
+                    <TableCell className="font-bold">{t("number")}</TableCell>
                     <TableCell>{data?.stock_opname_number}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-bold">Warehouse</TableCell>
+                    <TableCell className="font-bold">
+                      {t("warehouse")}
+                    </TableCell>
                     <TableCell>{data?.warehouse?.name}</TableCell>
                   </TableRow>
 
                   <TableRow>
-                    <TableCell className="font-bold">Opname Date</TableCell>
+                    <TableCell className="font-bold">{t("date")}</TableCell>
                     <TableCell>
                       <Moment format="YYYY-MM-DD">{data?.opname_date}</Moment>
                     </TableCell>
@@ -156,7 +158,7 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                               setShowProcessModal(true);
                             }}
                           >
-                            PROCESS
+                            {t("process")}
                           </Button>
                         )}
                       </div>
@@ -172,11 +174,11 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
               <Table className="min-w-full">
                 <TableBody>
                   <TableRow>
-                    <TableCell className="font-bold">Notes</TableCell>
+                    <TableCell className="font-bold">{t("notes")}</TableCell>
                     <TableCell>{data?.notes}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-bold">Status</TableCell>
+                    <TableCell className="font-bold">{t("status")}</TableCell>
                     <TableCell>
                       <div className="flex">
                         <Badge
@@ -200,7 +202,9 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-bold">Created By</TableCell>
+                    <TableCell className="font-bold">
+                      {t("created_by")}
+                    </TableCell>
                     <TableCell>{data?.created_by?.full_name}</TableCell>
                   </TableRow>
                   <TableRow>
@@ -215,20 +219,24 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
         <div className="overflow-x-auto mt-8">
           <Table className="min-w-full" striped>
             <TableHead>
-              <TableHeadCell>Product Name</TableHeadCell>
-              <TableHeadCell className="w-32">SKU</TableHeadCell>
-              <TableHeadCell className="w-16">Unit</TableHeadCell>
+              <TableHeadCell>{t("product_name")}</TableHeadCell>
+              <TableHeadCell className="w-32">{t("sku")}</TableHeadCell>
+              <TableHeadCell className="w-16">{t("unit")}</TableHeadCell>
               <TableHeadCell className="text-right w-[164px]">
-                System Qty
+                {t("system_qty")}
               </TableHeadCell>
               <TableHeadCell className="text-right w-[164px]">
-                Existing Qty
+                {t("existing_qty")}
               </TableHeadCell>
               <TableHeadCell className="text-right w-[164px]">
-                Difference
+                {t("difference")}
               </TableHeadCell>
-              <TableHeadCell className="w-32 text-center">Price</TableHeadCell>
-              <TableHeadCell className="w-32 text-center">Notes</TableHeadCell>
+              <TableHeadCell className="w-32 text-center">
+                {t("price")}
+              </TableHeadCell>
+              <TableHeadCell className="w-32 text-center">
+                {t("notes")}
+              </TableHeadCell>
               <TableHeadCell className="w-32 text-center"></TableHeadCell>
             </TableHead>
             <TableBody>
@@ -487,26 +495,28 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow>
-                <TableCell colSpan={9} className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <Button
-                      color="gray"
-                      className="flex items-center justify-center gap-2"
-                      onClick={() => setShowModal(true)}
-                    >
-                      <PiPlusCircle className="mt-0.5 mr-1" />
-                      <span>Add Item</span>
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+              {data?.status == "DRAFT" && (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center">
+                    <div className="flex items-center justify-center gap-2">
+                      <Button
+                        color="gray"
+                        className="flex items-center justify-center gap-2"
+                        onClick={() => setShowModal(true)}
+                      >
+                        <PiPlusCircle className="mt-0.5 mr-1" />
+                        <span>{t("add_item")}</span>
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Header>Add Item</Modal.Header>
+        <Modal.Header>{t("add_item")}</Modal.Header>
         <Modal.Body>
           <div className="pb-32">
             <Label>Product</Label>
@@ -680,11 +690,11 @@ const StockOpnameDetail: FC<StockOpnameDetailProps> = ({}) => {
             <Button
               onClick={async () => {
                 try {
-                if (!selectedInventoryAccount) {
-                  toast.error('Account must be selected first');
-                  return;
-                }
-                
+                  if (!selectedInventoryAccount) {
+                    toast.error("Account must be selected first");
+                    return;
+                  }
+
                   setLoading(true);
                   await completeStockOpname(data!.id!, {
                     date,

@@ -29,10 +29,12 @@ import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Moment from "react-moment";
+import { useTranslation } from 'react-i18next';
 
 interface LoanApplicationPageProps {}
 
 const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const { search, setSearch } = useContext(SearchContext);
@@ -81,7 +83,7 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
     <AdminLayout isCooperative permission="cooperative:loan_application:read">
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Loan Application</h1>
+          <h1 className="text-3xl font-bold ">{t('loan_application')}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -111,12 +113,12 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
         <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Loan No.</Table.HeadCell>
-              <Table.HeadCell>Member</Table.HeadCell>
-              <Table.HeadCell>Amount</Table.HeadCell>
-              <Table.HeadCell>Balance</Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
+              <Table.HeadCell>{t('date')}</Table.HeadCell>
+              <Table.HeadCell>{t('loan_number')}</Table.HeadCell>
+              <Table.HeadCell>{t('member')}</Table.HeadCell>
+              <Table.HeadCell>{t('amount')}</Table.HeadCell>
+              <Table.HeadCell>{t('balance')}</Table.HeadCell>
+              <Table.HeadCell>{t('status')}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body>
@@ -211,7 +213,7 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
             {/* Add form elements here */}
             <div className="flex flex-col gap-4">
               <div>
-                <Label>Date</Label>
+                <Label>{t('date')}</Label>
                 <Datepicker
                   onChange={(date) =>
                     setLoan({ ...loan!, submission_date: date! })
@@ -220,7 +222,7 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
                 />
               </div>
               <div>
-                <Label>Member</Label>
+                <Label>{t('member')}</Label>
                 <Select
                   options={members?.map((e) => ({
                     value: e.id,
@@ -244,10 +246,10 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label>Amount</Label>
+                <Label>{t('amount')}</Label>
                 <CurrencyInput
                   className="rs-input !p-1.5 "
-                  placeholder="Amount"
+                  placeholder={t('amount')}
                   value={loan?.loan_amount}
                   groupSeparator="."
                   decimalSeparator=","
@@ -260,11 +262,11 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label>Loan Purpose</Label>
+                <Label>{t('loan_purpose')}</Label>
                 <Textarea
                   className="input-white"
                   rows={7}
-                  placeholder="Loan Purpose"
+                  placeholder={t('loan_purpose')}
                   value={loan?.loan_purpose}
                   onChange={(e) =>
                     setLoan({

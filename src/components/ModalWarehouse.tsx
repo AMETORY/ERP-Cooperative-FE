@@ -6,6 +6,7 @@ import {
 } from "../services/api/warehouseApi";
 import { WarehouseModel } from "../models/warehouse";
 
+import { useTranslation } from 'react-i18next';
 interface ModalWarehouseProps {
   warehouse: WarehouseModel;
   setWarehouse: (warehouse: WarehouseModel) => void;
@@ -21,18 +22,19 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
   warehouse,
   setWarehouse,
 }) => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   return (
     <Modal show={show} onClose={() => setShow(false)}>
-      <Modal.Header>Create Warehouse</Modal.Header>
+      <Modal.Header>{t('create_warehouse')}</Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
           <div className="mb-2 block">
-            <Label htmlFor="name" value="Name" />
+            <Label htmlFor="name" value={t('name')} />
             <TextInput
               id="name"
               type="text"
-              placeholder="Name"
+              placeholder={t('name')}
               required={true}
               value={warehouse?.name}
               onChange={(e) =>
@@ -45,10 +47,10 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
             />
           </div>
           <div className="mb-2 block">
-            <Label htmlFor="description" value="Description" />
+            <Label htmlFor="description" value={t('description')} />
             <Textarea
               id="description"
-              placeholder="Description"
+              placeholder={t('description')}
               rows={4}
               value={warehouse?.description}
               onChange={(e) =>
@@ -62,10 +64,10 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
             />
           </div>
           <div className="mb-2 block">
-            <Label htmlFor="address" value="Address" />
+            <Label htmlFor="address" value={t('address')} />
             <Textarea
               id="address"
-              placeholder="Address"
+              placeholder={t('address')}
               rows={4}
               value={warehouse?.address}
               onChange={(e) =>
@@ -79,12 +81,12 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactPhone" value="Phone" />
+            <Label htmlFor="contactPhone" value={t('phone')} />
             <TextInput
               id="contactPhone"
               name="phone"
               type="tel"
-              placeholder="Phone"
+              placeholder={t('phone')}
               value={warehouse?.phone ?? ""}
               onChange={(e) =>
                 setWarehouse({
@@ -97,12 +99,12 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
           </div>
           
           <div>
-            <Label htmlFor="contactPersonPosition" value="Position" />
+            <Label htmlFor="contactPersonPosition" value={t('contact_position')} />
             <TextInput
               id="contactPersonPosition"
               name="contact_position"
               type="text"
-              placeholder="Position"
+              placeholder={t('contact_position')}
               value={warehouse?.contact_position ?? ""}
               onChange={(e) =>
                 setWarehouse({
@@ -114,12 +116,12 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactTitle" value="Title" />
+            <Label htmlFor="contactTitle" value={t('contact_title')} />
             <TextInput
               id="contactTitle"
               name="contact_title"
               type="text"
-              placeholder="ex: Mr. or Mrs."
+              placeholder={t('contact_title')}
               value={warehouse?.contact_title ?? ""}
               onChange={(e) =>
                 setWarehouse({
@@ -131,11 +133,11 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactAddress" value="Contact Note" />
+            <Label htmlFor="contactAddress" value={t('contact_notes')} />
             <Textarea
               id="contactContactNote"
-              name="contact_note"
-              placeholder="Contact Note"
+              name="contact_notes"
+              placeholder={t('contact_notes')}
               value={warehouse?.contact_note ?? ""}
               onChange={(e) =>
                 setWarehouse({
@@ -169,7 +171,7 @@ const ModalWarehouse: FC<ModalWarehouseProps> = ({
               }
             }}
           >
-            Save
+            {t('save')}
           </Button>
         </div>
       </Modal.Footer>

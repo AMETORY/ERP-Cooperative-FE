@@ -24,10 +24,12 @@ import {
 } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { RoleModel } from "../models/role";
+import { useTranslation } from 'react-i18next';
 
 interface MemberPageProps {}
 
 const MemberPage: FC<MemberPageProps> = ({}) => {
+  const { t } = useTranslation();
   const [inviteModal, setInviteModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
   const [members, setMembers] = useState<MemberModel[]>([]);
@@ -104,10 +106,10 @@ const MemberPage: FC<MemberPageProps> = ({}) => {
     <div>
       <Table>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Role</Table.HeadCell>
-          <Table.HeadCell>Invited By</Table.HeadCell>
+          <Table.HeadCell>{t("name")}</Table.HeadCell>
+          <Table.HeadCell>{t("email")}</Table.HeadCell>
+          <Table.HeadCell>{t("role")}</Table.HeadCell>
+          <Table.HeadCell>{t("invited_by")}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -181,10 +183,10 @@ const MemberPage: FC<MemberPageProps> = ({}) => {
     <div>
       <Table>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Role</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>{t("name")}</Table.HeadCell>
+          <Table.HeadCell>{t("email")}</Table.HeadCell>
+          <Table.HeadCell>{t("role")}</Table.HeadCell>
+          <Table.HeadCell>{t("status")}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
 

@@ -42,6 +42,7 @@ export const getClosingBooks = async (req: PaginationRequest) => {
   queryParams.set("page", String(req.page));
   queryParams.set("size", String(req.size));
   if (req.search) queryParams.set("search", req.search);
+  if (req.status) queryParams.set("status", req.status);
   return await customFetch(`api/v1/report/closing-book?${queryParams}`);
 };
 

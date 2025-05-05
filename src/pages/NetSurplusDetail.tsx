@@ -32,10 +32,12 @@ import { AccountModel } from "../models/account";
 import { getAccounts } from "../services/api/accountApi";
 import toast from "react-hot-toast";
 import { ClosingBookReport } from "../models/report";
+import { useTranslation } from 'react-i18next';
 
 interface NetSurplusDetailProps {}
 
 const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const { activeCompany } = useContext(ActiveCompanyContext);
   const { netSurplusId } = useParams();
   const { loading, setLoading } = useContext(LoadingContext);
@@ -113,9 +115,9 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col space-y-4">
             <div className="border rounded-lg bg-white p-4 flex flex-col space-y-4">
-              <h2 className="text-lg font-bold text-gray-700">Summary</h2>
+              <h2 className="text-lg font-bold text-gray-700">{t('summary')}</h2>
               <div>
-                <Label>Periode</Label>
+                <Label>{t('period')}</Label>
                 <p className="text-gray-600">
                   <Moment format="DD MMM YYYY">{netSurplus?.start_date}</Moment>{" "}
                   s/d{" "}
@@ -123,33 +125,33 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                 </p>
               </div>
               <div>
-                <Label>Description</Label>
+                <Label>{t('description')}</Label>
                 <p className="text-gray-600">{netSurplus?.description}</p>
               </div>
               <div>
-                <Label>Net Surplus Total</Label>
+                <Label>{t('net_surplus_total')}</Label>
                 <p className="text-gray-600">
                   {money(netSurplus?.net_surplus_total)}
                 </p>
               </div>
               <div>
-                <Label>Transaction Total</Label>
+                <Label>{t('transaction_total')}</Label>
                 <p className="text-gray-600">
                   {money(netSurplus?.transaction_total)}
                 </p>
               </div>
               <div>
-                <Label>Saving Total</Label>
+                <Label>{t('saving_total')}</Label>
                 <p className="text-gray-600">
                   {money(netSurplus?.savings_total)}
                 </p>
               </div>
               <div>
-                <Label>Loan Total</Label>
+                <Label>{t('loan_total')}</Label>
                 <p className="text-gray-600">{money(netSurplus?.loan_total)}</p>
               </div>
               <div>
-                <Label>Status</Label>
+                <Label>{t('status')}</Label>
                 <div className="w-fit">
                   <Badge
                     color={
@@ -174,9 +176,9 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
             {netSurplus?.status !== "DRAFT" && (
               <div className="border rounded-lg bg-white p-4 flex flex-col space-y-4">
                 <div className="flex justify-between">
-                  <h2 className="text-lg font-bold text-gray-700">Members</h2>
+                  <h2 className="text-lg font-bold text-gray-700">{t('members')}</h2>
                   {selectedMembers.length > 0 && (
-                    <Button size="xs">Disbursement</Button>
+                    <Button size="xs">{t('disbursement')}</Button>
                   )}
                 </div>
                 <div className=" overflow-x-auto">
@@ -195,11 +197,11 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                           }}
                         />
                       </TableHeadCell>
-                      <TableHeadCell>Name</TableHeadCell>
-                      <TableHeadCell>Jasa Modal</TableHeadCell>
-                      <TableHeadCell>Jasa Usaha</TableHeadCell>
-                      <TableHeadCell>Total SHU</TableHeadCell>
-                      <TableHeadCell>Status</TableHeadCell>
+                      <TableHeadCell>{t('name')}</TableHeadCell>
+                      <TableHeadCell>{t('net_surplus_business_profit_allocation')}</TableHeadCell>
+                      <TableHeadCell>{t('net_surplus_mandatory_savings_allocation')}</TableHeadCell>
+                      <TableHeadCell>{t('net_surplus_total')}</TableHeadCell>
+                      <TableHeadCell>{t('status')}</TableHeadCell>
                       <TableHeadCell></TableHeadCell>
                     </TableHead>
                     <TableBody>
@@ -272,7 +274,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                                   setDisbursementModal(true);
                                 }}
                               >
-                                Disbursement
+                                {t('disbursement')}
                               </Button>
                             )}
                           </TableCell>
@@ -286,15 +288,15 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
             {netSurplus?.status !== "DRAFT" && (
               <div className="border rounded-lg bg-white p-4 flex flex-col space-y-4">
                 <h2 className="text-lg font-bold text-gray-700">
-                  Transactions
+                  {t('transactions')}
                 </h2>
                 <div className=" overflow-x-auto">
                   <Table hoverable striped>
                     <TableHead>
-                      <TableHeadCell>Date</TableHeadCell>
-                      <TableHeadCell>Description</TableHeadCell>
-                      <TableHeadCell>Debit</TableHeadCell>
-                      <TableHeadCell>Credit</TableHeadCell>
+                      <TableHeadCell>{t("date")}</TableHeadCell>
+                      <TableHeadCell>{t("description")}</TableHeadCell>
+                      <TableHeadCell>{t("debit")}</TableHeadCell>
+                      <TableHeadCell>{t("credit")}</TableHeadCell>
                     </TableHead>
                     <TableBody>
                       {(netSurplus?.transactions ?? []).map(
@@ -326,7 +328,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
           </div>
           <div>
             <div className="border rounded-lg bg-white p-4">
-              <h2 className="text-lg font-bold text-gray-700">Distribution</h2>
+              <h2 className="text-lg font-bold text-gray-700">{t('distribution')}</h2>
               <div className="relative">
                 <Chart
                   style={{ borderRadius: "8px" }}
@@ -347,9 +349,9 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                 <div>
                   <Table hoverable striped>
                     <TableHead>
-                      <TableHeadCell>Allocation</TableHeadCell>
-                      <TableHeadCell>Amount</TableHeadCell>
-                      <TableHeadCell>Percentage</TableHeadCell>
+                      <TableHeadCell>{t('allocation')}</TableHeadCell>
+                      <TableHeadCell>{t('amount')}</TableHeadCell>
+                      <TableHeadCell>{t('percentage')}</TableHeadCell>
                     </TableHead>
                     <TableBody>
                       {(netSurplus?.distribution ?? []).map((v: any) => (
@@ -366,8 +368,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                 {netSurplus?.status == "DRAFT" && (
                   <div className="absolute top-0 left-0 right-0 bottom-0 bg-white bg-opacity-80 flex flex-col items-center justify-center">
                     <div className="text-lg text-center w-1/2 text-yellow-500 mb-4">
-                      Warning: No distribution found. Please set up distribution
-                      to distribute net surplus.
+                      {t('warning_no_distribution')}
                     </div>
                     <Button
                       gradientDuoTone="purpleToBlue"
@@ -375,7 +376,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                         setShowModal(true);
                       }}
                     >
-                      Distribute Net Suplus
+                      {t('distribute_net_surplus')}
                     </Button>
                   </div>
                 )}
@@ -385,12 +386,12 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
         </div>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Header>Distribute Net Surplus</Modal.Header>
+        <Modal.Header>{t('distribute_net_surplus')}</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
             <div className="flex flex-col ">
               <div className="border-b last:border-b-0 pb-4 pt-2">
-                <Label>Net Surplus Account</Label>
+                <Label>{t('net_surplus_account')}</Label>
                 <Select
                   options={netSurplusAccounts.map((v) => ({
                     label: v.name,
@@ -415,7 +416,7 @@ const NetSurplusDetail: FC<NetSurplusDetailProps> = ({}) => {
                   </Label>
                   <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <p className="font-semibold text-sm">Equity Account</p>
+                      <p className="font-semibold text-sm">{t('equity_account')}</p>
                       <Select
                         placeholder="Select Equity Account"
                         options={equityAccounts.map((v) => ({

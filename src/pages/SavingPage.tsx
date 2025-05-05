@@ -30,10 +30,12 @@ import { PaginationResponse } from "../objects/pagination";
 import { SearchContext } from "../contexts/SearchContext";
 import { getPagination, money } from "../utils/helper";
 import Moment from "react-moment";
+import { useTranslation } from 'react-i18next';
 
 interface SavingPageProps {}
 
 const SavingPage: FC<SavingPageProps> = ({}) => {
+  const { t } = useTranslation();
   const { search, setSearch } = useContext(SearchContext);
   const [page, setPage] = useState(1);
   const [size, setsize] = useState(20);
@@ -97,15 +99,15 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
   const convertSavingType = (savingType: string) => {
     switch (savingType) {
       case "PRINCIPAL":
-        return "Simpanan Pokok";
+        return t("principal_saving");
 
         break;
       case "MANDATORY":
-        return "Simpanan Wajib";
+        return t("mandatory_saving");
 
         break;
       case "VOLUNTARY":
-        return "Simpanan Sukarela";
+        return t("voluntary_saving");
 
         break;
 
@@ -117,7 +119,7 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
     <AdminLayout isCooperative permission="cooperative:saving:read">
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Saving</h1>
+          <h1 className="text-3xl font-bold ">{t('saving')}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -146,14 +148,14 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
         <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Number</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
-              <Table.HeadCell>Type</Table.HeadCell>
-              <Table.HeadCell>Member</Table.HeadCell>
-              <Table.HeadCell>Amount</Table.HeadCell>
-              <Table.HeadCell>Category</Table.HeadCell>
-              <Table.HeadCell>Account</Table.HeadCell>
+              <Table.HeadCell>{t('date')}</Table.HeadCell>
+              <Table.HeadCell>{t('number')}</Table.HeadCell>
+              <Table.HeadCell>{t('description')}</Table.HeadCell>
+              <Table.HeadCell>{t('type')}</Table.HeadCell>
+              <Table.HeadCell>{t('member')}</Table.HeadCell>
+              <Table.HeadCell>{t('amount')}</Table.HeadCell>
+              <Table.HeadCell>{t('category')}</Table.HeadCell>
+              <Table.HeadCell>{t('account')}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body>
@@ -234,21 +236,21 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
           <Modal.Header>
             <h2 id="submit-saving" className="text-xl font-bold">
               {" "}
-              Saving Form
+              {t('saving')}
             </h2>
           </Modal.Header>
           <Modal.Body>
             {/* Add form elements here */}
             <div className="flex flex-col gap-4">
               <div>
-                <Label>Date</Label>
+                <Label>{t('date')}</Label>
                 <Datepicker
                   onChange={(date) => setSaving({ ...saving!, date: date! })}
                   className="w-full input-white"
                 />
               </div>
               <div>
-                <Label>Member</Label>
+                <Label>{t('member')}</Label>
                 <Select
                   options={members?.map((e) => ({
                     value: e.id,
@@ -272,7 +274,7 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                 />
               </div>
               <div>
-                <Label>Type</Label>
+                <Label>{t('type')}</Label>
                 <Select
                   options={savingType}
                   value={savingType?.find(
@@ -316,10 +318,10 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label>Amount</Label>
+                <Label>{t('amount')}</Label>
                 <CurrencyInput
                   className="rs-input !p-1.5 "
-                  placeholder="Amount"
+                  placeholder={t('amount')}
                   value={saving?.amount}
                   groupSeparator="."
                   decimalSeparator=","
@@ -332,7 +334,7 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label>Account</Label>
+                <Label>{t('account')}</Label>
                 <Select
                   options={cashAccounts?.map((e) => ({
                     value: e.id,
@@ -354,10 +356,10 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label>Description</Label>
+                <Label>{t('description')}</Label>
                 <Textarea
                   rows={7}
-                  placeholder="Description"
+                  placeholder={t('description')}
                   value={saving?.notes}
                   onChange={(e) =>
                     setSaving({
@@ -379,19 +381,19 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                 onClick={async () => {
                   try {
                     if (!saving?.cooperative_member?.id) {
-                      throw new Error("Please select a member");
+                      throw new Error(t('please_select_a_member'));
                     }
                     if (!saving?.account_destination?.id) {
-                      throw new Error("Please select an account");
+                      throw new Error(t('please_select_an_account'));
                     }
                     if (!saving?.amount) {
-                      throw new Error("Please input an amount");
+                      throw new Error(t('please_input_an_amount'));
                     }
                     setLoading(true);
                     await createSaving(saving);
                     setShowModal(false);
                     getAllSavings();
-                    toast.success("Saving created successfully");
+                    toast.success(t('saving_created_successfully'));
                   } catch (error: any) {
                     toast.error(`${error}`);
                   } finally {
@@ -399,7 +401,7 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                   }
                 }}
               >
-                Submit
+                {t('submit')}
               </Button>
             </div>
           </Modal.Footer>

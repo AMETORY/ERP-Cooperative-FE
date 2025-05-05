@@ -29,10 +29,12 @@ import { StockOpnameModel } from "../models/stock_opname";
 import { getPagination } from "../utils/helper";
 import { SearchContext } from "../contexts/SearchContext";
 import Moment from "react-moment";
+import { useTranslation } from 'react-i18next';
 
 interface StockOpnameTableProps {}
 
 const StockOpnameTable: FC<StockOpnameTableProps> = ({}) => {
+  const { t } = useTranslation();
   const { loading, setLoading } = useContext(LoadingContext);
   const { search, setSearch } = useContext(SearchContext);
   const [mounted, setMounted] = useState(false);
@@ -81,7 +83,7 @@ const StockOpnameTable: FC<StockOpnameTableProps> = ({}) => {
     <>
       <div className="">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Stock Opname</h1>
+          <h1 className="text-3xl font-bold ">{t('stock_opname')}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -90,16 +92,16 @@ const StockOpnameTable: FC<StockOpnameTableProps> = ({}) => {
                 setShowModal(true);
               }}
             >
-              + Stock Opname
+              + {t('stock_opname')}
             </Button>
           </div>
         </div>
         <div className="overflow-x-auto">
           <Table striped className="">
             <TableHead>
-              <TableHeadCell>Date</TableHeadCell>
-              <TableHeadCell>Number</TableHeadCell>
-              <TableHeadCell>Notes</TableHeadCell>
+              <TableHeadCell>{t('date')}</TableHeadCell>
+              <TableHeadCell>{t('number')}</TableHeadCell>
+              <TableHeadCell>{t('notes')}</TableHeadCell>
               <TableHeadCell className="text-right w-32"></TableHeadCell>
             </TableHead>
             <TableBody>

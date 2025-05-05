@@ -26,9 +26,11 @@ import moment from "moment";
 import { getClosingBooks } from "../services/api/reportApi";
 import { ClosingBookReport } from "../models/report";
 import Select from "react-select";
+import { useTranslation } from 'react-i18next';
 interface NetSurplusPageProps {}
 
 const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
+  const { t } = useTranslation();
   const { search, setSearch } = useContext(SearchContext);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -100,7 +102,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
 
   const getAllClosingBooks = () => {
     setLoading(true);
-    getClosingBooks({ page: 1, size: 1000 })
+    getClosingBooks({ page: 1, size: 1000, status: "RELEASED" })
       .then((e: any) => {
         setClosingBooks(e.data.items);
       })
@@ -115,7 +117,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
     <AdminLayout isCooperative permission="cooperative:net_surplus:read">
       <div className="p-8 ">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Net Surplus</h1>
+          <h1 className="text-3xl font-bold ">{t('net_surplus')}</h1>
           <div className="flex items-center gap-2">
             <Button
               gradientDuoTone="purpleToBlue"
@@ -124,7 +126,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
                 setShowModal(true);
               }}
             >
-              + Create new Net Surplus
+              + {t('net_surplus')}
             </Button>
             <LuFilter
               className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -137,8 +139,8 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
         <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>{t('date')}</Table.HeadCell>
+              <Table.HeadCell>{t('description')}</Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
               <Table.HeadCell></Table.HeadCell>
             </Table.Head>
@@ -201,12 +203,12 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
           size="lg"
           aria-labelledby="create-net-surplus-modal"
         >
-          <Modal.Header>Create New Net Surplus</Modal.Header>
+          <Modal.Header>{t('net_surplus')}</Modal.Header>
           <Modal.Body>
             <form>
               <div className="space-y-6">
                 <div>
-                  <Label htmlFor="net-surplus-title" value="Date" />
+                  <Label htmlFor="net-surplus-title" value={t('date')} />
                   <Datepicker
                     value={date}
                     onChange={(val) => {
@@ -215,7 +217,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="net-surplus-title" value="End Date" />
+                  <Label htmlFor="net-surplus-title" value={t('end_date')} />
                   <Datepicker
                     value={endDate}
                     onChange={(val) => {
@@ -226,7 +228,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
                 <div>
                   <Label
                     htmlFor="net-surplus-title"
-                    value="Closing Book Report"
+                    value={t('closing_book_report')}
                   />
                   <Select
                     value={{
@@ -269,7 +271,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="net-surplus-title" value="Description" />
+                  <Label htmlFor="net-surplus-title" value={t('description')} />
                   <Textarea
                     rows={7}
                     value={description}
@@ -277,7 +279,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
                       setDescription(e.target.value);
                     }}
                     id="net-surplus-description"
-                    placeholder="Net Surplus Description"
+                    placeholder={t('description')}
                     required
                   />
                 </div>
@@ -287,7 +289,7 @@ const NetSurplusPage: FC<NetSurplusPageProps> = ({}) => {
           </Modal.Body>
           <Modal.Footer>
             <div className="flex justify-end w-full">
-              <Button onClick={saveNetSurplus}>Save</Button>
+              <Button onClick={saveNetSurplus}>{t('save')}</Button>
             </div>
           </Modal.Footer>
         </Modal>

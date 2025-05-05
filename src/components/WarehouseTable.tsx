@@ -9,10 +9,12 @@ import { getCategories } from "../services/api/companyApi";
 import { deleteWarehouse, getWarehouses } from "../services/api/warehouseApi";
 import { SearchContext } from "../contexts/SearchContext";
 import { getPagination } from "../utils/helper";
+import { useTranslation } from 'react-i18next';
 
 interface WarehouseTableProps {}
 
 const WarehouseTable: FC<WarehouseTableProps> = ({}) => {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -41,7 +43,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({}) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Warehouse</h1>
+        <h1 className="text-3xl font-bold ">{t('warehouse')}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -55,7 +57,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({}) => {
               setShowModal(true);
             }}
           >
-            + Warehouse
+            + {t('warehouse')}
           </Button>
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -66,8 +68,8 @@ const WarehouseTable: FC<WarehouseTableProps> = ({}) => {
       <div className="overflow-x-auto">
       <Table hoverable>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Description</Table.HeadCell>
+          <Table.HeadCell>{t('name')}</Table.HeadCell>
+          <Table.HeadCell>{t('description')}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body>

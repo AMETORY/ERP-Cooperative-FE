@@ -15,10 +15,12 @@ import { Link } from "react-router-dom";
 import { TbFileInvoice, TbTruckReturn } from "react-icons/tb";
 import { BsCartCheck } from "react-icons/bs";
 // import ModalStockMovement from "./ModalStockMovement";
+import { useTranslation } from 'react-i18next';
 
 interface StockMovementTableProps {}
 
 const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -49,7 +51,7 @@ const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
   return (
     <div className="">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">StockMovement</h1>
+        <h1 className="text-3xl font-bold ">{t('stock_movements')}</h1>
         <div className="flex items-center gap-2">
           {/* <Button
             gradientDuoTone="purpleToBlue"
@@ -75,13 +77,13 @@ const StockMovementTable: FC<StockMovementTableProps> = ({}) => {
         <div className="overflow-x-auto">
           <Table hoverable className=" ">
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
-              <Table.HeadCell>Product</Table.HeadCell>
-              <Table.HeadCell>Movement</Table.HeadCell>
-              <Table.HeadCell>Warehouse</Table.HeadCell>
-              <Table.HeadCell>Type</Table.HeadCell>
-              <Table.HeadCell>Ref</Table.HeadCell>
+              <Table.HeadCell>{t('date')}</Table.HeadCell>
+              <Table.HeadCell>{t('description')}</Table.HeadCell>
+              <Table.HeadCell>{t('product')}</Table.HeadCell>
+              <Table.HeadCell>{t('movement')}</Table.HeadCell>
+              <Table.HeadCell>{t('warehouse')}</Table.HeadCell>
+              <Table.HeadCell>{t('type')}</Table.HeadCell>
+              <Table.HeadCell>{t('ref')}</Table.HeadCell>
               {/* <Table.HeadCell></Table.HeadCell> */}
             </Table.Head>
             <Table.Body>

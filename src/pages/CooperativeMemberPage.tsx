@@ -27,10 +27,11 @@ import { getCooperativeMembers } from "../services/api/cooperativeMemberApi";
 import { getPagination, initial } from "../utils/helper";
 import { MdCardMembership, MdOutlineInsertInvitation } from "react-icons/md";
 import ModalMemberEdit from "../components/ModalMemberEdit";
-
+import { useTranslation } from 'react-i18next';
 interface CooperativeMemberPageProps {}
 
 const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
+  const { t } = useTranslation();
   const [inviteModal, setInviteModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
   const [members, setMembers] = useState<CooperativeMemberModel[]>([]);
@@ -107,9 +108,9 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
     <div>
       <Table>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Invited By</Table.HeadCell>
+          <Table.HeadCell>{t("name")}</Table.HeadCell>
+          <Table.HeadCell>{t("email")}</Table.HeadCell>
+          <Table.HeadCell>{t("invited_by")}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -176,11 +177,11 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
     <div>
       <Table>
         <Table.Head>
-          <Table.HeadCell>ID</Table.HeadCell>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Role</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>{t("id")}</Table.HeadCell>
+          <Table.HeadCell>{t("name")}</Table.HeadCell>
+          <Table.HeadCell>{t("email")}</Table.HeadCell>
+          <Table.HeadCell>{t("role")}</Table.HeadCell>
+          <Table.HeadCell>{t("status")}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
 
@@ -277,7 +278,7 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
     <AdminLayout isCooperative>
       <div className="p-8">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Member</h1>
+          <h1 className="text-3xl font-bold ">{t('member')}</h1>
           <Button
             gradientDuoTone="purpleToBlue"
             pill
@@ -285,14 +286,14 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
               setInviteModal(true);
             }}
           >
-            + Invite Member
+            + {t('invite_member')}
           </Button>
         </div>
         <Tabs>
-          <Tabs.Item icon={MdCardMembership} active title="Members">
+          <Tabs.Item icon={MdCardMembership} active title={t("members")}>
             {renderMembers()}
           </Tabs.Item>
-          <Tabs.Item icon={MdOutlineInsertInvitation} title="Invited">
+          <Tabs.Item icon={MdOutlineInsertInvitation} title={t("invited")}>
             {renderInvited()}
           </Tabs.Item>
         </Tabs>
@@ -302,7 +303,7 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
         show={inviteModal}
         onClose={() => setInviteModal(false)}
       >
-        <Modal.Header>Invite Member</Modal.Header>
+        <Modal.Header>{t('invite_member')}</Modal.Header>
         <Modal.Body>
           <form className="flex flex-col gap-4">
             <div>
@@ -310,12 +311,12 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email
+                {t("email")}
               </label>
               <TextInput
                 id="email"
                 type="email"
-                placeholder="Email"
+                placeholder={t("email")}
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
               />
@@ -325,12 +326,12 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
                 htmlFor="full_name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Full Name
+                {t("full_name")}
               </label>
               <TextInput
                 id="full_name"
                 type="text"
-                placeholder="Full Name"
+                placeholder={t("full_name")}
                 value={inviteFullName}
                 onChange={(e) => {
                   setInviteFullName(e.target.value);
@@ -342,7 +343,7 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
                 htmlFor="role"
                 className="block text-sm font-medium text-gray-700"
               >
-                Role
+                {t("role")}
               </label>
               <select
                 value={inviteRoleId}
@@ -350,7 +351,7 @@ const CooperativeMemberPage: FC<CooperativeMemberPageProps> = ({}) => {
                 className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 onChange={(e) => setInviteRoleId(e.target.value)}
               >
-                <option value="">Select Role</option>
+                <option value="">{t("select_role")}</option>
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>
                     {role.name}
