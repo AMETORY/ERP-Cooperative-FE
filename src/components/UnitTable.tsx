@@ -8,10 +8,12 @@ import { PaginationResponse } from "../objects/pagination";
 import { deleteUnit, getUnits } from "../services/api/unitApi";
 import { getPagination } from "../utils/helper";
 import ModalUnit from "./ModalUnit";
+import { useTranslation } from 'react-i18next';
 
 interface UnitTableProps {}
 
 const UnitTable: FC<UnitTableProps> = ({}) => {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -40,7 +42,7 @@ const UnitTable: FC<UnitTableProps> = ({}) => {
   return (
     <div className="">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Unit</h1>
+        <h1 className="text-3xl font-bold ">{t('product_unit')}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -65,9 +67,9 @@ const UnitTable: FC<UnitTableProps> = ({}) => {
       <div className="h-[calc(100vh-300px)] overflow-y-auto">
         <Table hoverable className=" ">
           <Table.Head>
-            <Table.HeadCell>Code</Table.HeadCell>
-            <Table.HeadCell>Name</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
+            <Table.HeadCell>{t('code')}</Table.HeadCell>
+            <Table.HeadCell>{t('name')}</Table.HeadCell>
+            <Table.HeadCell>{t('description')}</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>

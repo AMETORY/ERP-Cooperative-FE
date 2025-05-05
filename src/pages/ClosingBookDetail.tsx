@@ -1,11 +1,3 @@
-import { useContext, useEffect, useState, type FC } from "react";
-import AdminLayout from "../components/layouts/admin";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { LoadingContext } from "../contexts/LoadingContext";
-import {
-  generateClosingBook,
-  getClosingBookDetail,
-} from "../services/api/reportApi";
 import {
   Badge,
   Button,
@@ -13,26 +5,30 @@ import {
   Modal,
   Table,
   Tabs,
-  Textarea,
-  TextInput,
+  TextInput
 } from "flowbite-react";
-import { ClosingBookReport } from "../models/report";
-import { MdOutlineBalance } from "react-icons/md";
-import Moment from "react-moment";
-import TrialBalanceComponent from "../components/report/TrialBalanceComponent";
-import ProfitLossComponent from "../components/report/ProfitLossComponent";
-import BalanceSheetComponent from "../components/report/BalanceSheetComponent";
-import CashFlowComponent from "../components/report/CashFlowComponent";
-import CapitalChangeComponent from "../components/report/CapitalChangeComponent";
-import { AccountModel } from "../models/account";
-import { getAccounts } from "../services/api/accountApi";
-import Select from "react-select";
-import { BsCartCheck, BsJournal, BsPercent } from "react-icons/bs";
+import { useContext, useEffect, useState, type FC } from "react";
 import toast from "react-hot-toast";
-import { TbFileInvoice } from "react-icons/tb";
-import { HiOutlineChartPie } from "react-icons/hi2";
-import { money } from "../utils/helper";
 import { useTranslation } from "react-i18next";
+import { BsPercent } from "react-icons/bs";
+import Moment from "react-moment";
+import { useParams } from "react-router-dom";
+import Select from "react-select";
+import AdminLayout from "../components/layouts/admin";
+import BalanceSheetComponent from "../components/report/BalanceSheetComponent";
+import CapitalChangeComponent from "../components/report/CapitalChangeComponent";
+import CashFlowComponent from "../components/report/CashFlowComponent";
+import ProfitLossComponent from "../components/report/ProfitLossComponent";
+import TrialBalanceComponent from "../components/report/TrialBalanceComponent";
+import { LoadingContext } from "../contexts/LoadingContext";
+import { AccountModel } from "../models/account";
+import { ClosingBookReport } from "../models/report";
+import { getAccounts } from "../services/api/accountApi";
+import {
+  generateClosingBook,
+  getClosingBookDetail,
+} from "../services/api/reportApi";
+import { money } from "../utils/helper";
 
 interface ClosingBookDetailProps {}
 

@@ -8,6 +8,7 @@ import { getProductCategories } from "../services/api/productCategoryApi";
 import Select, { InputActionMeta } from "react-select";
 import Barcode from "react-barcode";
 import CurrencyInput from "react-currency-input-field";
+import { useTranslation } from 'react-i18next';
 interface ModalProductProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -23,6 +24,7 @@ const ModalProduct: FC<ModalProductProps> = ({
   setProduct,
   onCreateProduct,
 }) => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<ProductCategoryModel[]>([]);
   const handleCreateProduct = async () => {
     try {
@@ -51,14 +53,14 @@ const ModalProduct: FC<ModalProductProps> = ({
   };
   return (
     <Modal show={show} onClose={() => setShow(false)}>
-      <Modal.Header>Create Product</Modal.Header>
+      <Modal.Header>{product?.id ? t("edit_product") : t("create_product")}</Modal.Header>
       <Modal.Body>
         <div className="flex flex-col space-y-4">
           <div className="mb-4">
-            <Label htmlFor="product-name" value="Product Name" />
+            <Label htmlFor="product-name" value={t("product_name")} />
             <TextInput
               id="product-name"
-              placeholder="Product Name"
+              placeholder={t("product_name")}
               value={product?.name ?? ""}
               onChange={(e) =>
                 setProduct({ ...product!, name: e.target.value })
@@ -67,20 +69,20 @@ const ModalProduct: FC<ModalProductProps> = ({
             />
           </div>
           <div className="mb-4">
-            <Label htmlFor="product-sku" value="SKU" />
+            <Label htmlFor="product-sku" value={t("SKU")} />
             <TextInput
               id="product-sku"
-              placeholder="Product SKU"
+              placeholder={t("SKU")}
               value={product?.sku ?? ""}
               onChange={(e) => setProduct({ ...product!, sku: e.target.value })}
               className="input-white"
             />
           </div>
           <div className="mb-4">
-            <Label htmlFor="product-barcode" value="Barcode" />
+            <Label htmlFor="product-barcode" value={t("Barcode")} />
             <TextInput
               id="product-barcode"
-              placeholder="Product Barcode"
+              placeholder={t("Barcode")}
               value={product?.barcode ?? ""}
               onChange={(e) =>
                 setProduct({ ...product!, barcode: e.target.value })
@@ -92,7 +94,7 @@ const ModalProduct: FC<ModalProductProps> = ({
             )}
           </div>
           <div className="mb-4">
-            <Label htmlFor="product-price" value="Product Price" />
+            <Label htmlFor="product-price" value={t("price")} />
             <CurrencyInput
               className="rs-input !p-1.5 "
               value={product?.price ?? 0}
@@ -107,7 +109,7 @@ const ModalProduct: FC<ModalProductProps> = ({
             />
           </div>
           <div className="mb-4">
-            <Label htmlFor="product-category" value="Category" />
+            <Label htmlFor="product-category" value={t("category")} />
             <Select
               id="product-category"
               value={
@@ -127,11 +129,11 @@ const ModalProduct: FC<ModalProductProps> = ({
             />
           </div>
           <div className="mb-4">
-            <Label htmlFor="product-description" value="Description" />
+            <Label htmlFor="product-description" value={t("description")} />
             <Textarea
               rows={7}
               id="product-description"
-              placeholder="Product Description"
+              placeholder={t("description")}
               value={product?.description ?? ""}
               onChange={(e) =>
                 setProduct({ ...product!, description: e.target.value })
@@ -144,7 +146,7 @@ const ModalProduct: FC<ModalProductProps> = ({
       </Modal.Body>
       <Modal.Footer>
         <div className="flex justify-end w-full">
-          <Button onClick={handleCreateProduct}>Save</Button>
+          <Button onClick={handleCreateProduct}>{t("save")}</Button>
         </div>
       </Modal.Footer>
     </Modal>

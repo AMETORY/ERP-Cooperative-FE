@@ -1,22 +1,23 @@
 import { Tabs } from "flowbite-react";
 import { useState, type FC } from "react";
+import { useTranslation } from 'react-i18next';
 import { BsListCheck } from "react-icons/bs";
 import { IoPricetagOutline } from "react-icons/io5";
-import { RiShoppingBagLine } from "react-icons/ri";
-import AdminLayout from "../components/layouts/admin";
-import ProductTable from "../components/ProductTable";
-import ModalProduct from "../components/ModalProduct";
-import { ProductModel } from "../models/product";
-import ProductCategoryTable from "../components/ProductCategoryTable";
-import PriceCategoryTable from "../components/PriceCategoryTable";
 import { PiDotsNine } from "react-icons/pi";
-import ProductAttributeTable from "../components/ProductAttributeTable";
+import { RiShoppingBagLine } from "react-icons/ri";
 import { TbRulerMeasure } from "react-icons/tb";
+import AdminLayout from "../components/layouts/admin";
+import PriceCategoryTable from "../components/PriceCategoryTable";
+import ProductAttributeTable from "../components/ProductAttributeTable";
+import ProductCategoryTable from "../components/ProductCategoryTable";
+import ProductTable from "../components/ProductTable";
 import UnitTable from "../components/UnitTable";
+import { ProductModel } from "../models/product";
 
 interface ProductPageProps {}
 
 const ProductPage: FC<ProductPageProps> = ({}) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
   const [product, setProduct] = useState<ProductModel>();
 
@@ -34,29 +35,29 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
         >
           <Tabs.Item
             active={activeTab === 0}
-            title="Product"
+            title={t("products") }
             icon={RiShoppingBagLine}
           >
             <ProductTable />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 1}
-            title="Category"
+            title=  {t("product_categories")}
             icon={BsListCheck}
           >
             <ProductCategoryTable />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 2}
-            title="Price Category"
+            title={t("price_categories")}
             icon={IoPricetagOutline}
           >
             <PriceCategoryTable />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 3} title="Attributes" icon={PiDotsNine}>
+          <Tabs.Item active={activeTab === 3} title={t("product_attributes")} icon={PiDotsNine}>
             <ProductAttributeTable />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 4} title="Units" icon={TbRulerMeasure}>
+          <Tabs.Item active={activeTab === 4} title={t("units")} icon={TbRulerMeasure}>
             <UnitTable />
           </Tabs.Item>
         </Tabs>

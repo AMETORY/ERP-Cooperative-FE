@@ -6,6 +6,7 @@ import {
   updatePriceCategory,
 } from "../services/api/priceCategoryApi";
 import { PriceCategoryModel } from "../models/price_category";
+import { useTranslation } from 'react-i18next';
 
 interface ModalPriceCategoryProps {
   show: boolean;
@@ -22,6 +23,7 @@ const ModalPriceCategory: FC<ModalPriceCategoryProps> = ({
   category,
   setCategory,
 }) => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   return (
     <Modal show={show} onClose={() => setShow(false)}>
@@ -29,11 +31,11 @@ const ModalPriceCategory: FC<ModalPriceCategoryProps> = ({
       <Modal.Body>
         <div className="space-y-6">
           <div className="mb-2 block">
-            <Label htmlFor="name" value="Name" />
+            <Label htmlFor="name" value={t("name")} />
             <TextInput
               id="name"
               type="text"
-              placeholder="Name"
+              placeholder={t("name")}
               required={true}
               value={category?.name}
               onChange={(e) =>
@@ -46,10 +48,10 @@ const ModalPriceCategory: FC<ModalPriceCategoryProps> = ({
             />
           </div>
           <div className="mb-2 block">
-            <Label htmlFor="description" value="Description" />
+            <Label htmlFor="description" value={t("description")} />
             <Textarea
               id="description"
-              placeholder="Description"
+              placeholder={t("description")}
               rows={4}
               value={category?.description}
               onChange={(e) =>
@@ -85,7 +87,7 @@ const ModalPriceCategory: FC<ModalPriceCategoryProps> = ({
               }
             }}
           >
-            Save
+            {t('save')}
           </Button>
         </div>
       </Modal.Footer>

@@ -12,10 +12,12 @@ import {
 } from "../services/api/productCategoryApi";
 import { SearchContext } from "../contexts/SearchContext";
 import { getPagination } from "../utils/helper";
+import { useTranslation } from 'react-i18next';
 
 interface ProductCategoryTableProps {}
 
 const ProductCategoryTable: FC<ProductCategoryTableProps> = ({}) => {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -46,7 +48,7 @@ const ProductCategoryTable: FC<ProductCategoryTableProps> = ({}) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Category</h1>
+        <h1 className="text-3xl font-bold ">{t('product_categories')}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -59,7 +61,7 @@ const ProductCategoryTable: FC<ProductCategoryTableProps> = ({}) => {
               setShowModal(true);
             }}
           >
-            + Category
+            + {t('product_categories')}
           </Button>
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -69,8 +71,8 @@ const ProductCategoryTable: FC<ProductCategoryTableProps> = ({}) => {
       </div>
       <Table hoverable>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Description</Table.HeadCell>
+          <Table.HeadCell>{t('name')}</Table.HeadCell>
+          <Table.HeadCell>{t('description')}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body>

@@ -9,10 +9,12 @@ import { PaginationResponse } from "../objects/pagination";
 import { deleteProduct, getProducts } from "../services/api/productApi";
 import { getPagination, money } from "../utils/helper";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from 'react-i18next';
 interface ProductTableProps {}
 
 const ProductTable: FC<ProductTableProps> = ({}) => {
+
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [product, setProduct] = useState<ProductModel>();
   const [mounted, setMounted] = useState(false);
@@ -43,7 +45,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Product</h1>
+        <h1 className="text-3xl font-bold ">{t("product")}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -52,7 +54,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
               setShowModal(true);
             }}
           >
-            + Product
+            + {t("product")}
           </Button>
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -63,16 +65,16 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
       <div className="overflow-x-auto">
       <Table striped>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Description</Table.HeadCell>
-          <Table.HeadCell>Stock</Table.HeadCell>
+          <Table.HeadCell>{t("name")}</Table.HeadCell>
+          <Table.HeadCell>{t("description")}</Table.HeadCell>
+          <Table.HeadCell>{t("stock")}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body>
           {products.length === 0 && (
             <Table.Row>
               <Table.Cell colSpan={5} className="text-center">
-                No data found.
+                {t("no_data_found")}
               </Table.Cell>
             </Table.Row>
           )}
@@ -88,7 +90,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
                     navigate(`/product/${product.id}`);
                   }}
                 >
-                  View
+                  {t("view")}
                 </a>
                 <a
                   className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
@@ -105,7 +107,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
                     }
                   }}
                 >
-                  Delete
+                  {t("delete")}
                 </a>
               </Table.Cell>
             </Table.Row>

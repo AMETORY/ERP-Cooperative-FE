@@ -39,10 +39,11 @@ import VariantForm from "./VariantForm";
 import { UnitModel } from "../models/unit";
 import ModalProductUnit from "../components/ModalProductUnit";
 import { getStockMovements } from "../services/api/stockMovementApi";
-
+import { useTranslation } from 'react-i18next';
 interface ProductDetailProps {}
 
 const ProductDetail: FC<ProductDetailProps> = ({}) => {
+  const { t } = useTranslation();
   const [product, setProduct] = useState<ProductModel>();
   const { productId } = useParams<{ productId: string }>();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -236,7 +237,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
         }}
       >
         <BsImage className="mr-2" />
-        Add Image
+        {t('add_image')}
       </Button>
     </div>
   );
@@ -416,14 +417,14 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
             )}
 
             <div className="mb-4">
-              <small className="font-bold">Total Stock:</small>
+              <small className="font-bold">{t("total_stock")}:</small>
               <p className="text-lg">
                 {" "}
                 {money(product?.total_stock)} {product?.default_unit?.code}
               </p>
             </div>
             <div className="mb-4">
-              <small className="font-bold">Price:</small>
+              <small className="font-bold">{t('price')}:</small>
               <p className="text-lg ">
                 {" "}
                 {money(product?.price)}{" "}
@@ -436,7 +437,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
             </div>
             <div className="mb-4">
               <div className="flex flex-row justify-between items-center">
-                <small className="font-bold">Prices:</small>
+                <small className="font-bold">{t("prices")}:</small>
                 <Button
                   color="green"
                   size="xs"
@@ -454,19 +455,19 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                   <thead>
                     <tr>
                       <th className="px-2 py-1 text-xs border text-left border-gray-300">
-                        Category
+                        {t("category")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Amount
+                        {t("amount")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Effective Date
+                        {t("effective_date")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Min Quantity
+                        {t("min_quantity")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Action
+                        {t("action")}
                       </th>
                     </tr>
                   </thead>
@@ -507,7 +508,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
             <div className="w-full p-2"></div>
             <div className="mb-4">
               <div className="flex flex-row justify-between items-center">
-                <small className="font-bold">Variants:</small>
+                <small className="font-bold">{t("variants")}:</small>
                 <Button
                   color="green"
                   size="xs"
@@ -525,28 +526,28 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                   <thead>
                     <tr>
                       <th className="px-2 py-1 text-xs border text-left border-gray-300">
-                        Display Name
+                        {t("display_name")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Price
+                        {t("price")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Attribute
+                        {t("attribute")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Dimension (L x W x H)
+                        {t("dimension")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Weight
+                        {t("weight")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        SKU
+                        {t("sku")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Stock
+                        {t("stock")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Action
+                        {t("action")}
                       </th>
                     </tr>
                   </thead>
@@ -647,20 +648,20 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                   <thead>
                     <tr>
                       <th className="px-2 py-1 text-xs border text-left border-gray-300">
-                        Code
+                        {t("code")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Name
+                        {t("name")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Description
+                        {t("description")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Value
+                        {t("value")}
                       </th>
 
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Action
+                        {t("action")}
                       </th>
                     </tr>
                   </thead>
@@ -830,7 +831,7 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
             <div className="w-full p-2"></div>
 
             <div className="mb-4">
-              <small className="font-bold">Description:</small>
+              <small className="font-bold">{t("description")}:</small>
               <div
                 className="min-h-[100px] text-sm"
                 dangerouslySetInnerHTML={{
@@ -841,29 +842,29 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
               ></div>
             </div>
             <div className="mb-4">
-              <small className="font-bold">Stock Movement:</small>
+              <small className="font-bold">{t("stock_movements")}:</small>
               {stockMovements.length > 0 ? (
                 <table className="w-full">
                   <thead>
                     <tr>
                       <th className="px-2 py-1 text-xs border text-left border-gray-300">
-                        Date
+                        {t("date")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Quantity
+                        {t("quantity")}
                       </th>
 
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Merchant
+                        {t("merchant")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Warehouse
+                        {t("warehouse")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Type
+                        {t("type")}
                       </th>
                       <th className="px-2 py-1 text-xs border border-gray-300">
-                        Notes
+                        {t("notes")}
                       </th>
                     </tr>
                   </thead>

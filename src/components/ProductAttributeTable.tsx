@@ -9,22 +9,23 @@ import {
 import { useContext, useEffect, useState, type FC } from "react";
 import { LuFilter } from "react-icons/lu";
 // import ModalProductAttribute from "./ModalProductAttribute";
+import { useTranslation } from 'react-i18next';
 import { LoadingContext } from "../contexts/LoadingContext";
+import { SearchContext } from "../contexts/SearchContext";
 import { ProductAttributeModel } from "../models/producy_attribute";
 import { PaginationResponse } from "../objects/pagination";
-import { getCategories } from "../services/api/companyApi";
 import {
   createProductAttribute,
   deleteProductAttribute,
   getProductAttributes,
   updateProductAttribute,
 } from "../services/api/productAttributeApi";
-import { SearchContext } from "../contexts/SearchContext";
 import { getPagination } from "../utils/helper";
 
 interface ProductAttributeTableProps {}
 
 const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -56,7 +57,7 @@ const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Attribute</h1>
+        <h1 className="text-3xl font-bold ">{t('product_attributes')}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -75,8 +76,8 @@ const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
       </div>
       <Table hoverable>
         <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Description</Table.HeadCell>
+          <Table.HeadCell>{t('name')}</Table.HeadCell>
+          <Table.HeadCell>{t('description')}</Table.HeadCell>
           <Table.HeadCell></Table.HeadCell>
         </Table.Head>
         <Table.Body>
@@ -155,6 +156,7 @@ const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
+          <div className="flex w-full justify-end">
           <Button
             onClick={() => {
               if (productAttribute?.id) {
@@ -173,8 +175,9 @@ const ProductAttributeTable: FC<ProductAttributeTableProps> = ({}) => {
               }
             }}
           >
-            {productAttribute?.id ? "Update" : "Create"}
+            {productAttribute?.id ? t('"update"') : t('create')}
           </Button>
+          </div>
         </Modal.Footer>
       </Modal>
       {/* {category && (
