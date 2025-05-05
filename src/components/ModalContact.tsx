@@ -1,6 +1,7 @@
 import { Button, Label, Modal, Textarea, TextInput, ToggleSwitch } from "flowbite-react";
 import type { FC } from "react";
 import { ContactModel } from "../models/contact";
+import { useTranslation } from 'react-i18next';
 
 interface ModalContactProps {
   showModal: boolean;
@@ -18,19 +19,20 @@ const ModalContact: FC<ModalContactProps> = ({
   handleCreateContact
 
 }) => {
+  const { t } = useTranslation();
   return (
     <Modal show={showModal} onClose={() => setShowModal(false)}>
       <Modal.Header>
-        {selectedContact?.id ? "Edit" : "Create"} Contact
+ {t('contact')}
       </Modal.Header>
       <Modal.Body>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="contactName" value="Name" />
+            <Label htmlFor="contactName" value={t('name')} />
             <TextInput
               id="contactName"
               name="name"
-              placeholder="Name"
+              placeholder={t('name')}
               required
               value={selectedContact?.name ?? ""}
               onChange={(e) =>
@@ -42,12 +44,12 @@ const ModalContact: FC<ModalContactProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactEmail" value="Email" />
+            <Label htmlFor="contactEmail" value={t('email')} />
             <TextInput
               id="contactEmail"
               name="email"
               type="email"
-              placeholder="Email"
+              placeholder={t('email')}
               value={selectedContact?.email ?? ""}
               onChange={(e) =>
                 setSelectedContact({
@@ -58,12 +60,12 @@ const ModalContact: FC<ModalContactProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactPhone" value="Phone" />
+            <Label htmlFor="contactPhone" value={t('phone')} />
             <TextInput
               id="contactPhone"
               name="phone"
               type="tel"
-              placeholder="Phone"
+              placeholder={t('phone')}
               value={selectedContact?.phone ?? ""}
               onChange={(e) =>
                 setSelectedContact({
@@ -74,11 +76,11 @@ const ModalContact: FC<ModalContactProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactAddress" value="Address" />
+            <Label htmlFor="contactAddress" value={t('address')} />
             <Textarea
               id="contactAddress"
               name="address"
-              placeholder="Address"
+              placeholder={t('address')}
               value={selectedContact?.address ?? ""}
               onChange={(e) =>
                 setSelectedContact({
@@ -89,12 +91,12 @@ const ModalContact: FC<ModalContactProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="contactPersonPosition" value="Position" />
+            <Label htmlFor="contactPersonPosition" value={t('position')} />
             <TextInput
               id="contactPersonPosition"
               name="contact_person_position"
               type="text"
-              placeholder="Position"
+              placeholder={t('position')}
               value={selectedContact?.contact_person_position ?? ""}
               onChange={(e) =>
                 setSelectedContact({
@@ -115,7 +117,7 @@ const ModalContact: FC<ModalContactProps> = ({
                   is_customer: e!,
                 })
               }
-              label="Customer"
+              label={t('customer')}
             />
             <div>
               <ToggleSwitch
@@ -128,7 +130,7 @@ const ModalContact: FC<ModalContactProps> = ({
                     is_vendor: e!,
                   })
                 }
-                label="Vendor"
+                label={t('vendor')}
               />
             </div>
             <div>
@@ -142,7 +144,7 @@ const ModalContact: FC<ModalContactProps> = ({
                     is_supplier: e!,
                   })
                 }
-                label="Supplier"
+                label={t('supplier')}
               />
             </div>
           </div>
@@ -151,7 +153,7 @@ const ModalContact: FC<ModalContactProps> = ({
       <Modal.Footer>
         <div className="flex justify-end w-full">
           <Button onClick={handleCreateContact}>
-            {selectedContact?.id ? "Edit" : "Create"} Contact
+            {selectedContact?.id ? t('edit') : t('create')} {t('contact')}
           </Button>
         </div>
       </Modal.Footer>

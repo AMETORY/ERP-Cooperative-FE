@@ -14,10 +14,12 @@ import { Editor } from "@tinymce/tinymce-react";
 import { LoadingContext } from "../../contexts/LoadingContext";
 import { updateCooperativeSetting } from "../../services/api/cooperativeApi";
 import toast from "react-hot-toast";
+import { useTranslation } from 'react-i18next';
 
 interface CooperativeSettingProps {}
 
 const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
+  const { t } = useTranslation();
   const { loading, setLoading } = useContext(LoadingContext);
   const [mounted, setMounted] = useState(false);
   const [setting, setSetting] = useState<CooperationSetting>();
@@ -101,7 +103,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
   const renderTerms = () => (
     <div className="rounded-lg border p-4">
       <div className="">
-        <h3 className="font-bold text-lg mb-4">Loan Term</h3>
+        <h3 className="font-bold text-lg mb-4">{t('loan_term')}</h3>
         <div className="flex flex-col space-y-4">
           <Editor
             apiKey={process.env.REACT_APP_TINY_MCE_KEY}
@@ -129,10 +131,10 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
   const renderAccounts = () => (
     <div className="rounded-lg border p-4">
       <div className="">
-        <h3 className="font-bold text-lg mb-4">Accounts</h3>
+        <h3 className="font-bold text-lg mb-4">{t('accounts')}</h3>
         <div className="flex flex-col space-y-4">
           <div>
-            <Label>Simpanan Pokok</Label>
+            <Label>{t('principal_savings')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -153,7 +155,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Simpanan Wajib</Label>
+            <Label>{t('mandatory_savings')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -175,7 +177,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           </div>
 
           <div>
-            <Label>Simpanan Sukarela</Label>
+            <Label>{t('voluntary_savings')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -197,7 +199,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           </div>
           <HR />
           <div>
-            <Label>Piutang Pinjaman </Label>
+            <Label>{t('receivable')}</Label>
             <Select
               options={receivableAccounts.map((e) => ({
                 value: e.id,
@@ -220,7 +222,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Pendapatan Pinjaman </Label>
+            <Label>{t('loan_revenue')}</Label>
             <Select
               options={incomeAccounts.map((e) => ({
                 value: e.id,
@@ -241,7 +243,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Biaya Admin </Label>
+            <Label>{t('admin_fee')}</Label>
             <Select
               options={incomeAccounts.map((e) => ({
                 value: e.id,
@@ -263,7 +265,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           </div>
           <HR />
           <div>
-            <Label>SHU Jasa Modal </Label>
+            <Label>{t('mandatory_savings_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -284,7 +286,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>SHU Jasa Usaha </Label>
+            <Label>{t('business_profit_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -305,7 +307,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>SHU Dana Cadangan </Label>
+            <Label>{t('reserve_fund_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -326,7 +328,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>SHU Dana Sosial </Label>
+            <Label>{t('social_fund_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -347,7 +349,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>SHU Dana Pendidikan </Label>
+            <Label>{t('education_fund_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -368,7 +370,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>SHU Dana Pengurus </Label>
+            <Label>{t('management_fund_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -389,7 +391,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>SHU Dana Lainnya </Label>
+            <Label>{t('other_funds_net_surplus')}</Label>
             <Select
               options={equityAccounts.map((e) => ({
                 value: e.id,
@@ -411,7 +413,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           </div>
           <HR />
           <div>
-            <Label>Nominal Simpanan Pokok </Label>
+            <Label>{t('principal_savings_amount')}</Label>
             <CurrencyInput
               className="rs-input !p-1.5 "
               value={setting?.principal_savings_amount ?? 0}
@@ -424,7 +426,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Nominal Simpanan Wajib </Label>
+            <Label>{t('mandatory_savings_amount')}</Label>
             <CurrencyInput
               className="rs-input !p-1.5 "
               value={setting?.mandatory_savings_amount ?? 0}
@@ -437,7 +439,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Nominal Simpanan Sukarela </Label>
+            <Label>{t('voluntary_savings_amount')}</Label>
             <CurrencyInput
               className="rs-input !p-1.5 "
               value={setting?.voluntary_savings_amount ?? 0}
@@ -448,11 +450,11 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
                 });
               }}
             />
-            <small>Minimal</small>
+            <small>{t('minimum')}</small>
           </div>
           {setting?.is_islamic ? (
             <div>
-              <Label>Proyeksi Keuntungan Per Bulan (%) </Label>
+              <Label>{t('expected_profit_rate_per_month')}</Label>
               <CurrencyInput
                 className="rs-input !p-1.5 "
                 value={setting?.expected_profit_rate_per_month ?? 0}
@@ -463,11 +465,11 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
                   });
                 }}
               />
-              <small>Minimal</small>
+              <small>{t('minimum')}</small>
             </div>
           ) : (
             <div>
-              <Label>Bunga Per Bulan (%) </Label>
+              <Label>{t('interest_rate_per_month')}</Label>
               <CurrencyInput
                 className="rs-input !p-1.5 "
                 value={setting?.interest_rate_per_month ?? 0}
@@ -478,7 +480,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
                   });
                 }}
               />
-              <small>Minimal</small>
+              <small>{t('minimum')}</small>
             </div>
           )}
         </div>
@@ -525,7 +527,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             height={"400px"}
           />
           <div>
-            <Label>Jasa Modal</Label>
+            <Label>{t("mandatory_savings_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -540,7 +542,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Jasa Usaha</Label>
+            <Label>{t("business_profit_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -555,7 +557,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Dana Cadangan</Label>
+            <Label>{t("reserve_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -570,7 +572,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Dana Sosial</Label>
+            <Label>{t("social_fund_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -585,7 +587,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Dana Pendidikan</Label>
+            <Label>{t("education_fund_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -600,7 +602,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Dana Pengurus</Label>
+            <Label>{t("management_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -615,7 +617,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
             />
           </div>
           <div>
-            <Label>Dana Lainnya</Label>
+            <Label>{t("other_funds_allocation")}</Label>
             <TextInput
               rightIcon={TbPercentage}
               type="number"
@@ -632,7 +634,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           {error && <div className="mt-2 text-sm text-red-600">{error}</div>}
           {remainAllocation > 0 && (
             <div>
-              <Label>Remain Allocation</Label>
+              <Label>{t("remain_allocation")}</Label>
               <TextInput
                 rightIcon={TbPercentage}
                 type="number"
@@ -648,10 +650,10 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
   );
   const renderLoan = () => (
     <div className="rounded-lg border p-4">
-      <h3 className="font-bold text-lg mb-4">Auto Number</h3>
+      <h3 className="font-bold text-lg mb-4">{t("auto_number")}</h3>
       <div className="flex flex-col space-y-4">
         <div>
-          <Label>Panjang Auto Number</Label>
+          <Label>{t("auto_number_length")}</Label>
           <TextInput
             type="number"
             value={setting?.auto_numeric_length ?? 0}
@@ -665,7 +667,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           />
         </div>
         <div>
-          <Label>Format Nomor</Label>
+          <Label>{t("format_number")}</Label>
           <div>
             <Textarea
               value={setting?.number_format}
@@ -705,7 +707,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
         </div>
 
         <div>
-          <Label>Panjang Random Karakter</Label>
+          <Label>{t("length_random_character")}</Label>
           <TextInput
             type="number"
             value={setting?.random_character_length ?? 0}
@@ -719,7 +721,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           />
         </div>
         <div>
-          <Label>Panjang Random Nomber</Label>
+          <Label>{t("length_random_number")}</Label>
           <TextInput
             type="number"
             value={setting?.random_numeric_length ?? 0}
@@ -734,7 +736,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
         </div>
 
         <div>
-          <Label>Loan Static Character</Label>
+          <Label>{t("loan_static_character")}</Label>
           <TextInput
             value={setting?.static_character ?? 0}
             onChange={(e) =>
@@ -747,7 +749,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           />
         </div>
         <div>
-          <Label>Saving Static Character</Label>
+          <Label>{t("saving_static_character")}</Label>
           <TextInput
             value={setting?.saving_static_character ?? 0}
             onChange={(e) =>
@@ -760,7 +762,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
           />
         </div>
         <div>
-          <Label>Net Surplus Static Character</Label>
+          <Label>{t("net_surplus_static_character")}</Label>
           <TextInput
             value={setting?.net_surplus_static_character ?? 0}
             onChange={(e) =>
@@ -777,7 +779,7 @@ const CooperativeSetting: FC<CooperativeSettingProps> = ({}) => {
   );
   return (
     <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-200px)] p-2">
-      <h1 className="text-3xl font-bold">Cooperative Setting</h1>
+      <h1 className="text-3xl font-bold">{t("cooperative_setting")}</h1>
       <div className="grid grid-cols-2 gap-4">
         <div className=" flex flex-col space-y-4">
           {renderAccounts()}

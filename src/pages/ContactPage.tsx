@@ -1,5 +1,16 @@
+import {
+  Button,
+  Checkbox,
+  Pagination,
+  Table
+} from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
+import toast from "react-hot-toast";
+import { useTranslation } from 'react-i18next';
 import AdminLayout from "../components/layouts/admin";
+import ModalContact from "../components/ModalContact";
+import { LoadingContext } from "../contexts/LoadingContext";
+import { ContactModel } from "../models/contact";
 import { PaginationResponse } from "../objects/pagination";
 import {
   createContact,
@@ -7,26 +18,12 @@ import {
   getContacts,
   updateContact,
 } from "../services/api/contactApi";
-import { ContactModel } from "../models/contact";
-import { LoadingContext } from "../contexts/LoadingContext";
 import { getPagination } from "../utils/helper";
-import toast from "react-hot-toast";
-import {
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Pagination,
-  Table,
-  Textarea,
-  TextInput,
-  ToggleSwitch,
-} from "flowbite-react";
-import ModalContact from "../components/ModalContact";
 
 interface ContactPageProps {}
 
 const ContactPage: FC<ContactPageProps> = ({}) => {
+  const { t } = useTranslation();
   const { loading, setLoading } = useContext(LoadingContext);
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(1);
@@ -82,7 +79,7 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
     <AdminLayout>
       <div className="p-8 h-[calc(100vh-100px)] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">Contact</h1>
+          <h1 className="text-3xl font-bold ">{t('contact')}</h1>
           <Button
             gradientDuoTone="purpleToBlue"
             pill
@@ -96,17 +93,17 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
               });
             }}
           >
-            + Create new Contact
+            + {t('contact')}
           </Button>
         </div>
         <Table>
           <Table.Head>
-            <Table.HeadCell>Name</Table.HeadCell>
-            <Table.HeadCell>Email</Table.HeadCell>
-            <Table.HeadCell>Phone</Table.HeadCell>
-            <Table.HeadCell>Address</Table.HeadCell>
-            <Table.HeadCell>Position</Table.HeadCell>
-            <Table.HeadCell>Type</Table.HeadCell>
+            <Table.HeadCell>{t('name')}</Table.HeadCell>
+            <Table.HeadCell>{t('email')}</Table.HeadCell>
+            <Table.HeadCell>{t('phone')}</Table.HeadCell>
+            <Table.HeadCell>{t('address')}</Table.HeadCell>
+            <Table.HeadCell>{t('contact_position')}</Table.HeadCell>
+            <Table.HeadCell>{t('category')}</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
 
@@ -137,15 +134,15 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
                   <div>
                     <div className="flex gap-1 items-center">
                       <Checkbox checked={contact.is_customer} />
-                      Customer
+                      {t('customer')}
                     </div>
                     <div className="flex gap-1 items-center">
                       <Checkbox checked={contact.is_vendor} />
-                      Vendor
+                      {t('vendor')}
                     </div>
                     <div className="flex gap-1 items-center">
                       <Checkbox checked={contact.is_supplier} />
-                      Supplier
+                      {t('supplier')}
                     </div>
                   </div>
                 </Table.Cell>

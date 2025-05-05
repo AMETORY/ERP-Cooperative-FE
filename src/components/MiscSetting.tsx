@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { CompanyModel, CompanySetting } from "../models/company";
 import { Badge, Button, Label, Textarea, TextInput } from "flowbite-react";
 import { AUTO_NUMERIC_FORMAL } from "../utils/constants";
+import { useTranslation } from 'react-i18next';
 
 interface MiscSettingProps {
   setting?: CompanyModel | null;
@@ -10,14 +11,15 @@ interface MiscSettingProps {
 }
 
 const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
+  const { t } = useTranslation();
   return (
     <div className="h-[calc(100vh-200px)] overflow-y-auto">
       <div className="grid grid-cols-2 gap-4">
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Auto Number</h3>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t("auto_number")}</h3>
           <div className="flex flex-col space-y-4">
             <div>
-              <Label>Panjang Auto Number</Label>
+              <Label>{t("auto_number_length")}</Label>
               <TextInput
                 type="number"
                 value={setting?.auto_numeric_length ?? 0}
@@ -31,7 +33,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
               />
             </div>
             <div>
-              <Label>Panjang Random Number</Label>
+              <Label>{t("random_number_length")}</Label>
               <TextInput
                 type="number"
                 value={setting?.random_numeric_length ?? 0}
@@ -45,7 +47,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
               />
             </div>
             <div>
-              <Label>Panjang Random Karakter</Label>
+              <Label>{t("random_character_length")}</Label>
               <TextInput
                 type="number"
                 value={setting?.random_character_length ?? 0}
@@ -60,10 +62,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Sales</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('sales')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.sales_static_character ?? 0}
               onChange={(e) =>
@@ -76,7 +78,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.sales_format}
@@ -123,10 +125,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Sales Quote</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('sales_quote')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.sales_quote_static_character ?? 0}
               onChange={(e) =>
@@ -139,7 +141,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.sales_quote_format}
@@ -186,10 +188,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Sales Return</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('sales_return')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.sales_return_static_character ?? 0}
               onChange={(e) =>
@@ -202,7 +204,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.sales_return_format}
@@ -249,10 +251,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Delivery Order</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('delivery_order')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.delivery_static_character ?? 0}
               onChange={(e) =>
@@ -265,7 +267,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.delivery_format}
@@ -312,10 +314,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Purchase</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('purchase')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.purchase_static_character ?? 0}
               onChange={(e) =>
@@ -328,7 +330,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.purchase_format}
@@ -375,10 +377,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Purchase Order</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('purchase_order')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.purchase_order_static_character ?? 0}
               onChange={(e) =>
@@ -391,7 +393,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.purchase_order_format}
@@ -438,10 +440,10 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-lg border p-4">
-          <h3 className="font-bold text-lg mb-4">Purchase Return</h3>
-          <div>
-            <Label>Karakter Statis</Label>
+        <div className="rounded-lg border p-4 flex-col space-y-4">
+          <h3 className="font-bold text-lg mb-4">{t('purchase_return')}</h3>
+          <div className="flex flex-col">
+            <Label>{t("static_character")}</Label>
             <TextInput
               value={setting?.purchase_return_static_character ?? 0}
               onChange={(e) =>
@@ -454,7 +456,7 @@ const MiscSetting: FC<MiscSettingProps> = ({ setting, setSetting, onSave }) => {
             />
           </div>
           <div>
-            <Label>Format Nomor</Label>
+            <Label>{t("format_number")}</Label>
             <div>
               <Textarea
                 value={setting?.purchase_return_format}
