@@ -591,6 +591,7 @@
   "reject": "Tolak",
   "approve": "Setujui",
   "cooperative_members": "Anggota Koperasi",
+  "cooperative_member": "Anggota Koperasi",
   "cooperative_members_list": "Daftar Anggota Koperasi",
   "create_cooperative": "Buat Koperasi",
   "principal_saving": "Simpanan Pokok",
@@ -685,7 +686,9 @@
   "select_all": "Pilih Semua",
   "clear_all": "Hapus Semua",
   "new_role": "Role Baru",
-  "super_admin": "Super Admin"
+  "super_admin": "Super Admin",
+  "users": "Pengguna",
+  "invite_user": "Undang Pengguna"
   
  
 

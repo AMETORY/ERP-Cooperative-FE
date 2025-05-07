@@ -10,6 +10,15 @@ export const getMembers = async (req: PaginationRequest) => {
     method: "GET",
   });
 };
+export const getCompanyUsers = async (req: PaginationRequest) => {
+  const queryParams = new URLSearchParams();
+  queryParams.set("page", String(req.page));
+  queryParams.set("size", String(req.size));
+  if (req.search) queryParams.set("search", req.search);
+  return await customFetch(`api/v1/company/users?${queryParams}`, {
+    method: "GET",
+  });
+};
 export const getRoles = async (req: PaginationRequest) => {
   const queryParams = new URLSearchParams();
   queryParams.set("page", String(req.page));
@@ -25,6 +34,12 @@ export const inviteMember = async (req: any) => {
     body: JSON.stringify(req),
   });
 };
+export const inviteUser = async (req: any) => {
+  return await customFetch(`api/v1/invite-user`, {
+    method: "POST",
+    body: JSON.stringify(req),
+  });
+};
 export const getInvitedMembers = async (req: PaginationRequest) => {
   const queryParams = new URLSearchParams();
   queryParams.set("page", String(req.page));
@@ -34,6 +49,18 @@ export const getInvitedMembers = async (req: PaginationRequest) => {
     method: "GET",
   });
 };
+
+export const updateUserRole = async (id: string, data: any) => {
+  return await customFetch(`api/v1/user/${id}/role`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+export const deleteUser = async (id: string) => {
+  return await customFetch(`api/v1/user/${id}`, {
+    method: "DELETE",
+  });
+}
 export const deleteInvitation = async (id: string) => {
   return await customFetch(`api/v1/invited/${id}`, {
     method: "DELETE",

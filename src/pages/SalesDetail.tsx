@@ -289,6 +289,10 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
         getSalesDetail(salesId!).then((res: any) => {
           setSales(res.data);
           getAllItems();
+          setMountedAmount(false)
+          setTimeout(() => {
+            setMountedAmount(true)
+          }, 100);
         });
       });
     }
@@ -570,7 +574,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
         </div>
         <div className="flex flex-row items-center justify-between mt-4"></div>
         <div className="overflow-x-auto">
-          <Table className=" overflow-x-auto border rounded-none" hoverable>
+          <Table className=" overflow-x-auto border rounded-none" striped>
             <Table.Head>
               <Table.HeadCell style={{ width: "300px" }}>
                 {t("item")}
@@ -777,7 +781,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         <div className=" relative min-w-[32px]">
                           {mountedAmount && (
                             <CurrencyInput
-                              className="rs-input !p-1.5 "
+                              className="rs-input !p-1.5 " style={{zIndex: 0}}
                               defaultValue={item.quantity ?? 0}
                               groupSeparator="."
                               decimalSeparator=","
@@ -809,7 +813,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                           )}
                         </div>
                         {(item.product?.units ?? []).length > 0 ? (
-                          <Dropdown inline placement="bottom-end">
+                          <Dropdown inline placement="bottom-end"  >
                             {(item.product?.units ?? []).map((t) => (
                               <Dropdown.Item
                                 key={t.id}

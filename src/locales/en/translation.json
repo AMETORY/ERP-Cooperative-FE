@@ -589,6 +589,7 @@
   "reject": "Reject",
   "approve": "Approve",
   "cooperative_members": "Cooperative Members",
+  "cooperative_member": "Cooperative Member",
   "cooperative_members_list": "Cooperative Members List",
   "create_cooperative": "Create Cooperative",
   "principal_saving": "Principal Saving",
@@ -683,6 +684,8 @@
   "select_all": "Select All",
   "clear_all": "Clear All",
   "new_role": "New Role",
-  "super_admin": "Super Admin"
+  "super_admin": "Super Admin",
+  "users": "Users",
+  "invite_user": "Invite User"
 
 }

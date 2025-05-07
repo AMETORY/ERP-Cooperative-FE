@@ -12,7 +12,7 @@ import {
   Textarea,
   TextInput,
 } from "flowbite-react";
-import { BsInfoCircle, BsPlugin } from "react-icons/bs";
+import { BsInfoCircle, BsLock, BsPerson, BsPlugin } from "react-icons/bs";
 import {
   addRapidAPIPlugins,
   deleteCompanyRapidAPIPlugin,
@@ -47,6 +47,8 @@ import MiscSetting from "../components/MiscSetting";
 import { useTranslation } from "react-i18next";
 import { FaPeopleGroup } from "react-icons/fa6";
 import RolePermission from "../components/RolePermission";
+import { GoLock } from "react-icons/go";
+import CompanyUser from "../components/CompanyUser";
 interface SettingPageProps {}
 
 const SettingPage: FC<SettingPageProps> = ({}) => {
@@ -549,13 +551,14 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           >
             {renderReport()}
           </Tabs.Item>
+         
           <Tabs.Item
-            active={activeTab === 5}
-            title={t("misc")}
-            icon={MdBikeScooter}
+            active={activeTab === 6}
+            title={t("role_permission")}
+            icon={GoLock}
             className=""
           >
-            <MiscSetting
+            <RolePermission
               setting={company}
               setSetting={(val) => {
                 setCompany(val);
@@ -565,11 +568,25 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 6}
-            title={t("role_permission")}
-            icon={FaPeopleGroup}
+            title={t("users")}
+            icon={BsPerson}
             className=""
           >
-            <RolePermission
+            <CompanyUser
+              setting={company}
+              setSetting={(val) => {
+                setCompany(val);
+              }}
+              onSave={updateCompanySetting}
+            />
+          </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 5}
+            title={t("misc")}
+            icon={MdBikeScooter}
+            className=""
+          >
+            <MiscSetting
               setting={company}
               setSetting={(val) => {
                 setCompany(val);

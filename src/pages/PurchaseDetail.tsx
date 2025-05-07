@@ -255,6 +255,9 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
             return i;
           }),
         ]);
+        setTimeout(() => {
+          setMountedAmount(true)
+        }, 300);
       });
     }
   };

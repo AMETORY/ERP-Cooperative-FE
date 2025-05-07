@@ -587,6 +587,7 @@
   "reject": "拒否",
   "approve": "承認",
   "cooperative_members": "協同組合メンバー",
+  "cooperative_member": "組合員",
   "cooperative_members_list": "協同組合メンバーリスト",
   "create_cooperative": "協同組合を作成",
   "principal_saving": "元本貯蓄",
@@ -681,7 +682,9 @@
   "select_all": "すべて選択",
   "clear_all": "すべてクリア",
   "new_role": "新しい役割",
-  "super_admin": "スーパー管理者"
+  "super_admin": "スーパー管理者",
+  "users": "ユーザー",
+  "invite_user": "ユーザー招待"
 
 
 }

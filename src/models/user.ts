@@ -12,6 +12,7 @@ export interface UserModel {
   address: string;
   password: string;
   roles?: RoleModel[];
+  role?: RoleModel;
   companies?: CompanyModel[];
   profile_picture?: FileModel | null;
   role_id?: string | null;

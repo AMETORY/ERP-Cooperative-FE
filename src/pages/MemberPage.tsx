@@ -374,6 +374,7 @@ const MemberPage: FC<MemberPageProps> = ({}) => {
                   full_name: inviteFullName,
                   role_id: inviteRoleId,
                   email: inviteEmail,
+                  is_cooperative_member: true,
                 };
                 await inviteMember(invitationData);
                 setInviteModal(false);
