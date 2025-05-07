@@ -672,7 +672,12 @@
   "random_number_length": "Random Number Length",
   "random_character_length": "Random Character Length",
   "static_character": "Static Character",
-  "reset": "Reset"
-  
-
+  "reset": "Reset",
+  "create_company_first": "Create Company/Organization First",
+  "you_need_to_create_a_company_organization_first_to_access_this_page": "You need to create a company/organization first to access this page",
+  "cooperative_desc": "A cooperative is a jointly owned business operated by its members for their mutual benefit.",
+  "sme_desc": "A business with fewer than 500 employees and annual revenues of $1 million to $2.5 million.",
+  "sme": "Small Medium Enterprise",
+  "create_sme": "Create SME",
+  "role_permission": "Role Permission"
 }

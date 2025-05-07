@@ -192,3 +192,29 @@ export const statusColorMap = {
     PAID: "bg-indigo-500",
 }
 
+
+
+export const groupPermissions = (permissions) => {
+
+    const result = {};
+    permissions.forEach(item => {
+        const [level1, level2, actionName] = item.name.split(':');
+
+        if (!result[level1]) {
+            result[level1] = {};
+        }
+
+        if (!result[level1][level2]) {
+            result[level1][level2] = { actions: [] };
+        }
+
+        result[level1][level2].actions.push({
+            id: item.id,
+            created_at: item.created_at,
+            name: actionName,
+            is_active: item.is_active
+        });
+    });
+
+    return result
+}

@@ -23,6 +23,7 @@ import Loading from "../Loading";
 import Sidebar from "../sidebar";
 import Topnav from "../topnav";
 import { RiFolderForbidLine } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({
   isCooperative,
   permission,
 }) => {
+  const { t } = useTranslation();
   const { activeCompany, setActiveCompany } = useContext(ActiveCompanyContext);
   const { profile, setProfile } = useContext(ProfileContext);
   const { member, setMember } = useContext(MemberContext);
@@ -129,12 +131,11 @@ const AdminLayout: FC<AdminLayoutProps> = ({
       >
         <div className="bg-white p-16 bg-opacity-50 rounded-lg shadow-md w-1/2">
           <div className="mb-8">
-            <h2 className="text-lg font-bold">
-              Create Company/Organization First
-            </h2>
+            <h2 className="text-lg font-bold">{t("create_company_first")}</h2>
             <p>
-              You need to create a company/organization first to access this
-              page
+              {t(
+                "you_need_to_create_a_company_organization_first_to_access_this_page"
+              )}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -143,17 +144,16 @@ const AdminLayout: FC<AdminLayoutProps> = ({
                 <div className="flex items-center justify-center">
                   <img src="/logo-koperasi.jpg" alt="" className="w-12" />
                 </div>
-                <h2 className="text-lg font-bold text-center">Cooperative</h2>
-                <p className="text-center">
-                  A cooperative is a jointly owned business operated by its
-                  members for their mutual benefit.
-                </p>
+                <h2 className="text-lg font-bold text-center">
+                  {t("cooperative")}
+                </h2>
+                <p className="text-center">{t("cooperative_desc")}</p>
               </div>
               <Button
                 onClick={() => nav("/create/company/cooperative")}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
-                Create Cooperative
+                {t("create_cooperative")}
               </Button>
             </div>
             <div className="bg-white p-16 rounded-lg shadow-lg min-h-[400px] flex space-y-8 flex-col justify-between items-center">
@@ -161,19 +161,14 @@ const AdminLayout: FC<AdminLayoutProps> = ({
                 <div className="flex items-center justify-center">
                   <img src="/sme.png" alt="" className="w-12" />
                 </div>
-                <h2 className="text-lg font-bold text-center">
-                  Small Medium Enterprise
-                </h2>
-                <p className="text-center">
-                  A business with fewer than 500 employees and annual revenues
-                  of $1 million to $2.5 million.
-                </p>
+                <h2 className="text-lg font-bold text-center">{t("sme")}</h2>
+                <p className="text-center">{t("sme_desc")}</p>
               </div>
               <Button
                 onClick={() => nav("/create/company/sme")}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
-                Create SME
+                {t("create_sme")}
               </Button>
             </div>
           </div>

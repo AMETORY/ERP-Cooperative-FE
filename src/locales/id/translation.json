@@ -674,6 +674,15 @@
   "random_number_length": "Panjang Nomor Acak",
   "random_character_length": "Panjang Karakter Acak",
   "static_character": "Karakter Statis",
-  "reset": "Reset"
+  "reset": "Reset",
+  "create_company_first": "Buat Perusahaan/Organisasi Terlebih Dahulu",
+  "you_need_to_create_a_company_organization_first_to_access_this_page": "Anda perlu membuat perusahaan/organisasi terlebih dahulu untuk mengakses halaman ini",
+  "cooperative_desc": "Koperasi adalah bisnis yang dimiliki bersama dan dioperasikan oleh anggotanya untuk keuntungan bersama mereka.",
+  "sme_desc": "Bisnis dengan kurang dari 500 karyawan dan pendapatan tahunan antara $1 juta hingga $2,5 juta.",
+  "sme": "UMKM",
+  "create_sme": "Buat UMKM",
+  "role_permission": "Hak Akses"
+ 
+
 
 }

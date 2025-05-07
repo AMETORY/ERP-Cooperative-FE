@@ -44,7 +44,9 @@ import {
 import { CashFlowCategory } from "../models/setting";
 import { MdBikeScooter } from "react-icons/md";
 import MiscSetting from "../components/MiscSetting";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { FaPeopleGroup } from "react-icons/fa6";
+import RolePermission from "../components/RolePermission";
 interface SettingPageProps {}
 
 const SettingPage: FC<SettingPageProps> = ({}) => {
@@ -140,11 +142,11 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
 
   const renderReport = () => (
     <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-200px)] p-2">
-      <h1 className="text-3xl font-bold">{t('report_setting')}</h1>
+      <h1 className="text-3xl font-bold">{t("report_setting")}</h1>
       <div className="bg-white rounded-lg p-4 border">
-        <h3 className="text-xl font-semibold mb-8">{t('cash_flow_group')}</h3>
+        <h3 className="text-xl font-semibold mb-8">{t("cash_flow_group")}</h3>
         <div className="flex justify-between">
-          <h4 className="text-lg font-semibold mb-4">{t('operating')}</h4>
+          <h4 className="text-lg font-semibold mb-4">{t("operating")}</h4>
           <a
             className="font-medium text-green-600 hover:underline dark:text-green-500 ms-2 cursor-pointer text-xs"
             onClick={(e) => {
@@ -152,29 +154,34 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
               setSelectedGroup("operating");
             }}
           >
-            {t('add_sub_group')}
+            {t("add_sub_group")}
           </a>
         </div>
-        {(company?.cashflow_group_setting?.operating ?? []).map((item, index) => (
-          <div className="flex justify-between mb-4" key={index}>
-            <h5 className="text-md">{item.description}</h5>
-            <a
-              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                (company?.cashflow_group_setting?.operating ?? []).splice(index, 1);
-                setCompany({
-                  ...company!,
-                });
-              }}
-            >
-              {t('delete')}
-            </a>
-          </div>
-        ))}
+        {(company?.cashflow_group_setting?.operating ?? []).map(
+          (item, index) => (
+            <div className="flex justify-between mb-4" key={index}>
+              <h5 className="text-md">{item.description}</h5>
+              <a
+                className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  (company?.cashflow_group_setting?.operating ?? []).splice(
+                    index,
+                    1
+                  );
+                  setCompany({
+                    ...company!,
+                  });
+                }}
+              >
+                {t("delete")}
+              </a>
+            </div>
+          )
+        )}
         <HR />
         <div className="flex justify-between">
-          <h4 className="text-lg font-semibold mb-4">{t('investing')}</h4>
+          <h4 className="text-lg font-semibold mb-4">{t("investing")}</h4>
           <a
             className="font-medium text-green-600 hover:underline dark:text-green-500 ms-2 cursor-pointer text-xs"
             onClick={(e) => {
@@ -182,29 +189,34 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
               setSelectedGroup("investing");
             }}
           >
-            {t('add_sub_group')}
+            {t("add_sub_group")}
           </a>
         </div>
-        {(company?.cashflow_group_setting?.investing ?? []).map((item, index) => (
-          <div className="flex justify-between mb-4" key={index}>
-            <h5 className="text-md">{item.description}</h5>
-            <a
-              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                (company?.cashflow_group_setting?.investing ?? []).splice(index, 1);
-                setCompany({
-                  ...company!,
-                });
-              }}
-            >
-              {t('delete')}
-            </a>
-          </div>
-        ))}
+        {(company?.cashflow_group_setting?.investing ?? []).map(
+          (item, index) => (
+            <div className="flex justify-between mb-4" key={index}>
+              <h5 className="text-md">{item.description}</h5>
+              <a
+                className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  (company?.cashflow_group_setting?.investing ?? []).splice(
+                    index,
+                    1
+                  );
+                  setCompany({
+                    ...company!,
+                  });
+                }}
+              >
+                {t("delete")}
+              </a>
+            </div>
+          )
+        )}
         <HR />
         <div className="flex justify-between">
-          <h4 className="text-lg font-semibold mb-4">{t('financing')}</h4>
+          <h4 className="text-lg font-semibold mb-4">{t("financing")}</h4>
           <a
             className="font-medium text-green-600 hover:underline dark:text-green-500 ms-2 cursor-pointer text-xs"
             onClick={(e) => {
@@ -212,26 +224,31 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
               setSelectedGroup("financing");
             }}
           >
-            {t('add_sub_group')}
+            {t("add_sub_group")}
           </a>
         </div>
-        {(company?.cashflow_group_setting?.financing ?? []).map((item, index) => (
-          <div className="flex justify-between mb-4" key={index}>
-            <h5 className="text-md">{item.description}</h5>
-            <a
-              className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                (company?.cashflow_group_setting?.financing ?? []).splice(index, 1);
-                setCompany({
-                  ...company!,
-                });
-              }}
-            >
-              {t('delete')}
-            </a>
-          </div>
-        ))}
+        {(company?.cashflow_group_setting?.financing ?? []).map(
+          (item, index) => (
+            <div className="flex justify-between mb-4" key={index}>
+              <h5 className="text-md">{item.description}</h5>
+              <a
+                className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  (company?.cashflow_group_setting?.financing ?? []).splice(
+                    index,
+                    1
+                  );
+                  setCompany({
+                    ...company!,
+                  });
+                }}
+              >
+                {t("delete")}
+              </a>
+            </div>
+          )
+        )}
         <HR />
         <div className="flex gap-4 justify-between">
           <Button
@@ -246,10 +263,10 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
               });
             }}
           >
-            {t('reset')}
+            {t("reset")}
           </Button>
           <Button className="w-32" onClick={updateCompanySetting}>
-            {t('save')}
+            {t("save")}
           </Button>
         </div>
       </div>
@@ -257,7 +274,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
   );
   const renderInfo = () => (
     <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-160px)] p-2">
-      <h1 className="text-3xl font-bold">{t('edit_company')}</h1>
+      <h1 className="text-3xl font-bold">{t("edit_company")}</h1>
       <div className="bg-white rounded-lg p-4">
         <div className="flex flex-col gap-2 space-y-4">
           {company?.logo && (
@@ -271,7 +288,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
           )}
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">{t('logo')}</label>
+            <label className="text-sm font-medium">{t("logo")}</label>
             <FileInput
               accept="image/*"
               id="file-upload"
@@ -293,7 +310,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">{t('name')}</label>
+            <label className="text-sm font-medium">{t("name")}</label>
             <TextInput
               type="text"
               value={company?.name}
@@ -305,7 +322,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">{t('address')}</label>
+            <label className="text-sm font-medium">{t("address")}</label>
             <Textarea
               value={company?.address}
               name="address"
@@ -316,7 +333,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">{t('email')}</label>
+            <label className="text-sm font-medium">{t("email")}</label>
             <TextInput
               type="email"
               value={company?.email}
@@ -328,7 +345,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">{t('phone')}</label>
+            <label className="text-sm font-medium">{t("phone")}</label>
             <TextInput
               type="text"
               name="phone"
@@ -345,7 +362,7 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
               className="mt-8 w-32"
               onClick={updateCompanySetting}
             >
-              {t('save')}
+              {t("save")}
             </Button>
           </div>
         </div>
@@ -538,14 +555,27 @@ const SettingPage: FC<SettingPageProps> = ({}) => {
             icon={MdBikeScooter}
             className=""
           >
-              <MiscSetting
-                setting={company}
-                setSetting={(val) => {
-                  setCompany(val);
-                }}
-                onSave={updateCompanySetting}
-              />
-            
+            <MiscSetting
+              setting={company}
+              setSetting={(val) => {
+                setCompany(val);
+              }}
+              onSave={updateCompanySetting}
+            />
+          </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 6}
+            title={t("role_permission")}
+            icon={FaPeopleGroup}
+            className=""
+          >
+            <RolePermission
+              setting={company}
+              setSetting={(val) => {
+                setCompany(val);
+              }}
+              onSave={updateCompanySetting}
+            />
           </Tabs.Item>
         </Tabs>
       </div>

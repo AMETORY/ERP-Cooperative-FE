@@ -25,9 +25,11 @@ import {
   LOCAL_STORAGE_COMPANIES,
   LOCAL_STORAGE_COMPANY_ID,
 } from "../utils/constants";
+import { useTranslation } from 'react-i18next';
 interface CreateCompanyPageProps {}
 
 const CreateCompanyPage: FC<CreateCompanyPageProps> = ({}) => {
+  const { t } = useTranslation();
   const nav = useNavigate();
   const { loading, setLoading } = useContext(LoadingContext);
   const { companyType } = useParams();
@@ -153,11 +155,10 @@ const CreateCompanyPage: FC<CreateCompanyPageProps> = ({}) => {
         <div className="bg-white p-16 bg-opacity-50 rounded-lg shadow-md w-1/2">
           <div className="mb-8">
             <h2 className="text-lg font-bold">
-              Create Company/Organization First
+            {t('create_company_first')}
             </h2>
             <p>
-              You need to create a company/organization first to access this
-              page
+              {t('you_need_to_create_a_company_organization_first_to_access_this_page')}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -166,17 +167,16 @@ const CreateCompanyPage: FC<CreateCompanyPageProps> = ({}) => {
                 <div className="flex items-center justify-center">
                   <img src="/logo-koperasi.jpg" alt="" className="w-12" />
                 </div>
-                <h2 className="text-lg font-bold text-center">Cooperative</h2>
+                <h2 className="text-lg font-bold text-center">{t('cooperative')}</h2>
                 <p className="text-center">
-                  A cooperative is a jointly owned business operated by its
-                  members for their mutual benefit.
+                 {t('cooperative_desc')}
                 </p>
               </div>
               <Button
                 onClick={() => nav("/create/company/cooperative")}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
-                Create Cooperative
+                {t('create_cooperative')}
               </Button>
             </div>
             <div className="bg-white p-16 rounded-lg shadow-lg min-h-[400px] flex space-y-8 flex-col justify-between items-center">
@@ -185,18 +185,17 @@ const CreateCompanyPage: FC<CreateCompanyPageProps> = ({}) => {
                   <img src="/sme.png" alt="" className="w-12" />
                 </div>
                 <h2 className="text-lg font-bold text-center">
-                  Small Medium Enterprise
+                  {t('sme')}
                 </h2>
                 <p className="text-center">
-                  A business with fewer than 500 employees and annual revenues
-                  of $1 million to $2.5 million.
+                  {t('sme_desc')}
                 </p>
               </div>
               <Button
                 onClick={() => nav("/create/company/sme")}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
-                Create SME
+                {t('create_sme')}
               </Button>
             </div>
           </div>
