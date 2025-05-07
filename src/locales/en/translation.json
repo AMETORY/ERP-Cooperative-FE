@@ -679,5 +679,10 @@
   "sme_desc": "A business with fewer than 500 employees and annual revenues of $1 million to $2.5 million.",
   "sme": "Small Medium Enterprise",
   "create_sme": "Create SME",
-  "role_permission": "Role Permission"
+  "role_permission": "Role Permission",
+  "select_all": "Select All",
+  "clear_all": "Clear All",
+  "new_role": "New Role",
+  "super_admin": "Super Admin"
+
 }

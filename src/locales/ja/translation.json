@@ -677,6 +677,11 @@
   "sme_desc": "従業員数500人未満、年間収益100万ドルから250万ドルの事業を指します。",
   "sme": "中小企業",
   "create_sme": "中小企業を作成",
-  "role_permission": "ロール権限"
+  "role_permission": "ロール権限",
+  "select_all": "すべて選択",
+  "clear_all": "すべてクリア",
+  "new_role": "新しい役割",
+  "super_admin": "スーパー管理者"
+
 
 }

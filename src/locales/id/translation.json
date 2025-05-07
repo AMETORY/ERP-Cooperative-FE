@@ -681,7 +681,12 @@
   "sme_desc": "Bisnis dengan kurang dari 500 karyawan dan pendapatan tahunan antara $1 juta hingga $2,5 juta.",
   "sme": "UMKM",
   "create_sme": "Buat UMKM",
-  "role_permission": "Hak Akses"
+  "role_permission": "Hak Akses",
+  "select_all": "Pilih Semua",
+  "clear_all": "Hapus Semua",
+  "new_role": "Role Baru",
+  "super_admin": "Super Admin"
+  
  
 
 
