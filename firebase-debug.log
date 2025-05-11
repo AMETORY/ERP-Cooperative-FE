@@ -1,0 +1,17 @@
+[debug] [2025-05-11T07:55:07.511Z] ----------------------------------------------------------------------
+[debug] [2025-05-11T07:55:07.519Z] Command:       /Users/ametsuramet/.nvm/versions/node/v20.10.0/bin/node /Users/ametsuramet/.nvm/versions/node/v20.10.0/bin/firebase deploy --only hosting:new-jaraya
+[debug] [2025-05-11T07:55:07.519Z] CLI Version:   13.0.2
+[debug] [2025-05-11T07:55:07.519Z] Platform:      darwin
+[debug] [2025-05-11T07:55:07.520Z] Node Version:  v20.10.0
+[debug] [2025-05-11T07:55:07.520Z] Time:          Sun May 11 2025 14:55:07 GMT+0700 (Western Indonesia Time)
+[debug] [2025-05-11T07:55:07.520Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-11T07:55:07.564Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-11T07:55:07.565Z] > authorizing via signed-in user (support@ametory.id)
+[debug] [2025-05-11T07:55:07.565Z] [iam] checking project jaraya-new-prod for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-05-11T07:55:07.566Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/jaraya-new-prod:testIamPermissions [none]
+[debug] [2025-05-11T07:55:07.566Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/jaraya-new-prod:testIamPermissions x-goog-quota-user=projects/jaraya-new-prod
+[debug] [2025-05-11T07:55:07.566Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jaraya-new-prod:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-11T07:55:08.660Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/jaraya-new-prod:testIamPermissions 200
+[debug] [2025-05-11T07:55:08.660Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jaraya-new-prod:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-11T07:55:08.660Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/jaraya-new-prod [none]

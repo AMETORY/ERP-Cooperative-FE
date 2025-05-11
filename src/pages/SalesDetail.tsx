@@ -387,7 +387,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       status: "DRAFT",
                       ref_id: sales?.id,
                       ref_type: sales?.document_type,
-                      sales_date: moment().toISOString(),
+                      sales_date: sales?.sales_date,
                       sales_user_id: sales?.sales_user_id,
                       sales_user: sales?.sales_user,
                       items: items,
