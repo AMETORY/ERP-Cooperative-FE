@@ -2,7 +2,6 @@ import { Editor } from "@tinymce/tinymce-react";
 import {
   Badge,
   Button,
-  Checkbox,
   Datepicker,
   Dropdown,
   HelperText,
@@ -11,32 +10,41 @@ import {
   Modal,
   Table,
   TableRow,
-  Textarea,
+  Textarea
 } from "flowbite-react";
 import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import {
-  BsAirplane,
   BsCart2,
   BsDownload,
   BsPlusCircle,
-  BsTrash,
+  BsTrash
 } from "react-icons/bs";
+import { IoPaperPlaneOutline } from "react-icons/io5";
+import { MdOutlinePublish } from "react-icons/md";
+import { PiQuotes } from "react-icons/pi";
+import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
+import Moment from "react-moment";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import DrawerPostInvoice from "../components/DrawerPostInvoice";
 import AdminLayout from "../components/layouts/admin";
 import ModalListContact from "../components/ModalListContact";
 import ModalProduct from "../components/ModalProduct";
 import ModalSales from "../components/ModalSales";
+import ModalSalesReturn from "../components/ModalSalesReturn";
 import { LoadingContext } from "../contexts/LoadingContext";
+import { AccountModel } from "../models/account";
 import { PaymentTermModel } from "../models/payment_term";
 import { ProductModel } from "../models/product";
 import { SalesItemModel, SalesModel, SalesPaymentModel } from "../models/sales";
 import { TaxModel } from "../models/tax";
 import { WarehouseModel } from "../models/warehouse";
+import { getAccounts } from "../services/api/accountApi";
 import { getPaymentTermGroups } from "../services/api/paymentTermApi";
 import { getProducts } from "../services/api/productApi";
 import {
@@ -53,19 +61,8 @@ import {
 } from "../services/api/salesApi";
 import { getTaxes } from "../services/api/taxApi";
 import { getWarehouses } from "../services/api/warehouseApi";
-import { groupBy, money } from "../utils/helper";
-import DrawerPostInvoice from "../components/DrawerPostInvoice";
-import { FaPaperPlane, FaPlane } from "react-icons/fa6";
-import { IoPaperPlaneOutline } from "react-icons/io5";
-import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
-import { MdOutlinePublish } from "react-icons/md";
-import { PiQuotes } from "react-icons/pi";
-import Moment from "react-moment";
 import { paymentMethods } from "../utils/constants";
-import { AccountModel } from "../models/account";
-import { getAccounts } from "../services/api/accountApi";
-import ModalSalesReturn from "../components/ModalSalesReturn";
-import { useTranslation } from "react-i18next";
+import { groupBy, money } from "../utils/helper";
 
 interface SalesDetailProps {}
 
@@ -391,6 +388,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       ref_id: sales?.id,
                       ref_type: sales?.document_type,
                       sales_date: moment().toISOString(),
+                      sales_user_id: sales?.sales_user_id,
+                      sales_user: sales?.sales_user,
                       items: items,
                     });
                     setSalesTitle("Invoice");
@@ -560,6 +559,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   </div>
                 </div>
               ) : (
+                isEditable &&
                 <div
                   className="text-xs italic cursor-pointer"
                   onClick={() => {
@@ -570,6 +570,23 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                 </div>
               )}
             </div>
+          </div>
+          <div className="flex flex-col space-y-4">
+            {sales?.sales_user && (
+            <div>
+            <Label>{t("salesman")}</Label>
+            <div
+              className="cursor-pointer "
+             
+            >
+              <div>{sales?.sales_user?.full_name}</div>
+              <div className="text-xs">{sales?.sales_user?.email}</div>
+             
+            </div>
+          </div>  
+            )}
+            
+            
           </div>
         </div>
         <div className="flex flex-row items-center justify-between mt-4"></div>

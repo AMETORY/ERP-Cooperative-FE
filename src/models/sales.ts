@@ -52,7 +52,9 @@ export interface SalesModel {
   tax_breakdown_parsed?: TaxModel[];
   payment_account_id?: string;
   payment_account?: AccountModel;
-  sales_payments?: SalesPaymentModel[]
+  sales_payments?: SalesPaymentModel[];
+  sales_user?: UserModel;
+  sales_user_id?: string;
 }
 
 export interface SalesItemModel {
@@ -86,7 +88,7 @@ export interface SalesItemModel {
   unit?: UnitModel;
   unit_id?: string;
   unit_value?: number;
-  sales_payments: SalesPaymentModel[]
+  sales_payments: SalesPaymentModel[];
 }
 export interface SalesPaymentModel {
   id?: string;
@@ -105,6 +107,4 @@ export interface SalesPaymentModel {
   is_refund?: boolean;
   payment_method: string;
   payment_method_notes: string;
-  
 }
-
