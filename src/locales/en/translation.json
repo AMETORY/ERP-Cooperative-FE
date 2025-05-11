@@ -186,7 +186,7 @@
   "attention_journal_not_posted": "Attention! This journal is not posted.",
   "attention_journal_not_saved": "Attention! This journal is not saved.",
   "view": "View",
-  "confirm_delete": "Are you sure you want to delete {description}?",
+  "confirm_delete": "Are you sure you want to delete {{description}}?",
   "yes": "Yes",
   "no": "No",
   "journal_detail": "Journal Detail",
@@ -694,6 +694,8 @@
   "receivables_limit_remain": "Receivables Limit Remain",
   "total_debt": "Total Debt",
   "total_receivable": "Total Receivable"
+  
+
 
 
 }

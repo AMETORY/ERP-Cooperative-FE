@@ -186,7 +186,7 @@
   "attention_journal_not_posted": "Perhatian! Jurnal ini tidak diposting.",
   "attention_journal_not_saved": "Perhatian! Jurnal ini tidak tersimpan.",
   "view": "Lihat",
-  "confirm_delete": "Apakah Anda yakin ingin menghapus {description}?",
+  "confirm_delete": "Apakah Anda yakin ingin menghapus {{description}}?",
   "yes": "Ya",
   "no": "Tidak",
   "journal_detail": "Detail Jurnal",

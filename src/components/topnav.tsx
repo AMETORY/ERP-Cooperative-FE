@@ -36,6 +36,9 @@ const Topnav: React.FC<TopnavProps> = () => {
     return () => clearInterval(id);
   }, []);
 
+
+  
+
   const searchBox = (
     <div className="relative w-full max-w-[300px] mr-4 focus-within:text-purple-500">
       <div className="absolute inset-y-0 left-0 flex items-center pl-3">

@@ -11,14 +11,13 @@ import { PaginationResponse } from "../objects/pagination";
 import { getContacts } from "../services/api/contactApi";
 
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { BsCart2 } from "react-icons/bs";
 import { PiQuotes } from "react-icons/pi";
 import { TbFileInvoice, TbTruckDelivery, TbTruckReturn } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
-import SalesTable from "../components/SalesTable";
-import { createSales } from "../services/api/salesApi";
 import ReturnSalesTable from "../components/ReturnSalesTable";
-import { useTranslation } from "react-i18next";
+import SalesTable from "../components/SalesTable";
 interface SalesPageProps {}
 
 const SalesPage: FC<SalesPageProps> = ({}) => {

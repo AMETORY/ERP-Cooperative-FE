@@ -177,7 +177,7 @@
   "attention_journal_not_posted": "注意！この仕訳帳は記録されていません。",
   "attention_journal_not_saved": "注意！この仕訳帳は保存されていません。",
   "view": "表示",
-  "confirm_delete": "{description} を削除してもよろしいですか？",
+  "confirm_delete": "{{description}} を削除してもよろしいですか？",
   "yes": "はい",
   "no": "いいえ",
   "journal_detail": "仕訳帳の詳細",

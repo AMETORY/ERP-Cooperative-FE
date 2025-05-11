@@ -40,6 +40,8 @@ import ClosingBookDetail from "../pages/ClosingBookDetail";
 import AssetPage from "../pages/AssetPage";
 import AssetDetail from "../pages/AssetDetail";
 import StockOpnameDetail from "../pages/StockOpnameDetail";
+import MerchantPage from "../pages/MerchantPage";
+import MerchantDetail from "../pages/MerchantDetail";
 
 interface PrivateRouteProps {}
 
@@ -63,6 +65,8 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/journal/:journalId" element={<JournalDetail />} />
       <Route path="/tax" element={<TaxPage />} />
       <Route path="/sales" element={<SalesPage />} />
+      <Route path="/merchant" element={<MerchantPage />} />
+      <Route path="/merchant/:merchantId" element={<MerchantDetail />} />
       <Route path="/sales/:salesId" element={<SalesDetail />} />
       <Route path="/sales-return/:returnId" element={<SalesReturnDetail />} />
       <Route path="/purchase" element={<PurchasePage />} />

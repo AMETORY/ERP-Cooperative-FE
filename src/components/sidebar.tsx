@@ -8,6 +8,7 @@ import {
   BsGear,
   BsJournal,
   BsPeople,
+  BsShop,
 } from "react-icons/bs";
 import { GoTasklist } from "react-icons/go";
 import {
@@ -175,6 +176,21 @@ const Sidebar: FC<SidebarProps> = ({}) => {
               </Tooltip>
               {!collapsed && (
                 <span className="flex-1 ms-3 whitespace-nowrap">{t('sales')}</span>
+              )}
+            </span>
+          </li>
+        )}
+        {checkPermission("order:merchant:read") && (
+          <li className=" cursor-pointer" style={{}}>
+            <span
+              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+              onClick={handleNavigation("/merchant")}
+            >
+              <Tooltip content={t('merchant')}>
+                <BsShop />
+              </Tooltip>
+              {!collapsed && (
+                <span className="flex-1 ms-3 whitespace-nowrap">{t('merchant')}</span>
               )}
             </span>
           </li>
