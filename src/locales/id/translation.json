@@ -689,9 +689,11 @@
   "super_admin": "Super Admin",
   "users": "Pengguna",
   "invite_user": "Undang Pengguna",
-  "salesman": "Salesman"
-  
- 
-
-
+  "salesman": "Salesman",
+  "receivables_limit": "Batas Piutang",
+  "debt_limit": "Batas Hutang",
+  "debt_limit_remain": "Sisa Batas Hutang",
+  "receivables_limit_remain": "Sisa Batas Piutang",
+  "total_debt": "Total Hutang",
+  "total_receivable": "Total Piutang"
 }

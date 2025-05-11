@@ -2,6 +2,7 @@ import { Button, Label, Modal, Textarea, TextInput, ToggleSwitch } from "flowbit
 import type { FC } from "react";
 import { ContactModel } from "../models/contact";
 import { useTranslation } from 'react-i18next';
+import CurrencyInput from "react-currency-input-field";
 
 interface ModalContactProps {
   showModal: boolean;
@@ -106,6 +107,43 @@ const ModalContact: FC<ModalContactProps> = ({
               }
             />
           </div>
+          <div>
+            <Label htmlFor="receivablesLimit" value={t('receivables_limit')} />
+            <CurrencyInput
+              groupSeparator="."
+                  decimalSeparator=","
+              id="receivablesLimit"
+              name="receivables_limit"
+              placeholder={t('receivables_limit')}
+              value={selectedContact?.receivables_limit ?? 0}
+              onValueChange={(v) =>
+                setSelectedContact({
+                  ...selectedContact!,
+                  receivables_limit: Number(v),
+                })
+              }
+              className="rs-input"
+            />
+          </div>
+          <div>
+            <Label htmlFor="debtLimit" value={t('debt_limit')} />
+            <CurrencyInput
+              groupSeparator="."
+                  decimalSeparator=","
+              id="debtLimit"
+              name="debt_limit"
+              placeholder={t('debt_limit')}
+              value={selectedContact?.debt_limit ?? 0}
+              onValueChange={(v) =>
+                setSelectedContact({
+                  ...selectedContact!,
+                  debt_limit: Number(v),
+                })
+              }
+              className="rs-input"
+            />
+          </div>
+
           <div className="grid grid-cols-3 gap-4">
             <ToggleSwitch
               id="is_customer"

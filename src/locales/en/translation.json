@@ -687,6 +687,13 @@
   "super_admin": "Super Admin",
   "users": "Users",
   "invite_user": "Invite User",
-  "salesman": "Salesman"
+  "salesman": "Salesman",
+  "receivables_limit": "Receivables Limit",
+  "debt_limit": "Debt Limit",
+  "debt_limit_remain": "Debt Limit Remain",
+  "receivables_limit_remain": "Receivables Limit Remain",
+  "total_debt": "Total Debt",
+  "total_receivable": "Total Receivable"
+
 
 }

@@ -1,12 +1,7 @@
-import {
-  Button,
-  Checkbox,
-  Pagination,
-  Table
-} from "flowbite-react";
+import { Button, Checkbox, Pagination, Table } from "flowbite-react";
 import { useContext, useEffect, useState, type FC } from "react";
 import toast from "react-hot-toast";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import AdminLayout from "../components/layouts/admin";
 import ModalContact from "../components/ModalContact";
 import { LoadingContext } from "../contexts/LoadingContext";
@@ -18,7 +13,7 @@ import {
   getContacts,
   updateContact,
 } from "../services/api/contactApi";
-import { getPagination } from "../utils/helper";
+import { getPagination, money } from "../utils/helper";
 
 interface ContactPageProps {}
 
@@ -47,7 +42,14 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
   const getAllContacts = async () => {
     try {
       setLoading(true);
-      let resp: any = await getContacts({ page, size, search });
+      let resp: any = await getContacts({
+        page,
+        size,
+        search,
+        is_customer: true,
+        is_vendor: true,
+        is_supplier: true,
+      });
       setContacts(resp.data.items);
       setPagination(getPagination(resp.data));
     } catch (error) {
@@ -79,7 +81,7 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
     <AdminLayout>
       <div className="p-8 h-[calc(100vh-100px)] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold ">{t('contact')}</h1>
+          <h1 className="text-3xl font-bold ">{t("contact")}</h1>
           <Button
             gradientDuoTone="purpleToBlue"
             pill
@@ -93,17 +95,17 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
               });
             }}
           >
-            + {t('contact')}
+            + {t("contact")}
           </Button>
         </div>
         <Table>
           <Table.Head>
-            <Table.HeadCell>{t('name')}</Table.HeadCell>
-            <Table.HeadCell>{t('email')}</Table.HeadCell>
-            <Table.HeadCell>{t('phone')}</Table.HeadCell>
-            <Table.HeadCell>{t('address')}</Table.HeadCell>
-            <Table.HeadCell>{t('contact_position')}</Table.HeadCell>
-            <Table.HeadCell>{t('category')}</Table.HeadCell>
+            <Table.HeadCell>{t("name")}</Table.HeadCell>
+            <Table.HeadCell>{t("address")}</Table.HeadCell>
+            <Table.HeadCell>{t("total_debt")}</Table.HeadCell>
+            <Table.HeadCell>{t("total_receivable")}</Table.HeadCell>
+            <Table.HeadCell>{t("limit")}</Table.HeadCell>
+            <Table.HeadCell>{t("category")}</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
 
@@ -126,23 +128,43 @@ const ContactPage: FC<ContactPageProps> = ({}) => {
                 >
                   {contact.name}
                 </Table.Cell>
-                <Table.Cell>{contact.email}</Table.Cell>
-                <Table.Cell>{contact.phone}</Table.Cell>
-                <Table.Cell>{contact.address}</Table.Cell>
-                <Table.Cell>{contact.contact_person_position}</Table.Cell>
+                <Table.Cell>
+                  {contact.address} <br />
+                  {contact.email} <br />
+                  {contact.phone} <br />
+                  {contact.contact_person_position}
+                </Table.Cell>
+                <Table.Cell>{money(contact.total_debt)}</Table.Cell>
+                <Table.Cell>{money(contact.total_receivable)}</Table.Cell>
+                <Table.Cell>
+                  <ul>
+                    {contact.debt_limit! > 0 && (
+                      <>
+                      <li className="flex justify-between"><span className="font-semibold">{t("debt_limit")}</span> <span>{money(contact.debt_limit)}</span></li>
+                      <li className="flex justify-between"><span className="font-semibold">{t("debt_limit_remain")}</span> <span>{money(contact.debt_limit_remain)}</span></li>
+                      </>
+                    )}
+                    {contact.receivables_limit! > 0 && (
+                      <>
+                      <li className="flex justify-between"><span className="font-semibold">{t("receivables_limit")}</span> <span>{money(contact.receivables_limit)}</span></li>
+                      <li className="flex justify-between"><span className="font-semibold">{t("receivables_limit_remain")}</span> <span>{money(contact.receivables_limit_remain)}</span></li>
+                      </>
+                    )}
+                  </ul>
+                </Table.Cell>
                 <Table.Cell>
                   <div>
                     <div className="flex gap-1 items-center">
                       <Checkbox checked={contact.is_customer} />
-                      {t('customer')}
+                      {t("customer")}
                     </div>
                     <div className="flex gap-1 items-center">
                       <Checkbox checked={contact.is_vendor} />
-                      {t('vendor')}
+                      {t("vendor")}
                     </div>
                     <div className="flex gap-1 items-center">
                       <Checkbox checked={contact.is_supplier} />
-                      {t('supplier')}
+                      {t("supplier")}
                     </div>
                   </div>
                 </Table.Cell>

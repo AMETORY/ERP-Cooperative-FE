@@ -685,7 +685,12 @@
   "super_admin": "スーパー管理者",
   "users": "ユーザー",
   "invite_user": "ユーザー招待",
-  "salesman": "セールスマン"
-
+  "salesman": "セールスマン",
+  "receivables_limit": "債権限度",
+  "debt_limit": "債務限度",
+  "debt_limit_remain": "債務限度残",
+  "receivables_limit_remain": "債権限度残",
+  "total_debt": "合計債務",
+  "total_receivable": "合計債権"
 
 }

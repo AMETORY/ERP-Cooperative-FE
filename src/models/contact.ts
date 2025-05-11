@@ -20,4 +20,10 @@ export interface ContactModel {
   user?: UserModel;
   company_id?: string;
   company?: CompanyModel;
+  receivables_limit?: number;
+  debt_limit?: number;
+  receivables_limit_remain?: number;
+  debt_limit_remain?: number;
+  total_debt?: number;
+  total_receivable?: number;
 }
