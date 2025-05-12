@@ -24,6 +24,9 @@ import {
 } from "../services/api/regionalApi";
 import { WorkflowBuilder } from "../components/WorkflowStepBuilder";
 import { GoWorkflow } from "react-icons/go";
+import { MenuBuilder } from "../components/MenuBuilder";
+import { HiOutlineMenu } from "react-icons/hi";
+import MerchantDesk from "../components/MerchantDesk";
 
 interface MerchantDetailProps {}
 
@@ -108,7 +111,6 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
             value: selected.id,
           });
         });
-       
       }
 
       if (resp.data.regency_id) {
@@ -340,9 +342,20 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
             <MechantUser merchant={merchant} />
           </Tabs.Item>
           <Tabs.Item title={t("workflow")} icon={GoWorkflow}>
-            {merchant &&
-            <WorkflowBuilder merchant={merchant!} />
+            {merchant && <WorkflowBuilder merchant={merchant!} />}
+          </Tabs.Item>
+          <Tabs.Item title={t("menu")} icon={HiOutlineMenu}>
+            {merchant && <MenuBuilder merchant={merchant!} />}
+          </Tabs.Item>
+          <Tabs.Item
+            title={
+              <div className="flex gap-2">
+                <img className="w-6" src="/picnic-table.png" alt="" />
+                <span> {t("desk")} </span>
+              </div>
             }
+          >
+            {merchant && <MerchantDesk merchant={merchant!} />}
           </Tabs.Item>
         </Tabs>
       </div>

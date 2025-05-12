@@ -706,5 +706,18 @@
   "step_available": "Step Tersedia",
   "your_workflow_setup": "Susunan Workflow Anda",
   "resto": "Resto",
-  "ecommerce": "E-Commerce"
+  "ecommerce": "E-Commerce",
+  "create_tables": "Create Tables",
+  "status_available": "Available",
+  "status_filled": "Occupied",
+  "status_reserved": "Reserved",
+  "capacity_alert": "Capacity {{capacity}} people",
+  "capacity": "Capacity",
+  "menu": "Menu",
+  "desk": "Table",
+  "list_table": "List Table",
+  "no_table_yet": "There are no tables yet. Please generate tables first.",
+  "generate_table_automatically": "Generate Table Automatically",
+  "generate_table_msg": "Generate Table {{from}} to {{to}}",
+  "alert_table_number": "The ending number must be greater than the starting number"
 }

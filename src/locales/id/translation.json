@@ -655,7 +655,7 @@
   "interest_rate_per_month": "Suku Bunga per Bulan",
   "auto_number": "Nomor Otomatis",
   "auto_number_length": "Panjang Nomor Otomatis",
-  "format_number": "Format Number ",
+  "format_number": "Format No. ",
   "length_random_character": "Length Random Character",
   "length_random_number": "Panjang Nomor Acak",
   "loan_static_character": "Karakter Statis Pinjaman",
@@ -708,5 +708,21 @@
   "step_available": "Step Tersedia",
   "your_workflow_setup": "Susunan Workflow Anda",
   "resto": "Resto",
-  "ecommerce": "E-Commerce"
+  "ecommerce": "E-Commerce",
+  "create_tables": "Buat Meja",
+  "status_available": "Tersedia",
+  "status_filled": "Terisi",
+  "status_reserved": "Dipesan",
+  "capacity_alert": "Kapasitas {{capacity}} orang",
+  "capacity": "Kapasitas",
+  "menu": "Menu",
+  "desk": "Meja",
+  "list_table": "Daftar Meja",
+  "no_table_yet": "Belum ada meja. Generate meja terlebih dahulu.",
+  "generate_table_automatically": "Generate Meja Otomatis",
+  "generate_table_msg": "Generate Meja {{from}} sampai {{to}}",
+  "alert_table_number": "Nomor akhir harus lebih besar dari nomor awal"
+
+
+
 }

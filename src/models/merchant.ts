@@ -24,4 +24,5 @@ export interface MerchantModel  {
   status?: string
   picture?: FileModel | null
   workflow?: any
+  menu?: any
 }

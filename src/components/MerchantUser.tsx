@@ -137,7 +137,7 @@ const MerchantUser: FC<MerchantUserProps> = ({ merchant }) => {
           {merchantUsers.map((user) => (
             <div
               key={user.id}
-              className="flex-col  py-2 flex  gap-2 items-center cursor-pointer px-2 w-full  justify-between rounded-lg mb-2 last:mb-0 border  h-[200px] hover:bg-[#ffb6b9] "
+              className="flex-col  py-2 flex  gap-2 items-center cursor-pointer px-2 w-full  justify-between rounded-lg mb-2 last:mb-0 border  h-[240px] hover:bg-[#ffb6b9] "
               style={
                 selectedUserIds.includes(user.id!)
                   ? { backgroundColor: "#4c8aed" }
@@ -153,12 +153,12 @@ const MerchantUser: FC<MerchantUserProps> = ({ merchant }) => {
                 }
               }}
             >
-              <div className="w-full h-[120px] justify-center items-center flex bg-gray-100 rounded-lg">
+              <div className="w-full h-[160px] justify-center items-center flex bg-gray-100 rounded-lg">
                 {!user.profile_picture ? (
                   <BsImage className="w-12 h-12 rounded-lg" />
                 ) : (
                   <img
-                    className="w-full h-[120px] object-cover rounded-lg"
+                    className="w-full h-[160px] object-cover rounded-lg"
                     src={user.profile_picture.url}
                     alt={user.full_name}
                   />

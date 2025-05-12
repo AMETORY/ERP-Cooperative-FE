@@ -61,7 +61,6 @@ export const deleteMerchantProduct = async (id: string, data: any) => {
   });
 };
 
-
 export const addUserMerchant = async (id: string, data: any) => {
   return await customFetch(`api/v1/merchant/${id}/add-user`, {
     method: "PUT",
@@ -83,5 +82,39 @@ export const getMerchantUsers = async (id: string, req: PaginationRequest) => {
   if (req.search) queryParams.set("search", req.search);
   return await customFetch(`api/v1/merchant/${id}/users?${queryParams}`, {
     method: "GET",
+  });
+};
+
+export const addMerchantDesk = async (id: string, data: any) => {
+  return await customFetch(`api/v1/merchant/${id}/add-desk`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+export const getMerchantDesk = async (id: string,req: PaginationRequest) => {
+  const queryParams = new URLSearchParams();
+  queryParams.set("page", String(req.page));
+  queryParams.set("size", String(req.size));
+  if (req.search) queryParams.set("search", req.search);
+  return await customFetch(`api/v1/merchant/${id}/desk?${queryParams}`, {
+    method: "GET",
+  });
+};
+
+export const updateMerchantDesk = async (
+  id: string,
+  deskId: string,
+  data: any
+) => {
+  return await customFetch(`api/v1/merchant/${id}/desk/${deskId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteMerchantDesk = async (id: string, deskId: string) => {
+  return await customFetch(`api/v1/merchant/${id}/desk/${deskId}`, {
+    method: "DELETE",
   });
 };
