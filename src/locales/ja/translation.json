@@ -672,7 +672,7 @@
   "random_character_length": "ランダム文字長",
   "static_character": "固定文字",
   "reset": "リセット",
-    "create_company_first": "最初に会社/組織を作成してください",
+  "create_company_first": "最初に会社/組織を作成してください",
   "you_need_to_create_a_company_organization_first_to_access_this_page": "このページにアクセスするには、最初に会社/組織を作成する必要があります",
   "cooperative_desc": "協同組合とは、そのメンバーによって共同所有され、相互の利益のために運営される事業体です。",
   "sme_desc": "従業員数500人未満、年間収益100万ドルから250万ドルの事業を指します。",
@@ -691,6 +691,19 @@
   "debt_limit_remain": "債務限度残",
   "receivables_limit_remain": "債権限度残",
   "total_debt": "合計債務",
-  "total_receivable": "合計債権"
+  "total_receivable": "合計債権",
+  "select_table": "テーブルを選択",
+  "select_menu": "メニューを選択",
+  "checkout_order": "注文をチェックアウト",
+  "distribute_to_station": "ステーションに配布",
+  "send_to_table": "テーブルに送信",
+  "done": "完了",
+  "add_to_cart": "カートに追加",
+  "checkout": "チェックアウト",
+  "step_available": "利用可能なステップ",
+  "your_workflow_setup": "ワークフローの設定",
+  "workflow": "ワークフロー",
+  "resto": "休憩",
+  "ecommerce": "電子商取引"
 
 }

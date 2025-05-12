@@ -695,5 +695,18 @@
   "debt_limit_remain": "Sisa Batas Hutang",
   "receivables_limit_remain": "Sisa Batas Piutang",
   "total_debt": "Total Hutang",
-  "total_receivable": "Total Piutang"
+  "total_receivable": "Total Piutang",
+  "select_table": "Pilih Meja",
+  "select_menu": "Pilih Menu",
+  "checkout_order": "Checkout Order",
+  "distribute_to_station": "Distribusi ke Station",
+  "send_to_table": "Kirim ke Meja",
+  "done": "Selesai",
+  "workflow": "Workflow",
+  "add_to_cart": "Masuk Keranjang",
+  "checkout": "Checkout",
+  "step_available": "Step Tersedia",
+  "your_workflow_setup": "Susunan Workflow Anda",
+  "resto": "Resto",
+  "ecommerce": "E-Commerce"
 }

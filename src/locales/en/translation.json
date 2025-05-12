@@ -693,9 +693,18 @@
   "debt_limit_remain": "Debt Limit Remain",
   "receivables_limit_remain": "Receivables Limit Remain",
   "total_debt": "Total Debt",
-  "total_receivable": "Total Receivable"
-  
-
-
-
+  "total_receivable": "Total Receivable",
+  "select_table": "Select Table",
+  "select_menu": "Select Menu",
+  "checkout_order": "Checkout Order",
+  "distribute_to_station": "Distribute to Station",
+  "send_to_table": "Send to Table",
+  "done": "Done",
+  "workflow": "Workflow",
+  "add_to_cart": "Add to Cart",
+  "checkout": "Checkout",
+  "step_available": "Step Tersedia",
+  "your_workflow_setup": "Susunan Workflow Anda",
+  "resto": "Resto",
+  "ecommerce": "E-Commerce"
 }

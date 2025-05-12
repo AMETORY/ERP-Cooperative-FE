@@ -1,6 +1,7 @@
 import { CompanyModel } from "./company";
 import { FileModel } from "./file";
 import { UserModel } from "./user";
+import { WarehouseModel } from "./warehouse";
 
 export interface MerchantModel  {
   id?: string;
@@ -12,6 +13,8 @@ export interface MerchantModel  {
   merchant_type_id?: string | null;
   merchant_type?: string | null;
   company_id?: string | null;
+  default_warehouse?: WarehouseModel | null;
+  default_warehouse_id?: string | null;
   company?: CompanyModel | null;
   province_id?: string | null;
   regency_id?: string | null;
@@ -20,4 +23,5 @@ export interface MerchantModel  {
   user?: UserModel
   status?: string
   picture?: FileModel | null
+  workflow?: any
 }

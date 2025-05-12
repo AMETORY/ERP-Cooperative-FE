@@ -184,3 +184,103 @@ tbody td {
 tbody td:hover {
   z-index: 2;
 }
+
+/* styles.css */
+.workflow-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.builder-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.available-steps, .workflow-area {
+  border: 1px solid #e2e8f0;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.steps-list, .workflow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  min-height: 200px;
+}
+
+.step-item, .workflow-step {
+  padding: 12px 15px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: grab;
+}
+
+.workflow-step {
+  background: #ffffff;
+}
+
+.step-handle {
+  cursor: grab;
+  margin-right: 10px;
+  background: none;
+  border: none;
+  color: #64748b;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.step-content {
+  flex: 1;
+  font-size: 14px;
+}
+
+.remove-step {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ef4444;
+  font-size: 1.2em;
+  padding: 0 5px;
+  margin-left: 10px;
+}
+
+.empty-state {
+  color: #64748b;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.save-button {
+  align-self: flex-end;
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background: #2563eb;
+}
+
+/* Drag overlay styles */
+.workflow-step.dragging {
+  opacity: 0.5;
+  background: #f1f5f9;
+}
