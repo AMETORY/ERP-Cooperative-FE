@@ -27,6 +27,8 @@ import { GoWorkflow } from "react-icons/go";
 import { MenuBuilder } from "../components/MenuBuilder";
 import { HiOutlineMenu } from "react-icons/hi";
 import MerchantDesk from "../components/MerchantDesk";
+import { PriceCategoryModel } from "../models/price_category";
+import { getPriceCategories } from "../services/api/priceCategoryApi";
 
 interface MerchantDetailProps {}
 
@@ -38,6 +40,7 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
   const [mounted, setMounted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const [warehouses, setWarehouses] = useState<WarehouseModel[]>([]);
+  const [priceCategories, setPriceCategories] = useState<PriceCategoryModel[]>([]);
   const [provinces, setProvinces] = useState<
     { label: string; value: string }[]
   >([]);
@@ -93,6 +96,9 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
       getDetail();
       getWarehouses({ page: 1, size: 10 }).then((res: any) =>
         setWarehouses(res.data.items)
+      );
+      getPriceCategories({ page: 1, size: 10 }).then((res: any) =>
+        setPriceCategories(res.data.items)
       );
     }
   }, [mounted, merchantId]);
@@ -202,6 +208,23 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
                 ...merchant!,
                 default_warehouse_id: e!.value!,
                 default_warehouse: warehouses.find((w) => w.id === e!.value),
+              })
+            }
+          />
+        </div>
+        <div>
+          <Label>{t("price_categories")}</Label>
+          <Select
+            options={priceCategories.map((w) => ({ value: w.id, label: w.name }))}
+            value={{
+              value: merchant?.default_price_category_id,
+              label: merchant?.default_price_category?.name,
+            }}
+            onChange={(e) =>
+              setMerchant({
+                ...merchant!,
+                default_price_category_id: e!.value!,
+                default_price_category: priceCategories.find((w) => w.id === e!.value),
               })
             }
           />

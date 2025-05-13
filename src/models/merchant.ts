@@ -1,5 +1,6 @@
 import { CompanyModel } from "./company";
 import { FileModel } from "./file";
+import { PriceCategoryModel } from "./price_category";
 import { UserModel } from "./user";
 import { WarehouseModel } from "./warehouse";
 
@@ -15,6 +16,8 @@ export interface MerchantModel  {
   company_id?: string | null;
   default_warehouse?: WarehouseModel | null;
   default_warehouse_id?: string | null;
+  default_price_category_id?: string | null;
+  default_price_category?: PriceCategoryModel | null;
   company?: CompanyModel | null;
   province_id?: string | null;
   regency_id?: string | null;
@@ -26,3 +29,13 @@ export interface MerchantModel  {
   workflow?: any
   menu?: any
 }
+
+export interface MerchantLayoutModel {
+  id: string;
+  created_at: string;
+  name: string;
+  description: string;
+  merchant_id: string;
+  merchant_desks: any[];
+}
+

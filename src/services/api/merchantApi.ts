@@ -118,3 +118,35 @@ export const deleteMerchantDesk = async (id: string, deskId: string) => {
     method: "DELETE",
   });
 };
+
+
+export const getLayouts = async (id: string, req: PaginationRequest) => {
+  const queryParams = new URLSearchParams();
+  queryParams.set("page", String(req.page));
+  queryParams.set("size", String(req.size));
+  if (req.search) queryParams.set("search", req.search);
+  return await customFetch(`api/v1/merchant/${id}/layouts?${queryParams}`, {
+    method: "GET",
+  });
+};
+export const createLayout = async (id: string, data: any) => {
+
+  return await customFetch(`api/v1/merchant/${id}/add-layout`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const getLayoutDetail = async (id: string, layoutId: any) => {
+  return await customFetch(`api/v1/merchant/${id}/layout/${layoutId}`, {
+    method: "GET",
+  });
+};
+
+export const updateLayout = async (id: string, layoutId: string, data: any) => {
+
+  return await customFetch(`api/v1/merchant/${id}/update-layout/${layoutId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+

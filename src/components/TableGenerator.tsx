@@ -1,12 +1,12 @@
 // components/TableGenerator.tsx
 import React, { useState } from "react";
-import { Table } from "../models/table";
+import { RestaurantTable, Table } from "../models/table";
 import { Button } from "flowbite-react";
 import { generateUUID } from "../utils/helper";
 import { useTranslation } from "react-i18next";
 
 interface TableGeneratorProps {
-  onTablesGenerated: (tables: Table[]) => void;
+  onTablesGenerated: (tables: RestaurantTable[]) => void;
 }
 
 export const TableGenerator: React.FC<TableGeneratorProps> = ({
@@ -20,7 +20,7 @@ export const TableGenerator: React.FC<TableGeneratorProps> = ({
   const [formatNumber, setFormatNumber] = useState(3);
 
   const generateTables = () => {
-    const tables: Table[] = [];
+    const tables: RestaurantTable[] = [];
 
     for (let i = startNumber; i <= endNumber; i++) {
       tables.push({
@@ -28,6 +28,14 @@ export const TableGenerator: React.FC<TableGeneratorProps> = ({
         number: `${prefix}${i.toString().padStart(formatNumber, "0")}`,
         status: "available",
         capacity: capacity,
+        width: 180,
+        height: 80,
+        shape: 'rectangle',
+        position: {
+          x: Math.floor(Math.random() * 100),
+          y: Math.floor(Math.random() * 100),
+        }
+
       });
     }
 

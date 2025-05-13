@@ -7,13 +7,13 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { Table } from "../models/table";
+import { RestaurantTable, Table } from "../models/table";
 import { SortableTableItem } from "./SortableTableItem";
 import { useTranslation } from "react-i18next";
 
 interface TableListProps {
-  tables: Table[];
-  onTablesChange: (tables: Table[]) => void;
+  tables: RestaurantTable[];
+  onTablesChange: (tables: RestaurantTable[]) => void;
 }
 
 export const TableList: React.FC<TableListProps> = ({
