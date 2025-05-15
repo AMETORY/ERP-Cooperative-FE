@@ -42,6 +42,7 @@ import AssetDetail from "../pages/AssetDetail";
 import StockOpnameDetail from "../pages/StockOpnameDetail";
 import MerchantPage from "../pages/MerchantPage";
 import MerchantDetail from "../pages/MerchantDetail";
+import BrandPage from "../pages/BrandPage";
 
 interface PrivateRouteProps {}
 

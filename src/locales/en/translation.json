@@ -722,5 +722,7 @@
   "no_table_yet": "There are no tables yet. Please generate tables first.",
   "generate_table_automatically": "Generate Table Automatically",
   "generate_table_msg": "Generate Table {{from}} to {{to}}",
-  "alert_table_number": "The ending number must be greater than the starting number"
+  "alert_table_number": "The ending number must be greater than the starting number",
+  "brand": "Brand",
+  "brands": "Brands"
 }

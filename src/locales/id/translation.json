@@ -724,7 +724,9 @@
   "no_table_yet": "Belum ada meja. Generate meja terlebih dahulu.",
   "generate_table_automatically": "Generate Meja Otomatis",
   "generate_table_msg": "Generate Meja {{from}} sampai {{to}}",
-  "alert_table_number": "Nomor akhir harus lebih besar dari nomor awal"
+  "alert_table_number": "Nomor akhir harus lebih besar dari nomor awal",
+  "brand": "Merk",
+  "brands": "Merk"
 
 
 

@@ -720,6 +720,7 @@
   "no_table_yet": "まだテーブルがありません。まずはテーブルを生成してください。",
   "generate_table_automatically": "テーブルを自動生成",
   "generate_table_msg": "テーブル {{from}} から {{to}} を生成します",
-  "alert_table_number": "終了番号は開始番号より大きくなければなりません"
-
+  "alert_table_number": "終了番号は開始番号より大きくなければなりません",
+  "brand": "ブランド",
+  "brands": "ブランド"
 }

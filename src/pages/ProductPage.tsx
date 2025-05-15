@@ -5,7 +5,7 @@ import { BsListCheck } from "react-icons/bs";
 import { IoPricetagOutline } from "react-icons/io5";
 import { PiDotsNine } from "react-icons/pi";
 import { RiShoppingBagLine } from "react-icons/ri";
-import { TbRulerMeasure } from "react-icons/tb";
+import { TbBrandDatabricks, TbRulerMeasure } from "react-icons/tb";
 import AdminLayout from "../components/layouts/admin";
 import PriceCategoryTable from "../components/PriceCategoryTable";
 import ProductAttributeTable from "../components/ProductAttributeTable";
@@ -13,6 +13,7 @@ import ProductCategoryTable from "../components/ProductCategoryTable";
 import ProductTable from "../components/ProductTable";
 import UnitTable from "../components/UnitTable";
 import { ProductModel } from "../models/product";
+import BrandTable from "../components/BrandTable";
 
 interface ProductPageProps {}
 
@@ -49,15 +50,22 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 2}
+            title=  {t("brands")}
+            icon={TbBrandDatabricks}
+          >
+            <BrandTable />
+          </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 3}
             title={t("price_categories")}
             icon={IoPricetagOutline}
           >
             <PriceCategoryTable />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 3} title={t("product_attributes")} icon={PiDotsNine}>
+          <Tabs.Item active={activeTab === 4} title={t("product_attributes")} icon={PiDotsNine}>
             <ProductAttributeTable />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 4} title={t("units")} icon={TbRulerMeasure}>
+          <Tabs.Item active={activeTab === 5} title={t("units")} icon={TbRulerMeasure}>
             <UnitTable />
           </Tabs.Item>
         </Tabs>

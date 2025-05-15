@@ -9,6 +9,8 @@ import Select, { InputActionMeta } from "react-select";
 import Barcode from "react-barcode";
 import CurrencyInput from "react-currency-input-field";
 import { useTranslation } from 'react-i18next';
+import { BrandModel } from "../models/brand";
+import { getBrands } from "../services/api/brandApi";
 interface ModalProductProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -25,6 +27,7 @@ const ModalProduct: FC<ModalProductProps> = ({
   onCreateProduct,
 }) => {
   const { t } = useTranslation();
+  const [brands, setBrands] = useState<BrandModel[]>([]);
   const [categories, setCategories] = useState<ProductCategoryModel[]>([]);
   const handleCreateProduct = async () => {
     try {
@@ -44,6 +47,9 @@ const ModalProduct: FC<ModalProductProps> = ({
 
   useEffect(() => {
     searchCategory("");
+    getBrands({ page: 1, size: 10, search: "" }).then((res: any) => {
+      setBrands(res.data.items);
+    })
   }, []);
 
   const searchCategory = (s: string) => {
@@ -125,6 +131,26 @@ const ModalProduct: FC<ModalProductProps> = ({
                 })
               }
               options={categories.map((c) => ({ label: c.name, value: c.id }))}
+              onInputChange={(e) => searchCategory(e)}
+            />
+          </div>
+          <div className="mb-4">
+            <Label htmlFor="product-brand" value={t("brand")} />
+            <Select
+              id="product-category"
+              value={
+                product?.brand
+                  ? { label: product.brand.name, value: product.brand.id }
+                  : null
+              }
+              onChange={(e) =>
+                setProduct({
+                  ...product!,
+                  brand: { id: e!.value, name: e!.label },
+                  brand_id: e!.value,
+                })
+              }
+              options={brands.map((c) => ({ label: c.name, value: c.id }))}
               onInputChange={(e) => searchCategory(e)}
             />
           </div>
