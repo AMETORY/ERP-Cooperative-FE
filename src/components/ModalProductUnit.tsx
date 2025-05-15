@@ -25,6 +25,7 @@ const ModalProductUnit: FC<ModalProductUnitProps> = ({
   const [defaultUnit, setDefaultUnit] = useState<UnitModel>();
   const [value, setValue] = useState(1);
   const [isDefault, setIsDefault] = useState(false);
+  const [mountedValue, setMountedValue] = useState(true);
 
   useEffect(() => {
     searchUnit("");
@@ -69,15 +70,19 @@ const ModalProductUnit: FC<ModalProductUnitProps> = ({
           <div className="mb-2 block">
             <Label htmlFor="value" value="Value" />
             <div className="relative">
+              {mountedValue &&
               <CurrencyInput
                 className="rs-input !p-1.5 "
-                value={value ?? 0}
+                // value={value ?? 0}
                 groupSeparator="."
                 decimalSeparator=","
+                decimalsLimit={4}
                 onValueChange={(value, name, values) => {
-                  setValue(values?.float ?? 0);
+                  console.log(value);
+                  setValue(Number(value));
                 }}
               />
+}
               <span  className="absolute top-2 right-2 text-sm">
                 {defaultUnit?.code}
               </span>

@@ -92,7 +92,7 @@ const VariantForm: FC<VariantFormProps> = ({
       <Modal.Header>Variants Form</Modal.Header>
       <Modal.Body>
         <div className="w-full flex flex-col space-y-4">
-          <div className="form-group">
+          <div className="">
             <label>Attibutes</label>
             <div className="input">
               <div className="grid grid-cols-4 gap-4 ">
@@ -118,7 +118,7 @@ const VariantForm: FC<VariantFormProps> = ({
               </div>
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label>SKU</label>
             <div className="input">
               <TextInput
@@ -131,7 +131,7 @@ const VariantForm: FC<VariantFormProps> = ({
               />
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label>Barcode</label>
             <div className="input">
               <TextInput
@@ -144,7 +144,7 @@ const VariantForm: FC<VariantFormProps> = ({
               />
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label>Price</label>
             <div className="input">
               <CurrencyInput
@@ -158,7 +158,7 @@ const VariantForm: FC<VariantFormProps> = ({
               />
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label>Weight</label>
             <div className="input">
               <div className="relative">
@@ -175,7 +175,7 @@ const VariantForm: FC<VariantFormProps> = ({
               </div>
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label>Dimension (L x W x H)</label>
             <div className="input">
               <div className="grid grid-cols-3 gap-2">
@@ -219,7 +219,7 @@ const VariantForm: FC<VariantFormProps> = ({
             </div>
           </div>
           {/* {variant && (
-            <div className="form-group">
+            <div className="">
               <label>Tag</label>
               <div className="input">
                 <CreatableSelect
@@ -281,7 +281,7 @@ const VariantForm: FC<VariantFormProps> = ({
           {attributes
             .filter((attr) => attributeIds.includes(attr.id))
             .map((attr) => (
-              <div key={attr.id} className="form-group">
+              <div key={attr.id} className="">
                 <label>{attr.name}</label>
                 <TextInput
                   value={

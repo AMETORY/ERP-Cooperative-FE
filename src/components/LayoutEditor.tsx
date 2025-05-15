@@ -136,14 +136,7 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
 
   return (
     <div className="layout-editor">
-      {/* <div className="editor-toolbar">
-        <button onClick={addNewTable} className="add-table-btn">
-          Tambah Meja
-        </button>
-        <button onClick={() => onSave(tables)} className="save-layout-btn">
-          Simpan Layout
-        </button>
-      </div> */}
+    
 
       <div
         className="editor-content"

@@ -18,6 +18,12 @@ export const MONTHLY = "MONTHLY"
 export const WEEKLY = "WEEKLY"
 export const ANNUALY = "ANNUALY"
 
+
+export const STATUS_AVAILABLE = "available";
+export const STATUS_OCCUPIED = "occupied";
+export const STATUS_RESERVED = "reserved";
+
+
 export const TIMERANGE_OPTIONS = [
 
     { value: THIS_WEEK, label: "This Week" },

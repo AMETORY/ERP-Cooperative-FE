@@ -1,12 +1,10 @@
 // components/RestaurantLayout.tsx
-import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
-  MouseSensor,
   useDraggable,
-  useDroppable,
-  useSensor,
+  useDroppable
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import React, { useCallback, useRef, useState } from "react";
 import { RestaurantTable, TablePosition } from "../models/table";
 import { GridConfig } from "./LayoutEditor";
 
@@ -114,17 +112,7 @@ const DraggableTable: React.FC<DraggableTableProps> = ({
     width: table.width,
     height: table.height,
   } as React.CSSProperties;
-  // console.log(transform);
-  // useEffect(() => {
-  //   if (timeout.current) {
-  //     window.clearTimeout(timeout.current);
-  //   }
-  //   timeout.current = window.setTimeout(() => {
-  //     // getAllProduct();
-  //     console.log(table.position);
-  //     onPositionChange(table.id, table.position);
-  //   }, 500);
-  // }, [table]);
+  
   return (
     <>
       <div
