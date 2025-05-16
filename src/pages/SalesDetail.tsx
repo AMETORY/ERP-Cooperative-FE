@@ -10,19 +10,14 @@ import {
   Modal,
   Table,
   TableRow,
-  Textarea
+  Textarea,
 } from "flowbite-react";
 import moment from "moment";
 import { useContext, useEffect, useState, type FC } from "react";
 import CurrencyInput from "react-currency-input-field";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import {
-  BsCart2,
-  BsDownload,
-  BsPlusCircle,
-  BsTrash
-} from "react-icons/bs";
+import { BsCart2, BsDownload, BsPlusCircle, BsTrash } from "react-icons/bs";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { MdOutlinePublish } from "react-icons/md";
 import { PiQuotes } from "react-icons/pi";
@@ -286,9 +281,9 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
         getSalesDetail(salesId!).then((res: any) => {
           setSales(res.data);
           getAllItems();
-          setMountedAmount(false)
+          setMountedAmount(false);
           setTimeout(() => {
-            setMountedAmount(true)
+            setMountedAmount(true);
           }, 100);
         });
       });
@@ -559,34 +554,29 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                   </div>
                 </div>
               ) : (
-                isEditable &&
-                <div
-                  className="text-xs italic cursor-pointer"
-                  onClick={() => {
-                    setModalShippingOpen(true);
-                  }}
-                >
-                  + Shipping Address
-                </div>
+                isEditable && (
+                  <div
+                    className="text-xs italic cursor-pointer"
+                    onClick={() => {
+                      setModalShippingOpen(true);
+                    }}
+                  >
+                    + Shipping Address
+                  </div>
+                )
               )}
             </div>
           </div>
           <div className="flex flex-col space-y-4">
             {sales?.sales_user && (
-            <div>
-            <Label>{t("salesman")}</Label>
-            <div
-              className="cursor-pointer "
-             
-            >
-              <div>{sales?.sales_user?.full_name}</div>
-              <div className="text-xs">{sales?.sales_user?.email}</div>
-             
-            </div>
-          </div>  
+              <div>
+                <Label>{t("salesman")}</Label>
+                <div className="cursor-pointer ">
+                  <div>{sales?.sales_user?.full_name}</div>
+                  <div className="text-xs">{sales?.sales_user?.email}</div>
+                </div>
+              </div>
             )}
-            
-            
           </div>
         </div>
         <div className="flex flex-row items-center justify-between mt-4"></div>
@@ -680,6 +670,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                                     i.product = prod;
                                     i.unit_price = prod?.price ?? 0;
                                     i.description = prod?.display_name ?? "";
+                                    i.tax = prod?.tax;
+                                    i.tax_id = prod?.tax_id;
                                   }
                                   return i;
                                 }),
@@ -798,7 +790,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         <div className=" relative min-w-[32px]">
                           {mountedAmount && (
                             <CurrencyInput
-                              className="rs-input !p-1.5 " style={{zIndex: 0}}
+                              className="rs-input !p-1.5 "
+                              style={{ zIndex: 0 }}
                               defaultValue={item.quantity ?? 0}
                               groupSeparator="."
                               decimalSeparator=","
@@ -830,7 +823,7 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                           )}
                         </div>
                         {(item.product?.units ?? []).length > 0 ? (
-                          <Dropdown inline placement="bottom-end"  >
+                          <Dropdown inline placement="bottom-end">
                             {(item.product?.units ?? []).map((t) => (
                               <Dropdown.Item
                                 key={t.id}
@@ -872,30 +865,30 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                     {isEditable ? (
                       <div className="flex gap-2 relative">
                         {mountedAmount && (
-                        <CurrencyInput
-                          className="rs-input !p-1.5"
-                          defaultValue={item.unit_price ?? 0}
-                          groupSeparator="."
-                          decimalSeparator=","
-                          onValueChange={(value, name, values) => {
-                            setItems([
-                              ...items.map((i) => {
-                                if (i.id === item.id) {
-                                  i.unit_price = values?.float ?? 0;
-                                }
-                                return i;
-                              }),
-                            ]);
-                          }}
-                          onKeyUp={(e) => {
-                            if (e.key === "Enter") {
+                          <CurrencyInput
+                            className="rs-input !p-1.5"
+                            defaultValue={item.unit_price ?? 0}
+                            groupSeparator="."
+                            decimalSeparator=","
+                            onValueChange={(value, name, values) => {
+                              setItems([
+                                ...items.map((i) => {
+                                  if (i.id === item.id) {
+                                    i.unit_price = values?.float ?? 0;
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                            }}
+                            onKeyUp={(e) => {
+                              if (e.key === "Enter") {
+                                updateItem(item);
+                              }
+                            }}
+                            onBlur={(e) => {
                               updateItem(item);
-                            }
-                          }}
-                          onBlur={(e) => {
-                            updateItem(item);
-                          }}
-                        />
+                            }}
+                          />
                         )}
                         {(item.availablePrices ?? []).length > 0 && (
                           <div className="absolute top-2 right-2">

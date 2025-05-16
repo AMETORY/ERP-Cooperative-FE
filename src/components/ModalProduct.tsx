@@ -11,6 +11,8 @@ import CurrencyInput from "react-currency-input-field";
 import { useTranslation } from 'react-i18next';
 import { BrandModel } from "../models/brand";
 import { getBrands } from "../services/api/brandApi";
+import { TaxModel } from "../models/tax";
+import { getTaxes } from "../services/api/taxApi";
 interface ModalProductProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -29,6 +31,7 @@ const ModalProduct: FC<ModalProductProps> = ({
   const { t } = useTranslation();
   const [brands, setBrands] = useState<BrandModel[]>([]);
   const [categories, setCategories] = useState<ProductCategoryModel[]>([]);
+  const [taxes, setTaxes] = useState<TaxModel[]>([]);
   const handleCreateProduct = async () => {
     try {
       if (product?.id) {
@@ -49,6 +52,9 @@ const ModalProduct: FC<ModalProductProps> = ({
     searchCategory("");
     getBrands({ page: 1, size: 10, search: "" }).then((res: any) => {
       setBrands(res.data.items);
+    })
+    getTaxes({ page: 1, size: 10, search: "" }).then((res: any) => {
+      setTaxes(res.data.items);
     })
   }, []);
 
@@ -151,6 +157,26 @@ const ModalProduct: FC<ModalProductProps> = ({
                 })
               }
               options={brands.map((c) => ({ label: c.name, value: c.id }))}
+              onInputChange={(e) => searchCategory(e)}
+            />
+          </div>
+          <div className="mb-4">
+            <Label htmlFor="product-tax" value={t("tax")} />
+            <Select
+              id="product-tax"
+              value={
+                product?.tax
+                  ? { label: product.tax.name, value: product.tax.id }
+                  : null
+              }
+              onChange={(e) =>
+                setProduct({
+                  ...product!,
+                  tax: { id: e!.value, name: e!.label },
+                  tax_id: e!.value,
+                })
+              }
+              options={taxes.map((c) => ({ label: c.name, value: c.id }))}
               onInputChange={(e) => searchCategory(e)}
             />
           </div>

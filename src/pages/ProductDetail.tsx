@@ -769,6 +769,16 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
           <p className="text-lg">{product?.brand?.name ?? "-"}</p>
         )}
       </div>
+      {product?.tax && (
+        <div className="mb-4">
+          <p className="font-bold">{t("tax")}:</p>
+          {product?.tax && (
+            <p className="text-lg">
+              {product?.tax?.name} ({product?.tax?.code}) 
+            </p>
+          )}
+        </div>
+      )}
       <div className="mb-4">
         <p className="font-bold">{t("total_stock")}:</p>
         <p className="text-lg">
@@ -965,10 +975,10 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
                 <th className="px-4 py-2 text-sm border border-gray-300">
                   {product?.total_stock} {product?.default_unit?.code}
                 </th>
-                <th className="px-4 py-2 text-sm border border-gray-300" colSpan={5}>
-                </th>
-
-                
+                <th
+                  className="px-4 py-2 text-sm border border-gray-300"
+                  colSpan={5}
+                ></th>
               </tr>
             </tfoot>
           </table>

@@ -255,9 +255,10 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
             return i;
           }),
         ]);
+        setMountedAmount(false);
         setTimeout(() => {
-          setMountedAmount(true)
-        }, 300);
+          setMountedAmount(true);
+        }, 100);
       });
     }
   };
@@ -574,6 +575,8 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                                       i.product = prod;
                                       i.unit_price = prod?.price ?? 0;
                                       i.description = prod?.display_name ?? "";
+                                      i.tax = prod?.tax;
+                                      i.tax_id = prod?.tax_id;
                                     }
                                     return i;
                                   }),
@@ -794,30 +797,30 @@ const PurchaseDetail: FC<PurchaseDetailProps> = ({}) => {
                     {isEditable && !item.is_cost ? (
                       <div className="relative flex justify-end w-fit">
                         {mountedAmount && (
-                        <CurrencyInput
-                          className="rs-input !p-1.5 "
-                          defaultValue={item.discount_percent ?? 0}
-                          groupSeparator="."
-                          decimalSeparator=","
-                          onValueChange={(value, name, values) => {
-                            setItems([
-                              ...items.map((i) => {
-                                if (i.id === item.id) {
-                                  i.discount_percent = values?.float ?? 0;
-                                }
-                                return i;
-                              }),
-                            ]);
-                          }}
-                          onKeyUp={(e) => {
-                            if (e.key === "Enter") {
+                          <CurrencyInput
+                            className="rs-input !p-1.5 "
+                            defaultValue={item.discount_percent ?? 0}
+                            groupSeparator="."
+                            decimalSeparator=","
+                            onValueChange={(value, name, values) => {
+                              setItems([
+                                ...items.map((i) => {
+                                  if (i.id === item.id) {
+                                    i.discount_percent = values?.float ?? 0;
+                                  }
+                                  return i;
+                                }),
+                              ]);
+                            }}
+                            onKeyUp={(e) => {
+                              if (e.key === "Enter") {
+                                updateItem(item);
+                              }
+                            }}
+                            onBlur={() => {
                               updateItem(item);
-                            }
-                          }}
-                          onBlur={() => {
-                            updateItem(item);
-                          }}
-                        />
+                            }}
+                          />
                         )}
 
                         <span className="absolute top-2 right-1">%</span>

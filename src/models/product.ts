@@ -4,6 +4,7 @@ import { DiscountModel } from "./discount";
 import { FileModel } from "./file";
 import { ProductPriceModel } from "./price";
 import { ProductCategoryModel } from "./product_category";
+import { TaxModel } from "./tax";
 import { UnitModel } from "./unit";
 
 
@@ -34,6 +35,8 @@ export interface ProductModel {
   status?: string;
   units?: UnitModel[];
   default_unit?: UnitModel;
+  tax?: TaxModel;
+  tax_id?: string;
 }
 
 
