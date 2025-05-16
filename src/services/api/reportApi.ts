@@ -68,3 +68,16 @@ export const generateClosingBook = async (id: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
+
+
+export const getProductSalesCustomers = async (data: any) => {
+  let params =  {
+    method: "POST",
+    body: JSON.stringify(data),
+  }
+ 
+  return await customFetch(`api/v1/report/product-sales-customers`, {
+    ...params,
+    isBlob: data.is_download
+  },);
+};

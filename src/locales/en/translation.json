@@ -724,5 +724,10 @@
   "generate_table_msg": "Generate Table {{from}} to {{to}}",
   "alert_table_number": "The ending number must be greater than the starting number",
   "brand": "Brand",
-  "brands": "Brands"
+  "brands": "Brands",
+  "product_per_customer": "Product Customer Report",
+  "product_per_customer_desc": "This report shows the number of products purchased by each customer.",
+  "generate_report": "Generate Report",
+  "download_report": "Download Report"
+
 }

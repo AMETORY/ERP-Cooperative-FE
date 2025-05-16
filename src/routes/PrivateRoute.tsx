@@ -43,6 +43,7 @@ import StockOpnameDetail from "../pages/StockOpnameDetail";
 import MerchantPage from "../pages/MerchantPage";
 import MerchantDetail from "../pages/MerchantDetail";
 import BrandPage from "../pages/BrandPage";
+import ProductPerCustomer from "../pages/ProductPerCustomer";
 
 interface PrivateRouteProps {}
 
@@ -90,6 +91,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({}) => {
       <Route path="/asset" element={<AssetPage />} />
       <Route path="/asset/:assetId" element={<AssetDetail />} />
       <Route path="/capital-change-statement" element={<CapitalChange />} />
+      <Route path="/product-per-customer" element={<ProductPerCustomer />} />
       <Route path="/cooperative/member" element={<CooperativeMemberPage />} />
       <Route path="/cooperative/activities" element={<CooperativeActivitiesPage />} />
       <Route path="/cooperative/loan" element={<LoanApplicationPage />} />

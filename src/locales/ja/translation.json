@@ -722,5 +722,9 @@
   "generate_table_msg": "テーブル {{from}} から {{to}} を生成します",
   "alert_table_number": "終了番号は開始番号より大きくなければなりません",
   "brand": "ブランド",
-  "brands": "ブランド"
+  "brands": "ブランド",
+  "product_per_customer": "商品顧客レポート",
+  "product_per_customer_desc": "このレポートには、各顧客が購入した商品の数が表示されます。",
+  "generate_report": "レポートを生成",
+  "download_report": "レポートをダウンロード"
 }

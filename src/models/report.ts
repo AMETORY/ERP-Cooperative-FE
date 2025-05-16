@@ -137,3 +137,27 @@ export interface ClosingSummary {
   tax_percentage: number;
   earning_retain: AccountModel;
 }
+
+
+export interface ProductSalesCustomer {
+  product_id: string;
+  contact_id: string;
+  product_code: string;
+  contact_code: string;
+  unit_code: string;
+  unit_name: string;
+  product_name: string;
+  contact_name: string;
+  quantity: number;
+  total_quantity: number;
+  total_price: number;
+}
+
+export interface ProductSalesCustomerReport {
+  contacts: Record<string, ProductSalesCustomer>;
+  products: Record<string, ProductSalesCustomer>;
+  data: Record<string, Record<string, ProductSalesCustomer[]>>;
+  grand_total_amount: Record<string, number>;
+  grand_total_quantity: Record<string, number>;
+  message: string;
+}

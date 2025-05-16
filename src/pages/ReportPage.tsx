@@ -59,13 +59,18 @@ const { t } = useTranslation();
       description: t("general_journal_description"),
       link: "/general-journal",
     },
+    // {
+    //   icon: <img src="/icon/ledger.png" width={40} />,
+    //   title: t("general_ledger"),
+    //   description: t("general_ledger_description"),
+    //   link: "/general-ledger",
+    // },
     {
-      icon: <img src="/icon/ledger.png" width={40} />,
-      title: t("general_ledger"),
-      description: t("general_ledger_description"),
-      link: "/general-ledger",
+      icon: <img src="/icon/product_per_customer.png" width={40} />,
+      title: t("product_per_customer"),
+      description: t("product_per_customer_desc"),
+      link: "/product-per-customer",
     },
-   
 
   ];
   return (

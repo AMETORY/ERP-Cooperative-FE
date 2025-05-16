@@ -726,8 +726,10 @@
   "generate_table_msg": "Generate Meja {{from}} sampai {{to}}",
   "alert_table_number": "Nomor akhir harus lebih besar dari nomor awal",
   "brand": "Merk",
-  "brands": "Merk"
-
-
+  "brands": "Merk",
+  "product_per_customer": "Laporan Produk per Pelanggan",
+  "product_per_customer_desc": "Laporan ini menunjukkan jumlah produk yang dibeli oleh setiap pelanggan.",
+  "generate_report": "Buat Laporan",
+  "download_report": "Unduh Laporan"
 
 }

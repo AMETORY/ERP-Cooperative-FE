@@ -29,6 +29,22 @@ const ModalContact: FC<ModalContactProps> = ({
       <Modal.Body>
         <div className="space-y-4">
           <div>
+            <Label htmlFor="contactCode" value={t('code')} />
+            <TextInput
+              id="contactCode"
+              name="code"
+              placeholder={t('code')}
+              required
+              value={selectedContact?.code ?? ""}
+              onChange={(e) =>
+                setSelectedContact({
+                  ...selectedContact!,
+                  code: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div>
             <Label htmlFor="contactName" value={t('name')} />
             <TextInput
               id="contactName"
