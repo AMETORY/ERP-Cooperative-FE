@@ -133,7 +133,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
     }
   };
   return (
-    <div>
+    <div className="h-[calc(100vh-200px)] overflow-y-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold ">{title}</h1>
         <div className="flex items-center gap-2">
@@ -160,7 +160,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
           <Table.HeadCell>{t("date")}</Table.HeadCell>
           <Table.HeadCell>{t("due_date")}</Table.HeadCell>
           <Table.HeadCell>No.</Table.HeadCell>
-          <Table.HeadCell>{t("contact")}</Table.HeadCell>
+          <Table.HeadCell>{t("customer")}</Table.HeadCell>
           <Table.HeadCell>{t("status")}</Table.HeadCell>
           <Table.HeadCell>{t("total")}</Table.HeadCell>
           <Table.HeadCell>{t("balance")}</Table.HeadCell>
@@ -270,7 +270,7 @@ const SalesTable: FC<SalesTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="contact">{t("contact")}</Label>
+                <Label htmlFor="contact">{t("customer")}</Label>
                 <CreatableSelect
                   id="contact"
                   value={selectedContact}

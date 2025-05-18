@@ -3,6 +3,7 @@ import {
   Datepicker,
   Label,
   Modal,
+  Pagination,
   Table,
   Textarea,
   TextInput,
@@ -82,7 +83,7 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
   };
 
   return (
-    <div>
+    <div className="h-[calc(100vh-200px)] overflow-y-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold ">Purchase Return</h1>
         <div className="flex items-center gap-2">
@@ -150,6 +151,15 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
           ))}
         </Table.Body>
       </Table>
+      <Pagination
+        className="mt-4"
+        currentPage={page}
+        totalPages={pagination?.total_pages ?? 0}
+        onPageChange={(val) => {
+          setPage(val);
+        }}
+        showIcons
+      />
       <ModalPurchaseReturn
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -163,7 +173,6 @@ const ReturnPurchaseTable: FC<ReturnPurchaseTableProps> = ({}) => {
           setSelectedPurchase(val);
         }}
       />
-      
     </div>
   );
 };

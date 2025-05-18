@@ -158,7 +158,7 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
           <Table.Head>
             <Table.HeadCell>{t("date")}</Table.HeadCell>
             <Table.HeadCell>No.</Table.HeadCell>
-            <Table.HeadCell>{t("contact")}</Table.HeadCell>
+            <Table.HeadCell>{t("supplier")} / {t("vendor")}</Table.HeadCell>
             <Table.HeadCell>{t("status")}</Table.HeadCell>
             <Table.HeadCell>{t("total")}</Table.HeadCell>
             <Table.HeadCell>{t("balance")}</Table.HeadCell>
@@ -267,7 +267,7 @@ const PurchaseTable: FC<PurchaseTableProps> = ({ docType, title }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="contact">{t("contact")}</Label>
+                <Label htmlFor="contact">{t("supplier")} / {t("vendor")}</Label>
                 <CreatableSelect
                   id="contact"
                   value={selectedContact}

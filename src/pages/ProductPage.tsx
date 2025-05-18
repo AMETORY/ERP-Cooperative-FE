@@ -1,6 +1,6 @@
 import { Tabs } from "flowbite-react";
 import { useState, type FC } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { BsListCheck } from "react-icons/bs";
 import { IoPricetagOutline } from "react-icons/io5";
 import { PiDotsNine } from "react-icons/pi";
@@ -14,6 +14,7 @@ import ProductTable from "../components/ProductTable";
 import UnitTable from "../components/UnitTable";
 import { ProductModel } from "../models/product";
 import BrandTable from "../components/BrandTable";
+import { MdBikeScooter } from "react-icons/md";
 
 interface ProductPageProps {}
 
@@ -36,21 +37,21 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
         >
           <Tabs.Item
             active={activeTab === 0}
-            title={t("products") }
+            title={t("products")}
             icon={RiShoppingBagLine}
           >
             <ProductTable />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 1}
-            title=  {t("product_categories")}
+            title={t("product_categories")}
             icon={BsListCheck}
           >
             <ProductCategoryTable />
           </Tabs.Item>
           <Tabs.Item
             active={activeTab === 2}
-            title=  {t("brands")}
+            title={t("brands")}
             icon={TbBrandDatabricks}
           >
             <BrandTable />
@@ -62,15 +63,23 @@ const ProductPage: FC<ProductPageProps> = ({}) => {
           >
             <PriceCategoryTable />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 4} title={t("product_attributes")} icon={PiDotsNine}>
+          <Tabs.Item
+            active={activeTab === 4}
+            title={t("product_attributes")}
+            icon={PiDotsNine}
+          >
             <ProductAttributeTable />
           </Tabs.Item>
-          <Tabs.Item active={activeTab === 5} title={t("units")} icon={TbRulerMeasure}>
+          <Tabs.Item
+            active={activeTab === 5}
+            title={t("units")}
+            icon={TbRulerMeasure}
+          >
             <UnitTable />
           </Tabs.Item>
+         
         </Tabs>
       </div>
-
     </AdminLayout>
   );
 };

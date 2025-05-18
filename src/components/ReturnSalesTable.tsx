@@ -3,6 +3,7 @@ import {
   Datepicker,
   Label,
   Modal,
+  Pagination,
   Table,
   Textarea,
   TextInput,
@@ -85,9 +86,9 @@ const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
   };
 
   return (
-    <div>
+    <div className="h-[calc(100vh-200px)] overflow-y-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">{t('sales_return')}</h1>
+        <h1 className="text-3xl font-bold ">{t("sales_return")}</h1>
         <div className="flex items-center gap-2">
           <Button
             gradientDuoTone="purpleToBlue"
@@ -96,7 +97,7 @@ const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
               setShowModal(true);
             }}
           >
-            + {t('sales_return')}
+            + {t("sales_return")}
           </Button>
           <LuFilter
             className=" cursor-pointer text-gray-400 hover:text-gray-600"
@@ -153,6 +154,15 @@ const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
           ))}
         </Table.Body>
       </Table>
+      <Pagination
+        className="mt-4"
+        currentPage={page}
+        totalPages={pagination?.total_pages ?? 0}
+        onPageChange={(val) => {
+          setPage(val);
+        }}
+        showIcons
+      />
       <ModalSalesReturn
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -166,7 +176,6 @@ const ReturnSalesTable: FC<ReturnSalesTableProps> = ({}) => {
           setSelectedSales(val);
         }}
       />
-      
     </div>
   );
 };

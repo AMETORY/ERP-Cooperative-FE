@@ -21,6 +21,7 @@ import {
 } from "react-icons/bs";
 import {
   MdBalance,
+  MdBikeScooter,
   MdOutlineBalance,
   MdOutlineCheck,
   MdOutlineChecklist,
@@ -1018,6 +1019,12 @@ const ProductDetail: FC<ProductDetailProps> = ({}) => {
           <Tabs.Item title={t("stock_movements")} icon={RxReload}>
             {renderStockMovement()}
           </Tabs.Item>
+          <Tabs.Item
+            active={activeTab === 6}
+            title={t("misc")}
+            icon={MdBikeScooter}
+            className=""
+          ></Tabs.Item>
         </Tabs>
       </div>
       {renderInputFile()}

@@ -43,7 +43,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
   };
 
   return (
-    <div>
+    <div className="">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold ">{t("product")}</h1>
         <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ const ProductTable: FC<ProductTableProps> = ({}) => {
                     navigate(`/product/${product.id}`);
                   }}
                 >
-                  {t("view")}
+                  {t("edit")}
                 </a>
                 <a
                   className="font-medium text-red-600 hover:underline dark:text-red-500 ms-2 cursor-pointer"
