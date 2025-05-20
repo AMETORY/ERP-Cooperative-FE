@@ -29,6 +29,23 @@ const ModalUnit: FC<ModalUnitProps> = ({
       <Modal.Body>
         <div className="space-y-6">
           <div className="mb-2 block">
+            <Label htmlFor="code" value={t("code")} />
+            <TextInput
+              id="code"
+              type="text"
+              placeholder={t("code")}
+              required={true}
+              value={unit?.code}
+              onChange={(e) =>
+                setUnit({
+                  ...unit!,
+                  code: e.target.value,
+                })
+              }
+              className="input-white"
+            />
+          </div>
+          <div className="mb-2 block">
             <Label htmlFor="name" value={t("name")} />
             <TextInput
               id="name"

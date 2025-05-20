@@ -267,8 +267,8 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                   />
                   <CurrencyInput
                     value={acquisition_cost}
-                    groupSeparator="."
-                    decimalSeparator=","
+                    groupSeparator=","
+                    decimalSeparator="."
                     onValueChange={(_, __, val) => {
                       setAcquisitionCost(val?.float ?? 0);
                     }}
@@ -320,8 +320,8 @@ const AssetPage: FC<AssetPageProps> = ({}) => {
                       />
                       <CurrencyInput
                         value={salvageValue}
-                        groupSeparator="."
-                        decimalSeparator=","
+                        groupSeparator=","
+                        decimalSeparator="."
                         onValueChange={(_, __, val) => {
                           setSalvageValue(val?.float ?? 0);
                         }}

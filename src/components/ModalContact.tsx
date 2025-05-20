@@ -126,8 +126,8 @@ const ModalContact: FC<ModalContactProps> = ({
           <div>
             <Label htmlFor="receivablesLimit" value={t('receivables_limit')} />
             <CurrencyInput
-              groupSeparator="."
-                  decimalSeparator=","
+              groupSeparator=","
+                  decimalSeparator="."
               id="receivablesLimit"
               name="receivables_limit"
               placeholder={t('receivables_limit')}
@@ -144,8 +144,8 @@ const ModalContact: FC<ModalContactProps> = ({
           <div>
             <Label htmlFor="debtLimit" value={t('debt_limit')} />
             <CurrencyInput
-              groupSeparator="."
-                  decimalSeparator=","
+              groupSeparator=","
+                  decimalSeparator="."
               id="debtLimit"
               name="debt_limit"
               placeholder={t('debt_limit')}

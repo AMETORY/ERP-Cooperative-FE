@@ -89,8 +89,8 @@ const PriceForm: FC<PriceFormProps> = ({
                 className="rs-input col-span-3"
                 readOnly
                 value={product?.price}
-                groupSeparator="."
-                decimalSeparator=","
+                groupSeparator=","
+                decimalSeparator="."
                 onValueChange={(value, name, values) =>
                   setData({ ...data, amount: values?.float ?? 0 })
                 }
@@ -117,8 +117,8 @@ const PriceForm: FC<PriceFormProps> = ({
             <CurrencyInput
               className="rs-input"
               value={data.amount}
-              groupSeparator="."
-              decimalSeparator=","
+              groupSeparator=","
+              decimalSeparator="."
               onValueChange={(value, name, values) => {
                 setData({ ...data, amount: values?.float ?? 0 });
                 setMarkup(
@@ -132,8 +132,8 @@ const PriceForm: FC<PriceFormProps> = ({
             <CurrencyInput
               className="rs-input"
               value={data.min_quantity}
-              groupSeparator="."
-              decimalSeparator=","
+              groupSeparator=","
+              decimalSeparator="."
               onValueChange={(value, name, values) =>
                 setData({ ...data, min_quantity: values?.float ?? 0 })
               }

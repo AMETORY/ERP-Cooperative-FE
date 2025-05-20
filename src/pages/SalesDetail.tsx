@@ -793,8 +793,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                               className="rs-input !p-1.5 "
                               style={{ zIndex: 0 }}
                               defaultValue={item.quantity ?? 0}
-                              groupSeparator="."
-                              decimalSeparator=","
+                              groupSeparator=","
+                              decimalSeparator="."
                               onValueChange={(value, name, values) => {
                                 setItems([
                                   ...items.map((i) => {
@@ -868,8 +868,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                           <CurrencyInput
                             className="rs-input !p-1.5"
                             defaultValue={item.unit_price ?? 0}
-                            groupSeparator="."
-                            decimalSeparator=","
+                            groupSeparator=","
+                            decimalSeparator="."
                             onValueChange={(value, name, values) => {
                               setItems([
                                 ...items.map((i) => {
@@ -945,8 +945,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                           <CurrencyInput
                             className="rs-input !p-1.5 "
                             defaultValue={item.discount_percent ?? 0}
-                            groupSeparator="."
-                            decimalSeparator=","
+                            groupSeparator=","
+                            decimalSeparator="."
                             onValueChange={(value, name, values) => {
                               setItems([
                                 ...items.map((i) => {
@@ -1463,8 +1463,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       className="rs-input !p-1.5  text-xl"
                       required
                       value={payment?.amount}
-                      groupSeparator="."
-                      decimalSeparator=","
+                      groupSeparator=","
+                      decimalSeparator="."
                       onValueChange={(_, __, val) => {
                         if (
                           (val?.float ?? 0) >
@@ -1501,8 +1501,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                         className="rs-input !p-1.5  text-xl text-right !pr-6"
                         required
                         value={paymentPercentage}
-                        // groupSeparator="."
-                        // decimalSeparator=","
+                        // groupSeparator=","
+                        // decimalSeparator="."
                         decimalsLimit={0}
                         onValueChange={(_, __, val) => {
                           if (
@@ -1605,8 +1605,8 @@ const SalesDetail: FC<SalesDetailProps> = ({}) => {
                       className="rs-input !p-1.5 text-right !pr-6"
                       value={payment?.payment_discount ?? 0}
                       max={payment?.payment_discount ?? 0}
-                      groupSeparator="."
-                      decimalSeparator=","
+                      groupSeparator=","
+                      decimalSeparator="."
                       onValueChange={(_, __, val) => {
                         setPayment({
                           ...payment!,

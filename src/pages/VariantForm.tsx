@@ -150,8 +150,8 @@ const VariantForm: FC<VariantFormProps> = ({
               <CurrencyInput
                 className="rs-input"
                 value={data.price}
-                groupSeparator="."
-                decimalSeparator=","
+                groupSeparator=","
+                decimalSeparator="."
                 onValueChange={(value, name, values) =>
                   setData({ ...data, price: values?.float ?? 0 })
                 }
@@ -165,8 +165,8 @@ const VariantForm: FC<VariantFormProps> = ({
                 <CurrencyInput
                   className="rs-input"
                   value={data.weight}
-                  groupSeparator="."
-                  decimalSeparator=","
+                  groupSeparator=","
+                  decimalSeparator="."
                   onValueChange={(value, name, values) =>
                     setData({ ...data, weight: values?.float ?? 0 })
                   }
@@ -183,8 +183,8 @@ const VariantForm: FC<VariantFormProps> = ({
                   <CurrencyInput
                     className="rs-input"
                     value={data.length}
-                    groupSeparator="."
-                    decimalSeparator=","
+                    groupSeparator=","
+                    decimalSeparator="."
                     onValueChange={(value, name, values) =>
                       setData({ ...data, length: values?.float ?? 0 })
                     }
@@ -195,8 +195,8 @@ const VariantForm: FC<VariantFormProps> = ({
                   <CurrencyInput
                     className="rs-input"
                     value={data.width}
-                    groupSeparator="."
-                    decimalSeparator=","
+                    groupSeparator=","
+                    decimalSeparator="."
                     onValueChange={(value, name, values) =>
                       setData({ ...data, width: values?.float ?? 0 })
                     }
@@ -207,8 +207,8 @@ const VariantForm: FC<VariantFormProps> = ({
                   <CurrencyInput
                     className="rs-input"
                     value={data.height}
-                    groupSeparator="."
-                    decimalSeparator=","
+                    groupSeparator=","
+                    decimalSeparator="."
                     onValueChange={(value, name, values) =>
                       setData({ ...data, height: values?.float ?? 0 })
                     }

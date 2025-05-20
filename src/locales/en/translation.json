@@ -728,6 +728,9 @@
   "product_per_customer": "Product Customer Report",
   "product_per_customer_desc": "This report shows the number of products purchased by each customer.",
   "generate_report": "Generate Report",
-  "download_report": "Download Report"
-
+  "download_report": "Download Report",
+  "accounts_receivable_subsidiary_ledger": "Accounts Receivable Subsidiary Ledger",
+  "accounts_receivable_subsidiary_ledger_description": "This report shows the detail of accounts receivable subsidiary ledger.",
+  "accounts_payable_subsidiary_ledger": "Accounts Payable Subsidiary Ledger",
+  "accounts_payable_subsidiary_ledger_description": "This report shows the detail of accounts payable subsidiary ledger."
 }

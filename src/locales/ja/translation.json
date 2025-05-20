@@ -726,5 +726,9 @@
   "product_per_customer": "商品顧客レポート",
   "product_per_customer_desc": "このレポートには、各顧客が購入した商品の数が表示されます。",
   "generate_report": "レポートを生成",
-  "download_report": "レポートをダウンロード"
+  "download_report": "レポートをダウンロード",
+  "accounts_receivable_subsidiary_ledger": "債権債務明細台帳",
+  "accounts_receivable_subsidiary_ledger_description": "このレポートは、債権債務明細台帳の明細を表示します。",
+  "accounts_payable_subsidiary_ledger": "債務債権明細台帳",
+  "accounts_payable_subsidiary_ledger_description": "このレポートは、債務債権明細台帳の明細を表示します。"
 }

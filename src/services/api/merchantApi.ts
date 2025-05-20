@@ -48,6 +48,23 @@ export const addProductMerchant = async (id: string, data: any) => {
     body: JSON.stringify(data),
   });
 };
+export const getProductsMerchantStation = async (id: string, stationId: string) => {
+  return await customFetch(`api/v1/merchant/${id}/station/${stationId}/product`, {
+    method: "GET",
+  });
+};
+export const addProductMerchantStation = async (id: string, stationId: string, data: any) => {
+  return await customFetch(`api/v1/merchant/${id}/station/${stationId}/add-product`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+export const deleteProductMerchantStation = async (id: string, stationId: string, data: any) => {
+  return await customFetch(`api/v1/merchant/${id}/station/${stationId}/delete-product`, {
+    method: "DELETE",
+    body: JSON.stringify(data),
+  });
+};
 
 export const deleteMerchant = async (id: string) => {
   return await customFetch(`api/v1/merchant/${id}`, {
@@ -150,3 +167,41 @@ export const updateLayout = async (id: string, layoutId: string, data: any) => {
   });
 };
 
+
+
+export const getStations = async (id: string, req: PaginationRequest) => {
+  const queryParams = new URLSearchParams();
+  queryParams.set("page", String(req.page));
+  queryParams.set("size", String(req.size));
+  if (req.search) queryParams.set("search", req.search);
+  return await customFetch(`api/v1/merchant/${id}/station?${queryParams}`, {
+    method: "GET",
+  });
+};
+export const createStation = async (id: string, data: any) => {
+
+  return await customFetch(`api/v1/merchant/${id}/station`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+export const getStationDetail = async (id: string, layoutId: any) => {
+  return await customFetch(`api/v1/merchant/${id}/station/${layoutId}`, {
+    method: "GET",
+  });
+};
+
+export const updateStation = async (id: string, layoutId: string, data: any) => {
+
+  return await customFetch(`api/v1/merchant/${id}/station/${layoutId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+
+export const deleteStation = async (id: string, stationId: string) => {
+  return await customFetch(`api/v1/merchant/${id}/station/${stationId}`, {
+    method: "DELETE",
+  });
+};

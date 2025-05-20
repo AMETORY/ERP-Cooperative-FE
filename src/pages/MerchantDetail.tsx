@@ -29,6 +29,9 @@ import { HiOutlineMenu } from "react-icons/hi";
 import MerchantDesk from "../components/MerchantDesk";
 import { PriceCategoryModel } from "../models/price_category";
 import { getPriceCategories } from "../services/api/priceCategoryApi";
+import { FaMartiniGlass } from "react-icons/fa6";
+import MerchantStation from "../components/MerchantStation";
+import { TbGlass } from "react-icons/tb";
 
 interface MerchantDetailProps {}
 
@@ -379,6 +382,9 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
             }
           >
             {merchant && <MerchantDesk merchant={merchant!} />}
+          </Tabs.Item>
+          <Tabs.Item title={t("station")} icon={TbGlass}>
+            {merchant && <MerchantStation merchant={merchant!} />}
           </Tabs.Item>
         </Tabs>
       </div>

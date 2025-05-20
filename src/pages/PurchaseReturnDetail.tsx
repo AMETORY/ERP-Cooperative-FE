@@ -202,8 +202,8 @@ const PurchaseReturnDetail: FC<PurchaseReturnDetailProps> = ({}) => {
                         <CurrencyInput
                           className="rs-input !p-1.5 "
                           value={item.quantity ?? 0}
-                          groupSeparator="."
-                          decimalSeparator=","
+                          groupSeparator=","
+                          decimalSeparator="."
                           onValueChange={(value, name, values) => {
                             if (
                               (values?.float ?? 0) > item.original_quantity!

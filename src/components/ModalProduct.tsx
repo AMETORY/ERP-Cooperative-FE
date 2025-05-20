@@ -110,8 +110,8 @@ const ModalProduct: FC<ModalProductProps> = ({
             <CurrencyInput
               className="rs-input !p-1.5 "
               defaultValue={product?.price ?? 0}
-              groupSeparator="."
-              decimalSeparator=","
+              groupSeparator=","
+              decimalSeparator="."
               onValueChange={(value, name, values) => {
                 setProduct({
                   ...product!,

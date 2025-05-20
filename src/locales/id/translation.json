@@ -730,6 +730,10 @@
   "product_per_customer": "Laporan Produk per Konsumen",
   "product_per_customer_desc": "Laporan ini menunjukkan jumlah produk yang dibeli oleh setiap pelanggan.",
   "generate_report": "Buat Laporan",
-  "download_report": "Unduh Laporan"
+  "download_report": "Unduh Laporan",
+  "accounts_receivable_subsidiary_ledger": "Buku Besar Piutang",
+  "accounts_receivable_subsidiary_ledger_description": "Laporan ini menunjukkan detail buku besar piutang.",
+  "accounts_payable_subsidiary_ledger": "Buku Besar Hutang",
+  "accounts_payable_subsidiary_ledger_description": "Laporan ini menunjukkan detail buku besar hutang."
 
 }

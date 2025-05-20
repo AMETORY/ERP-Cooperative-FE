@@ -72,6 +72,20 @@ const { t } = useTranslation();
       link: "/product-per-customer",
     },
 
+    {
+      icon: <img src="/icon/accounts-receivable.png" width={40} />,
+      title: t("accounts_receivable_subsidiary_ledger"),
+      description: t("accounts_receivable_subsidiary_ledger_description"),
+      link: "/accounts-receivable-subsidiary-ledger",
+    },
+    {
+      icon: <img src="/icon/accounts-payable.png" width={40} />,
+      title: t("accounts_payable_subsidiary_ledger"),
+      description: t("accounts_payable_subsidiary_ledger_description"),
+      link: "/accounts-payable-subsidiary-ledger",
+    },
+
+
   ];
   return (
     <AdminLayout>

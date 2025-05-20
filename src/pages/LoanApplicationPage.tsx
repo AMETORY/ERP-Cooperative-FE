@@ -251,8 +251,8 @@ const LoanApplicationPage: FC<LoanApplicationPageProps> = ({}) => {
                   className="rs-input !p-1.5 "
                   placeholder={t('amount')}
                   value={loan?.loan_amount}
-                  groupSeparator="."
-                  decimalSeparator=","
+                  groupSeparator=","
+                  decimalSeparator="."
                   onValueChange={(_, __, val) =>
                     setLoan({
                       ...loan!,

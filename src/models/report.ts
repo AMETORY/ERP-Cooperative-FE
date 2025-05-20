@@ -1,4 +1,5 @@
 import { AccountModel } from "./account";
+import { ContactModel } from "./contact";
 import { TransactionModel } from "./transaction";
 import { TrialBalanceReportModel } from "./trial_balance";
 
@@ -160,4 +161,34 @@ export interface ProductSalesCustomerReport {
   grand_total_amount: Record<string, number>;
   grand_total_quantity: Record<string, number>;
   message: string;
+}
+
+
+export interface LedgerReport {
+  total_debit_before: number;
+  total_debit: number;
+  total_debit_after: number;
+  total_credit_before: number;
+  total_credit: number;
+  total_credit_after: number;
+  total_balance_before: number;
+  total_balance: number;
+  total_balance_after: number;
+  grand_total_debit: number;
+  grand_total_credit: number;
+  grand_total_balance: number;
+  ledgers: Ledger[];
+  contact: ContactModel;
+}
+
+export interface Ledger {
+  id: string;
+  description: string;
+  date: string;
+  debit: number;
+  credit: number;
+  balance: number;
+  ref_id: string;
+  ref: string;
+  ref_type: string;
 }

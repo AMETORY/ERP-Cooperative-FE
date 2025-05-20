@@ -240,8 +240,8 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                     <CurrencyInput
                       disabled={!isEditable}
                       className="rs-input !p-1.5 "
-                      groupSeparator="."
-                      decimalSeparator=","
+                      groupSeparator=","
+                      decimalSeparator="."
                       value={loan?.projected_profit ?? 0}
                       onValueChange={(_, __, val) =>
                         setLoan({ ...loan!, projected_profit: val?.float ?? 0 })
@@ -274,8 +274,8 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                   <CurrencyInput
                     disabled={!isEditable}
                     className="rs-input !p-1.5 "
-                    groupSeparator="."
-                    decimalSeparator=","
+                    groupSeparator=","
+                    decimalSeparator="."
                     value={loan?.admin_fee ?? 0}
                     onValueChange={(_, __, val) =>
                       setLoan({ ...loan!, admin_fee: val?.float ?? 0 })
@@ -924,8 +924,8 @@ const LoanApplicationDetail: FC<LoanApplicationDetailProps> = ({}) => {
                   style={{
                     fontSize: "1.5rem",
                   }}
-                  decimalSeparator=","
-                  groupSeparator="."
+                  decimalSeparator="."
+                  groupSeparator=","
                   placeholder="Enter payment amount"
                 />
                 {(paymentData?.payment_amount ?? 0) !==

@@ -38,4 +38,9 @@ export interface MerchantLayoutModel {
   merchant_id: string;
   merchant_desks: any[];
 }
+export interface MerchantStationModel {
+  id: string;
+  station_name: string;
+  description: string;
+}
 

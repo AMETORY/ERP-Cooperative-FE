@@ -37,6 +37,7 @@ export interface ProductModel {
   default_unit?: UnitModel;
   tax?: TaxModel;
   tax_id?: string;
+  merchant_station_id?: string;
 }
 
 

@@ -216,7 +216,7 @@ const MerchantProduct: FC<MerchantProductProps> = ({ merchant }) => {
             >
               <div className="flex items-center gap-2">
                 <div className="w-12 h-12">
-                  {product.product_images.length == 0 ? (
+                  {(product.product_images??[]).length == 0 ? (
                     <BsImage />
                   ) : (
                     <img

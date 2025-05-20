@@ -323,8 +323,8 @@ const SavingPage: FC<SavingPageProps> = ({}) => {
                   className="rs-input !p-1.5 "
                   placeholder={t('amount')}
                   value={saving?.amount}
-                  groupSeparator="."
-                  decimalSeparator=","
+                  groupSeparator=","
+                  decimalSeparator="."
                   onValueChange={(_, __, val) =>
                     setSaving({
                       ...saving!,

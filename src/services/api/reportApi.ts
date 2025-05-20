@@ -81,3 +81,27 @@ export const getProductSalesCustomers = async (data: any) => {
     isBlob: data.is_download
   },);
 };
+
+
+export const getAccountReceivableLedger = async (data: any) => {
+  let params =  {
+    method: "POST",
+    body: JSON.stringify(data),
+  }
+ 
+  return await customFetch(`api/v1/report/account-receivable-ledger`, {
+    ...params,
+    isBlob: data.is_download
+  },);
+};
+export const getAccountPayableLedger = async (data: any) => {
+  let params =  {
+    method: "POST",
+    body: JSON.stringify(data),
+  }
+ 
+  return await customFetch(`api/v1/report/account-payable-ledger`, {
+    ...params,
+    isBlob: data.is_download
+  },);
+};

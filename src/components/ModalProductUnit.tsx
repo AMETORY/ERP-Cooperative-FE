@@ -74,8 +74,8 @@ const ModalProductUnit: FC<ModalProductUnitProps> = ({
               <CurrencyInput
                 className="rs-input !p-1.5 "
                 // value={value ?? 0}
-                groupSeparator="."
-                decimalSeparator=","
+                groupSeparator=","
+                decimalSeparator="."
                 decimalsLimit={4}
                 onValueChange={(value, name, values) => {
                   console.log(value);
