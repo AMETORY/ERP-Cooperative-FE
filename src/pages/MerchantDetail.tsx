@@ -32,6 +32,8 @@ import { getPriceCategories } from "../services/api/priceCategoryApi";
 import { FaMartiniGlass } from "react-icons/fa6";
 import MerchantStation from "../components/MerchantStation";
 import { TbGlass } from "react-icons/tb";
+import { PiPlug } from "react-icons/pi";
+import MerchantIntegration from "../components/MerchantIntegration";
 
 interface MerchantDetailProps {}
 
@@ -385,6 +387,9 @@ const MerchantDetail: FC<MerchantDetailProps> = ({}) => {
           </Tabs.Item>
           <Tabs.Item title={t("station")} icon={TbGlass}>
             {merchant && <MerchantStation merchant={merchant!} />}
+          </Tabs.Item>
+          <Tabs.Item title={t("integration")} icon={PiPlug}>
+            {merchant && <MerchantIntegration merchant={merchant!} setMerchant={setMerchant} onUpdate={getDetail} />}
           </Tabs.Item>
         </Tabs>
       </div>

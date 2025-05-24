@@ -28,6 +28,28 @@ export interface MerchantModel  {
   picture?: FileModel | null
   workflow?: any
   menu?: any
+  enable_xendit?: boolean
+  xendit_api_key?: string
+  xendit_api_key_censored?: string
+  xendit?: Xendit
+}
+
+export interface Xendit {
+  enable_qris?: boolean;
+  enable_dana?: boolean;
+  enable_link_aja?: boolean;
+  enable_shopee_pay?: boolean;
+  enable_ovo?: boolean;
+  enable_bca?: boolean;
+  enable_mandiri?: boolean;
+  enable_bni?: boolean;
+  enable_bri?: boolean;
+  qris_fee?: number;
+  dana_fee?: number;
+  ovo_fee?: number;
+  link_aja_fee?: number;
+  shopee_pay_fee?: number;
+  va_fee?: number;
 }
 
 export interface MerchantLayoutModel {

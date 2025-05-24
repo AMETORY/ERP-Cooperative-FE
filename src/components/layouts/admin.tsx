@@ -54,7 +54,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({
   const { sendMessage, sendJsonMessage, lastMessage, readyState } =
     useWebSocket(socketUrl, {
       onMessage(event) {
-        // console.log("Received message:", event.data);
+        console.log("Received message:", event.data);
         setWsMsg(JSON.parse(event.data));
       },
       onOpen() {
